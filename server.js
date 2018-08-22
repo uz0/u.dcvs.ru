@@ -18,4 +18,3 @@ server.listen(port, function() {
   // eslint-disable-next-line
   console.log('Server running on port: %d', port);
 });
-
