@@ -6,6 +6,6 @@ module.exports = {
     credentials: {
       authToken: process.env.TELEGRAM_AUTH_TOKEN || '639983676:AAHMdWPHL_s81ElXEvC6-OWq0jpHUoEtW-Q',
     },
-    webhookEndpoint: process.env.TELEGRAM_WEBHOOKENDPOINT,
+    webhookEndpoint: process.env.TELEGRAM_WEBHOOKENDPOINT || '',
   },
 };
