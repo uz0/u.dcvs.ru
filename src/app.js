@@ -19,7 +19,7 @@ app.use('/api/message', function(req, res) {
 
 // telegram
 const path = `/telegram/${config.telegram.webhookEndpoint}${telegramCfg.credentials.authToken}`;
-const bot = new TelegramBot(TOKEN);
+const bot = new TelegramBot(telegramCfg.credentials.authToken);
 bot.setWebHook(`${config.url}${path}`);
 
 app.post(path, (req, res) => {
