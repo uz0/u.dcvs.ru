@@ -24,8 +24,7 @@ bot.on('message', (msg) => {
 
     if ('hiper' === cmd) {
         users.find({telegramId: userId}, (err, res) => {
-            if (res) {
-                console.log(res);
+            if (!_.isEmpty(res)) {
                 answer = 'Already signed!';
             }
             else {
