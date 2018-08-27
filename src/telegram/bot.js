@@ -7,11 +7,9 @@ const {
 const config = require('../config');
 const {telegram: telegramCfg} = config;
 
-const TOKEN = telegramCfg.credentials.authToken;
 const PREFIX = telegramCfg.prefix;
 
-const path = `/telegram/${config.telegram.webhookEndpoint}${TOKEN}`;
-const bot = new TelegramBot(TOKEN, {polling: true});
+const bot = new TelegramBot(telegramCfg.credentials.authToken, {polling: true});
 bot.setWebHook(`${config.url}${path}`);
 
 bot.on('message', (msg) => {

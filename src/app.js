@@ -16,6 +16,7 @@ app.use('/api/message', function(req, res) {
 });
 
 // telegram
+const path = `/telegram/${config.telegram.webhookEndpoint}${telegramCfg.credentials.authToken}`;
 app.post(path, (req, res) => {
     telegramBot.processUpdate(req.body);
     res.sendStatus(200);
