@@ -14,7 +14,7 @@ const bot = new TelegramBot(telegramCfg.credentials.authToken, {polling: true});
 bot.setWebHook(`${config.url}${path}`);
 
 bot.on('message', (msg) => {
-    if (!_.startsWith(PREFIX, msg.text)) {
+    if (!_.startsWith(msg.text, PREFIX)) {
         bot.sendMessage(msg.chat.id, `Enter command, pls (${PREFIX})`);;
     }
 
