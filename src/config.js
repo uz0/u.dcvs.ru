@@ -6,14 +6,14 @@ module.exports = {
     url: process.env.APP_URL || 'https://bot-hyperloot.herokuapp.com:443',
     telegram: {
         credentials: {
-            authToken: process.env.TELEGRAM_AUTH_TOKEN || '639983676:AAHMdWPHL_s81ElXEvC6-OWq0jpHUoEtW-Q',
+            authToken: process.env.TELEGRAM_AUTH_TOKEN,
         },
         webhookEndpoint: process.env.TELEGRAM_WEBHOOKENDPOINT || '',
         prefix: PREFIX,
     },
     discord: {
         credentials: {
-            authToken: process.env.DISCORD_AUTH_TOKEN || 'NDc5Njg4MTcwODM3OTAxMzcx.Dlyd6Q.dCvaAquznBiAQAaZSQXQFyAx9k8',
+            authToken: process.env.DISCORD_AUTH_TOKEN,
         },
         webhookEndpoint: process.env.DISCORD_WEBHOOKENDPOINT,
         prefix: PREFIX,
