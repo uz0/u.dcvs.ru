@@ -37,7 +37,7 @@ bot.on('message', (msg) => {
     let answer;
 
     if (!_.startsWith(msg.text, PREFIX)) {
-        users.find({telegramId: userId}, (err, user) => {
+        users.find({telegramId: userId}, async (err, user) => {
             if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
             } else if (user.pending === 'missionChoice') {
@@ -51,17 +51,15 @@ bot.on('message', (msg) => {
 
                 answer = `Mission picked ${MISSIONS[choise][0].name}!\n`;
             }
-            bot.sendMessage(msg.chat.id, answer);
+            await bot.sendMessage(msg.chat.id, answer);
         });
-
-        return;
     }
 
     // todo move out
-    if ('help' === cmd) {
+    else if ('help' === cmd) {
         bot.sendMessage(msg.chat.id, HELP_MESSAGE);
     }
-    if ('hiper' === cmd) {
+    else if ('hiper' === cmd) {
         users.find({telegramId: userId}, (err, res) => {
             if (!_.isEmpty(res)) {
                 answer = 'Already signed!';
@@ -73,7 +71,7 @@ bot.on('message', (msg) => {
             bot.sendMessage(msg.chat.id, answer);
         });
     }
-    if ('mission' === cmd) {
+    else if ('mission' === cmd) {
         users.find({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
@@ -92,6 +90,7 @@ bot.on('message', (msg) => {
             bot.sendMessage(msg.chat.id, answer);
         });
     }
+    bot.sendMessage(msg.chat.id, `No such command, try ${PREFIX}help`);
 });
 
 // жмаки по кнопкам
