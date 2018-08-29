@@ -38,15 +38,13 @@ bot.on('message', (msg) => {
 
     if (!_.startsWith(msg.text, PREFIX)) {
         users.find({telegramId: userId}, async (err, user) => {
-            if (!user.pending){
-                return;
-            } else if (_.isEmpty(user)) {
+            if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
             } else if (user.pending === 'missionChoice') {
                 // todo pick from available
                 const choise = _.parseInt(msg.text) - 1;
 
-                users.update(
+                await users.update(
                     {telegramId: userId},
                     {$set: {onMission: true, currentMission: MISSIONS[choise][0].name, missionStep: 0}}
                 );
@@ -66,7 +64,7 @@ bot.on('message', (msg) => {
                 answer = 'Already signed!';
             }
             else {
-                users.insert({telegramId: userId}, {available: {gamer: 1, programmer: 1}});
+                users.insert({telegramId: userId, available: {gamer: 1, programmer: 1}});
                 answer = 'Successfully added!';
             }
             bot.sendMessage(msg.chat.id, answer);
