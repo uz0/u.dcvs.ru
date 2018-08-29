@@ -16,20 +16,16 @@ bot.setWebHook(`${config.url}${path}`);
 const HELP_MESSAGE =`${PREFIX}mission to get a new task or get info about your current task;`;
 const HELP_REQUEST = `No such command, try ${PREFIX}help`;
 
-const MISSIONS = [
-    {
-        gamer: [{
-            name: 'gamer mission 1',
-            steps: []
-        }]
-    },
-    {
-        programmer: [{
-            name: 'programmer mission 1',
-            steps: []
-        }]
-    },
-];
+const MISSIONS = {
+    gamer: [{
+        name: 'gamer mission 1',
+        steps: []
+    }],
+    programmer: [{
+        name: 'programmer mission 1',
+        steps: []
+    }],
+};
 
 bot.on('message', (msg) => {
     const cmd = _.trimStart(msg.text, PREFIX);
@@ -44,11 +40,20 @@ bot.on('message', (msg) => {
             } else if (user.pending === 'missionChoice') {
                 // todo handlers for different pending statuses
                 // todo pick from available
-                const choise = _.parseInt(msg.text) - 1;
-                if (MISSIONS[choise]){
+
+                const choise = msg.text;
+                const availableMission = user.available[choise];
+
+                if (availableMission) {
                     users.update(
                         {telegramId: userId},
-                        {$set: {onMission: true, currentMission: MISSIONS[choise][0].name, missionStep: 0}}
+                        {
+                            $set: {
+                                onMission: true,
+                                currentMission: MISSIONS[choise][availableMission].name,
+                                missionStep: 0
+                            }
+                        }
                     );
                     answer = `Mission picked ${MISSIONS[choise][0].name}!\n`;
                 } else {
@@ -71,7 +76,11 @@ bot.on('message', (msg) => {
                 answer = 'Already signed!';
             }
             else {
-                users.insert({telegramId: userId, available: {gamer: 1, programmer: 1}});
+                // todo move out user initialization obj
+                users.insert({
+                    telegramId: userId,
+                    available: {gamer: 0, programmer: 0}
+                });
                 answer = 'Successfully added!';
             }
             bot.sendMessage(msg.chat.id, answer);
@@ -86,7 +95,7 @@ bot.on('message', (msg) => {
                     {$set: {pending: 'missionChoice'}}
                 );
                 // todo pick from available
-                answer = `Please, choose you mission (type number):\n1. Gamer\n2. Programmer`
+                answer = `Please, choose you mission:\n- gamer\n- programmer`
             } else {
                 answer = `Your current mission is ${user.currentMission}`;
             }
