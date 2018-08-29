@@ -13,8 +13,8 @@ const path = `/telegram/${config.telegram.webhookEndpoint}${telegramCfg.credenti
 const bot = new TelegramBot(telegramCfg.credentials.authToken, {polling: true});
 bot.setWebHook(`${config.url}${path}`);
 
-const HELP_MESSAGE =
-    `${PREFIX}mission to get a new task or get info about your current task;`;
+const HELP_MESSAGE =`${PREFIX}mission to get a new task or get info about your current task;`;
+const HELP_REQUEST = `No such command, try ${PREFIX}help`;
 
 const MISSIONS = [
     {
@@ -50,6 +50,8 @@ bot.on('message', (msg) => {
                 );
 
                 answer = `Mission picked ${MISSIONS[choise][0].name}!\n`;
+            } else if (!user.pending) {
+                answer = HELP_REQUEST;
             }
             await bot.sendMessage(msg.chat.id, answer);
         });
@@ -88,7 +90,7 @@ bot.on('message', (msg) => {
             bot.sendMessage(msg.chat.id, answer);
         });
     } else {
-        bot.sendMessage(msg.chat.id, `No such command, try ${PREFIX}help`);
+        bot.sendMessage(msg.chat.id, HELP_REQUEST);
     }
 });
 
