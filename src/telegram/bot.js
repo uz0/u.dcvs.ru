@@ -42,15 +42,19 @@ bot.on('message', (msg) => {
             if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
             } else if (user.pending === 'missionChoice') {
+                // todo handlers for different pending statuses
                 // todo pick from available
                 const choise = _.parseInt(msg.text) - 1;
+                if (MISSIONS[choise]){
+                    users.update(
+                        {telegramId: userId},
+                        {$set: {onMission: true, currentMission: MISSIONS[choise][0].name, missionStep: 0}}
+                    );
+                    answer = `Mission picked ${MISSIONS[choise][0].name}!\n`;
+                } else {
+                    answer = 'There\'s no such mission';
+                }
 
-                users.update(
-                    {telegramId: userId},
-                    {$set: {onMission: true, currentMission: MISSIONS[choise][0].name, missionStep: 0}}
-                );
-
-                answer = `Mission picked ${MISSIONS[choise][0].name}!\n`;
             } else if (!user.pending) {
                 answer = HELP_REQUEST;
             }
