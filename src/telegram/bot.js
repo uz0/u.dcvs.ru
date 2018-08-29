@@ -44,7 +44,7 @@ bot.on('message', (msg) => {
                 const choise = msg.text;
                 const availableMission = user.available[choise];
 
-                if (availableMission) {
+                if (_.isInteger(availableMission)) {
                     users.update(
                         {telegramId: userId},
                         {
