@@ -90,7 +90,9 @@ bot.on('message', (msg) => {
             bot.sendMessage(msg.chat.id, answer);
         });
     }
-    bot.sendMessage(msg.chat.id, `No such command, try ${PREFIX}help`);
+    else {
+        bot.sendMessage(msg.chat.id, `No such command, try ${PREFIX}help`);
+    }
 });
 
 // жмаки по кнопкам
