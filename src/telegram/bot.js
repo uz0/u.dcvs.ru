@@ -75,8 +75,7 @@ bot.on('message', (msg) => {
         users.find({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
-            }
-            if (!user.onMission) {
+            } else if (!user.onMission) {
                 users.update(
                     {telegramId: userId},
                     {$set: {pending: 'missionChoice'}}
