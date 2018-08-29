@@ -37,7 +37,7 @@ bot.on('message', (msg) => {
     let answer;
 
     if (!_.startsWith(msg.text, PREFIX)) {
-        users.find({telegramId: userId}, (err, user) => {
+        users.findOne({telegramId: userId}, (err, user) => {
             console.log(user);
             if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
@@ -62,8 +62,8 @@ bot.on('message', (msg) => {
     else if ('help' === cmd) {
         bot.sendMessage(msg.chat.id, HELP_MESSAGE);
     } else if ('hiper' === cmd) {
-        users.find({telegramId: userId}, (err, res) => {
-            if (!_.isEmpty(res)) {
+        users.findOne({telegramId: userId}, (err, user) => {
+            if (!_.isEmpty(user)) {
                 answer = 'Already signed!';
             }
             else {
@@ -73,7 +73,7 @@ bot.on('message', (msg) => {
             bot.sendMessage(msg.chat.id, answer);
         });
     } else if ('mission' === cmd) {
-        users.find({telegramId: userId}, (err, user) => {
+        users.findOne({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
             } else if (!user.onMission) {
