@@ -50,6 +50,8 @@ bot.on('message', (msg) => {
                         {
                             $set: {
                                 onMission: true,
+                                // todo own pending status for each mission?
+                                pending: 'mission',
                                 currentMission: MISSIONS[choise][availableMission].name,
                                 missionStep: 0
                             }
