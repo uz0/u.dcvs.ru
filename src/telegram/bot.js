@@ -38,7 +38,9 @@ bot.on('message', (msg) => {
 
     if (!_.startsWith(msg.text, PREFIX)) {
         users.find({telegramId: userId}, async (err, user) => {
-            if (_.isEmpty(user)) {
+            if (!user.pending){
+                return;
+            } else if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
             } else if (user.pending === 'missionChoice') {
                 // todo pick from available
@@ -58,8 +60,7 @@ bot.on('message', (msg) => {
     // todo move out
     else if ('help' === cmd) {
         bot.sendMessage(msg.chat.id, HELP_MESSAGE);
-    }
-    else if ('hiper' === cmd) {
+    } else if ('hiper' === cmd) {
         users.find({telegramId: userId}, (err, res) => {
             if (!_.isEmpty(res)) {
                 answer = 'Already signed!';
@@ -70,8 +71,7 @@ bot.on('message', (msg) => {
             }
             bot.sendMessage(msg.chat.id, answer);
         });
-    }
-    else if ('mission' === cmd) {
+    } else if ('mission' === cmd) {
         users.find({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
@@ -89,8 +89,7 @@ bot.on('message', (msg) => {
 
             bot.sendMessage(msg.chat.id, answer);
         });
-    }
-    else {
+    } else {
         bot.sendMessage(msg.chat.id, `No such command, try ${PREFIX}help`);
     }
 });
