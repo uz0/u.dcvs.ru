@@ -37,14 +37,14 @@ bot.on('message', (msg) => {
     let answer;
 
     if (!_.startsWith(msg.text, PREFIX)) {
-        users.find({telegramId: userId}, async (err, user) => {
+        users.find({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
             } else if (user.pending === 'missionChoice') {
                 // todo pick from available
                 const choise = _.parseInt(msg.text) - 1;
 
-                await users.update(
+                users.update(
                     {telegramId: userId},
                     {$set: {onMission: true, currentMission: MISSIONS[choise][0].name, missionStep: 0}}
                 );
@@ -53,7 +53,7 @@ bot.on('message', (msg) => {
             } else if (!user.pending) {
                 answer = HELP_REQUEST;
             }
-            await bot.sendMessage(msg.chat.id, answer);
+            bot.sendMessage(msg.chat.id, answer);
         });
     }
 
