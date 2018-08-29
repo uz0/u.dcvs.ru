@@ -38,6 +38,7 @@ bot.on('message', (msg) => {
 
     if (!_.startsWith(msg.text, PREFIX)) {
         users.find({telegramId: userId}, (err, user) => {
+            console.log(user);
             if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
             } else if (user.pending === 'missionChoice') {
