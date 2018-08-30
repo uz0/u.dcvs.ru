@@ -19,7 +19,20 @@ const HELP_REQUEST = `No such command, try ${PREFIX}help`;
 const MISSIONS = {
     gamer: [{
         name: 'gamer mission 1',
-        steps: []
+        steps: [
+            {
+                brief: 'Type in "correct"',
+                check: (userAnswer) => {
+                    return userAnswer === 'correct';
+                }
+            },
+            {
+                brief: 'Type in "answer"',
+                check: (userAnswer) => {
+                    return userAnswer === 'answer';
+                }
+            },
+        ]
     }],
     programmer: [{
         name: 'programmer mission 1',
