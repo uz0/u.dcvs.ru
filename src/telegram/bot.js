@@ -17,27 +17,50 @@ const HELP_MESSAGE =`${PREFIX}mission to get a new task or get info about your c
 const HELP_REQUEST = `No such command, try ${PREFIX}help`;
 
 const MISSIONS = {
-    gamer: [{
-        name: 'gamer mission 1',
-        steps: [
-            {
-                brief: 'Type in "correct"',
-                check: (userAnswer) => {
-                    return userAnswer === 'correct';
-                }
-            },
-            {
-                brief: 'Type in "answer"',
-                check: (userAnswer) => {
-                    return userAnswer === 'answer';
-                }
-            },
-        ]
-    }],
-    programmer: [{
-        name: 'programmer mission 1',
-        steps: []
-    }],
+    gamer: [
+        {
+            name: 'gamer mission 1',
+            steps: [
+                {
+                    brief: 'Type in "correct"',
+                    check: (userAnswer) => {
+                        return userAnswer === 'correct';
+                    },
+                    complete: 'You did 1',
+                },
+                {
+                    brief: 'Type in "answer"',
+                    check: (userAnswer) => {
+                        return userAnswer === 'answer';
+                    },
+                    complete: 'You did 2',
+                },
+            ]
+        },
+        {
+            name: 'gamer mission 2',
+            steps: [
+                {
+                    brief: 'Type in "blabla"',
+                    check: (userAnswer) => {
+                        return userAnswer === 'blabla';
+                    }
+                },
+                {
+                    brief: 'Type in "answer"',
+                    check: (userAnswer) => {
+                        return userAnswer === 'answer';
+                    }
+                },
+            ]
+        }
+    ],
+    programmer: [
+        {
+            name: 'programmer mission 1',
+            steps: []
+        }
+    ],
 };
 
 bot.on('message', (msg) => {
@@ -54,10 +77,19 @@ bot.on('message', (msg) => {
                 // todo handlers for different pending statuses
                 // todo pick from available
 
-                const choise = msg.text;
-                const availableMission = user.available[choise];
+                const choice = _.parseInt(msg.text) - 1;
+                const availableMission = user.available[choice];
+                let missionType;
+                let missionStage;
 
-                if (_.isInteger(availableMission)) {
+                if (availableMission) {
+                    // todo >_>
+                    [[missionType, missionStage]] = _.entries(availableMission);
+
+                //}
+                //if (_.isInteger(availableMission)) {
+                    const pickedMission = MISSIONS[missionType][missionStage];
+
                     users.update(
                         {telegramId: userId},
                         {
@@ -65,16 +97,93 @@ bot.on('message', (msg) => {
                                 onMission: true,
                                 // todo own pending status for each mission?
                                 pending: 'mission',
-                                currentMission: MISSIONS[choise][availableMission].name,
-                                missionStep: 0
+                                // same format as in user.available
+                                currentMission: availableMission,
+                                missionStep: 0,
                             }
                         }
                     );
-                    answer = `Mission picked ${MISSIONS[choise][0].name}!\n`;
+
+                    answer =
+                        `Mission picked ${pickedMission.name}!\n
+                        Task: ${pickedMission.steps[0].brief}`;
                 } else {
-                    answer = 'There\'s no such mission';
+                    answer = 'There\'s no such mission. Please type in mission number.';
+                }
+            } else if (user.pending === 'mission') {
+                let {currentMission, missionStep} = user;
+                let [[missionType, missionStage]] = _.entries(currentMission);
+                const pickedMission = MISSIONS[missionType][missionStage];
+                const currentStep = pickedMission.steps[missionStep];
+
+                if (currentStep.check(msg.text)) {
+                    answer = currentStep.complete;
+                } else {
+                    answer = 'Something\'s terribly wrong just happened';
                 }
 
+                // all steps passed
+                if (missionStep + 1 == pickedMission.steps.length) {
+                    let newAvailable = user.available;
+                    const index = newAvailable.indexOf(currentMission[0]);
+
+                    // all missions in this type completed
+                    if (missionStage == MISSIONS[missionType].length) {
+                        newAvailable.splice(index, 1);
+                    } else {
+                        newAvailable[index] = {[missionType]: missionStage + 1};
+                        // todo >_>
+                        // for (let v in newAvailable) {
+                        //     if (_.keys(v)[0] == )
+                        // }
+                    }
+
+                    // users.update(
+                    //     {telegramId: userId},
+                    //     {
+                    //         $set: {
+                    //             onMission: false,
+                    //             available: newAvailable,
+                    //         },
+                    //         $unset: {
+                    //             pending: '',
+                    //             currentMission: '',
+                    //             missionStep: '',
+                    //         }
+                    //     }
+                    // );
+                    users.update(
+                        {telegramId: userId},
+                        {
+                            $set: {
+                                onMission: false,
+                                available: newAvailable,
+                            },
+                        }
+                    );
+
+                    users.update(
+                        {telegramId: userId},
+                        {
+                            $unset: {
+                                pending: '',
+                                currentMission: '',
+                                missionStep: '',
+                            }
+                        }
+                    );
+
+                    answer = `You complete your mission ${pickedMission.name}`;
+                } else {
+                    users.update(
+                        {telegramId: userId},
+                        {
+                            $set: {
+                                missionStep: missionStep + 1,
+                            }
+                        }
+                    );
+                }
             } else if (!user.pending) {
                 answer = HELP_REQUEST;
             }
@@ -94,7 +203,7 @@ bot.on('message', (msg) => {
                 // todo move out user initialization obj
                 users.insert({
                     telegramId: userId,
-                    available: {gamer: 0, programmer: 0}
+                    available: [{gamer: 0}, {programmer: 0}],
                 });
                 answer = 'Successfully added!';
             }
@@ -109,9 +218,22 @@ bot.on('message', (msg) => {
                     {telegramId: userId},
                     {$set: {pending: 'missionChoice'}}
                 );
-                // todo pick from available
-                answer = `Please, choose you mission:\n- gamer\n- programmer`
+
+                // todo >_>
+                // generate message from db info
+                const availabilityMsg = _.reduce(
+                    user.available,
+                    (acc, v, i) => acc + `${i}. ${Object.entries(v)[0][0]}\n`,
+                    '',
+                );
+
+                if (!_.isEmpty(availabilityMsg)) {
+                    answer = `Please, choose you mission: ${availabilityMsg}`;
+                } else {
+                    answer = 'You have no available missions now :(';
+                }
             } else {
+                // todo fix
                 answer = `Your current mission is ${user.currentMission}`;
             }
 
