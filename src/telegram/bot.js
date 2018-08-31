@@ -26,14 +26,14 @@ const MISSIONS = {
                     check: (userAnswer) => {
                         return userAnswer === 'correct';
                     },
-                    complete: 'You did 1',
+                    complete: 'You did gm1-1',
                 },
                 {
                     brief: 'Type in "answer"',
                     check: (userAnswer) => {
                         return userAnswer === 'answer';
                     },
-                    complete: 'You did 2',
+                    complete: 'You did gm1-2',
                 },
             ]
         },
@@ -44,13 +44,15 @@ const MISSIONS = {
                     brief: 'Type in "blabla"',
                     check: (userAnswer) => {
                         return userAnswer === 'blabla';
-                    }
+                    },
+                    complete: 'You did gm2-1',
                 },
                 {
-                    brief: 'Type in "answer"',
+                    brief: 'Type in "qweqwe"',
                     check: (userAnswer) => {
                         return userAnswer === 'answer';
-                    }
+                    },
+                    complete: 'You did gm2-2',
                 },
             ]
         }
@@ -58,7 +60,15 @@ const MISSIONS = {
     programmer: [
         {
             name: 'programmer mission 1',
-            steps: []
+            steps: [
+                {
+                    brief: 'Type in "mamaamaprogrammer"',
+                    check: (userAnswer) => {
+                        return userAnswer === 'mamaamaprogrammer';
+                    },
+                    complete: 'You did pm1-1',
+                },
+            ]
         }
     ],
 };
