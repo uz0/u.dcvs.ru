@@ -70,7 +70,6 @@ bot.on('message', (msg) => {
 
     if (!_.startsWith(msg.text, PREFIX)) {
         users.findOne({telegramId: userId}, (err, user) => {
-            console.log(user);
             if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
             } else if (user.pending === 'missionChoice') {
@@ -105,8 +104,7 @@ bot.on('message', (msg) => {
                     );
 
                     answer =
-                        `Mission picked ${pickedMission.name}!\n
-                        Task: ${pickedMission.steps[0].brief}`;
+                        `Mission picked ${pickedMission.name}!\nTask: ${pickedMission.steps[0].brief}`;
                 } else {
                     answer = 'There\'s no such mission. Please type in mission number.';
                 }
@@ -118,71 +116,71 @@ bot.on('message', (msg) => {
 
                 if (currentStep.check(msg.text)) {
                     answer = currentStep.complete;
+                    // all steps passed
+                    if (missionStep + 1 == pickedMission.steps.length) {
+                        let newAvailable = user.available;
+                        const index = newAvailable.indexOf(currentMission[0]);
+
+                        // all missions in this type completed
+                        if (missionStage == MISSIONS[missionType].length) {
+                            newAvailable.splice(index, 1);
+                        } else {
+                            newAvailable[index] = {[missionType]: missionStage + 1};
+                            // todo >_>
+                            // for (let v in newAvailable) {
+                            //     if (_.keys(v)[0] == )
+                            // }
+                        }
+
+                        // users.update(
+                        //     {telegramId: userId},
+                        //     {
+                        //         $set: {
+                        //             onMission: false,
+                        //             available: newAvailable,
+                        //         },
+                        //         $unset: {
+                        //             pending: '',
+                        //             currentMission: '',
+                        //             missionStep: '',
+                        //         }
+                        //     }
+                        // );
+                        users.update(
+                            {telegramId: userId},
+                            {
+                                $set: {
+                                    onMission: false,
+                                    available: newAvailable,
+                                },
+                            }
+                        );
+
+                        users.update(
+                            {telegramId: userId},
+                            {
+                                $unset: {
+                                    pending: '',
+                                    currentMission: '',
+                                    missionStep: '',
+                                }
+                            }
+                        );
+
+                        answer = `You complete your mission ${pickedMission.name}`;
+                    } else {
+                        answer += `\nNext step: ${pickedMission.steps[missionStep + 1].brief}`;
+                        users.update(
+                            {telegramId: userId},
+                            {
+                                $set: {
+                                    missionStep: missionStep + 1,
+                                }
+                            }
+                        );
+                    }
                 } else {
                     answer = 'Something\'s terribly wrong just happened';
-                }
-
-                // all steps passed
-                if (missionStep + 1 == pickedMission.steps.length) {
-                    let newAvailable = user.available;
-                    const index = newAvailable.indexOf(currentMission[0]);
-
-                    // all missions in this type completed
-                    if (missionStage == MISSIONS[missionType].length) {
-                        newAvailable.splice(index, 1);
-                    } else {
-                        newAvailable[index] = {[missionType]: missionStage + 1};
-                        // todo >_>
-                        // for (let v in newAvailable) {
-                        //     if (_.keys(v)[0] == )
-                        // }
-                    }
-
-                    // users.update(
-                    //     {telegramId: userId},
-                    //     {
-                    //         $set: {
-                    //             onMission: false,
-                    //             available: newAvailable,
-                    //         },
-                    //         $unset: {
-                    //             pending: '',
-                    //             currentMission: '',
-                    //             missionStep: '',
-                    //         }
-                    //     }
-                    // );
-                    users.update(
-                        {telegramId: userId},
-                        {
-                            $set: {
-                                onMission: false,
-                                available: newAvailable,
-                            },
-                        }
-                    );
-
-                    users.update(
-                        {telegramId: userId},
-                        {
-                            $unset: {
-                                pending: '',
-                                currentMission: '',
-                                missionStep: '',
-                            }
-                        }
-                    );
-
-                    answer = `You complete your mission ${pickedMission.name}`;
-                } else {
-                    users.update(
-                        {telegramId: userId},
-                        {
-                            $set: {
-                                missionStep: missionStep + 1,
-                            }
-                        }
-                    );
                 }
             } else if (!user.pending) {
                 answer = HELP_REQUEST;
@@ -223,12 +221,12 @@ bot.on('message', (msg) => {
                 // generate message from db info
                 const availabilityMsg = _.reduce(
                     user.available,
-                    (acc, v, i) => acc + `${i}. ${Object.entries(v)[0][0]}\n`,
+                    (acc, v, i) => acc + `${i + 1}. ${Object.entries(v)[0][0]}\n`,
                     '',
                 );
 
                 if (!_.isEmpty(availabilityMsg)) {
-                    answer = `Please, choose you mission: ${availabilityMsg}`;
+                    answer = `Please, choose you mission:\n${availabilityMsg}`;
                 } else {
                     answer = 'You have no available missions now :(';
                 }
