@@ -122,7 +122,7 @@ bot.on('message', (msg) => {
                         const index = _.findIndex(newAvailable, currentMission);
 
                         // all missions in this type completed
-                        if (missionStage == MISSIONS[missionType].length) {
+                        if (missionStage + 1 == MISSIONS[missionType].length) {
                             newAvailable.splice(index, 1);
                         } else {
                             newAvailable[index] = {[missionType]: missionStage + 1};
