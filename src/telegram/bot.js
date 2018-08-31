@@ -50,7 +50,7 @@ const MISSIONS = {
                 {
                     brief: 'Type in "qweqwe"',
                     check: (userAnswer) => {
-                        return userAnswer === 'answer';
+                        return userAnswer === 'qweqwe';
                     },
                     complete: 'You did gm2-2',
                 },
@@ -222,11 +222,6 @@ bot.on('message', (msg) => {
             if (_.isEmpty(user)) {
                 answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
             } else if (!user.onMission) {
-                users.update(
-                    {telegramId: userId},
-                    {$set: {pending: 'missionChoice'}}
-                );
-
                 // todo >_>
                 // generate message from db info
                 const availabilityMsg = _.reduce(
@@ -236,6 +231,10 @@ bot.on('message', (msg) => {
                 );
 
                 if (!_.isEmpty(availabilityMsg)) {
+                    users.update(
+                        {telegramId: userId},
+                        {$set: {pending: 'missionChoice'}}
+                    );
                     answer = `Please, choose you mission:\n${availabilityMsg}`;
                 } else {
                     answer = 'You have no available missions now :(';
