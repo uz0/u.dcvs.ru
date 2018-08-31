@@ -119,7 +119,10 @@ bot.on('message', (msg) => {
                     // all steps passed
                     if (missionStep + 1 == pickedMission.steps.length) {
                         let newAvailable = user.available;
+                        console.log(newAvailable);
+                        console.log(currentMission[0]);
                         const index = newAvailable.indexOf(currentMission[0]);
+                        console.log(newAvailable);
 
                         // all missions in this type completed
                         if (missionStage == MISSIONS[missionType].length) {
