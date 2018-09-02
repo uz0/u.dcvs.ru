@@ -14,9 +14,9 @@ const bot = new TelegramBot(telegramCfg.credentials.authToken, {polling: true});
 bot.setWebHook(`${config.url}${path}`);
 
 // const managers = {};
-// value is {userId}
+// value is {userId} '122657093' - dc
 const managers = {
-    '201056374': {},
+    '122657093': {},
 };
 let managersIds = _.keys(managers);
 let managersTasks = [];
@@ -37,7 +37,7 @@ bot.on('message', (msg) => {
     const userId = msg.from.id;
     let answer = '';
 
-    if (managersIds.includes(userId)) {
+    if (managersIds.includes(userId.toString())) {
         const managerId = userId;
         if (!managersTasks.length) {
             answer = 'Нет заданий для проверки';
