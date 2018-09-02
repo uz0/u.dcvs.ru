@@ -10,7 +10,7 @@ module.exports = [
                 // todo: XXX eth
                 brief: 'Давай поближе познакомимся, сперва присоединись к моему серверу в Telegram, ведь я существую не только в Discord. Я награжу тебя XXX HTL и расскажу, что требуется сделать дальше.',
                 check: (userAnswer, userId) => {
-                    const match = userAnswer.match(/\d+/)[0];
+                    const match = userAnswer.match(/\d+/);
                     if (match === null) {
                         return false;
                     }

@@ -33,7 +33,7 @@ module.exports = [
                             {telegramId: userId},
                             {
                                 $set: {
-                                    discordId: userAnswer,
+                                    discordId: match[1],
                                 },
                             }
                         );
