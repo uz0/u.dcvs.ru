@@ -163,19 +163,21 @@ bot.on('message', (msg) => {
             bot.sendMessage(msg.chat.id, answer);
         });
     }
+    // todo fix on "!eth"
     else if (cmd.startsWith('eth')) {
         // todo do we need cmd with params ?
-        const ethnum = msg.text.match(/.* (\d+)/)[1];
+        const regexp = msg.text.match(/.* (\d+)/);
+        const ethnum = regexp ? regexp[1] : null;
 
         users.findOne({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
                 answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
             }
-            else if (_.isEmpty(ethnum)) {
-                answer = `Пожалуйста, укажи корректный номер своего ethereum-кошелька через пробел в команде: ${PREFIX}eth номер_кошелька`;
-            }
             else if(!_.isEmpty(user.eth)) {
                 answer = `Номер Ethereum кошелька: ${user.eth}`;
+            }
+            else if (!ethnum) {
+                answer = `Пожалуйста, укажи корректный номер своего ethereum-кошелька через пробел в команде: ${PREFIX}eth номер_кошелька`;
             }
             else {
                 users.update(
