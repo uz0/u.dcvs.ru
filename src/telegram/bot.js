@@ -39,7 +39,7 @@ bot.on('message', (msg) => {
 
     if (managersIds.includes(userId.toString())) {
         const managerId = userId;
-        if (!managersTasks.length) {
+        if (_.isEmpty(managersTasks)) {
             answer = 'Нет заданий для проверки';
         }
         else {
@@ -116,7 +116,7 @@ bot.on('message', (msg) => {
                 } = getCurrentMissionInfo(user);
 
                 if (currentStep.managementCheckRequired) {
-                    managersTasks.append({currentStep, userId, msg: msg.text});
+                    managersTasks.push({currentStep, userId, msg: msg.text});
                     answer = 'Мы отправили задание на проверку менеджеру. Тебе придет уведомление с результатом, когда задание будет проверено';
                 }
                 else if (currentStep.check(msg.text, userId)) {
