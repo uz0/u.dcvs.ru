@@ -191,8 +191,8 @@ bot.on('message', (msg) => {
                 );
                 answer = `Я успешно привязала номер твоего Ethereum кошелька (${ethnum}) к твоему аккаунту`;
             }
+            bot.sendMessage(msg.chat.id, answer);
         });
-        bot.sendMessage(msg.chat.id, answer);
     }
     else if ('help' === cmd) {
         bot.sendMessage(msg.chat.id, HELP_MESSAGE);
