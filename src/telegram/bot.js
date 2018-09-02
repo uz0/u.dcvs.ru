@@ -150,7 +150,7 @@ bot.on('message', (msg) => {
     // todo move out
     else if ('balance' === cmd) {
         users.findOne({telegramId: userId}, (err, user) => {
-            if (!_.isEmpty(user)) {
+            if (_.isEmpty(user)) {
                 answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
             }
             else {
@@ -168,7 +168,7 @@ bot.on('message', (msg) => {
         const ethnum = msg.text.match(/.* (\d+)/g)[1];
 
         users.findOne({telegramId: userId}, (err, user) => {
-            if (!_.isEmpty(user)) {
+            if (_.isEmpty(user)) {
                 answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
             }
             else if (_.isEmpty(ethnum)) {
