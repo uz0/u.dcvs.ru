@@ -2,6 +2,20 @@ const {isOkAnswer} = require("./helpers");
 const {users} = require('../db/mongojs_db');
 
 module.exports = [
+    // {
+    //     name: 'test: management',
+    //     steps: [
+    //         {
+    //             brief: 'Briefing',
+    //             managementCheckRequired: true,
+    //             check: (userAnswer) => {
+    //                 return isOkAnswer(userAnswer);
+    //             },
+    //             complete: 'Отлично! Тебе доступна следующая миссия по команде "!mission".',
+    //         },
+    //     ],
+    //     reward: 1,
+    // },
     {
         name: 'Про дискорд',
         steps: [
