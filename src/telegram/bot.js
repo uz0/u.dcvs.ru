@@ -39,7 +39,7 @@ bot.on('message', (msg) => {
 
     if (managersIds.includes(userId.toString())) {
         const managerId = userId;
-        if (_.isEmpty(managersTasks)) {
+        if (_.isEmpty(managersTasks) && _.isEmpty(managers[managerId])) {
             answer = 'Нет заданий для проверки';
         }
         else {
