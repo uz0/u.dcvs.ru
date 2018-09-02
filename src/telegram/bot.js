@@ -107,62 +107,17 @@ bot.on('message', (msg) => {
                     answer = 'Миссии с таким номером нет, среди предложенных =\\';
                 }
             } else if (user.pending === 'mission') {
-                let {currentMission, missionStep} = user;
-                let [[missionType, missionStage]] = _.entries(currentMission);
-                const pickedMission = MISSIONS[missionType][missionStage];
-                const currentStep = pickedMission.steps[missionStep];
+                const {
+                    pickedMission,
+                    currentStep,
+                } = getCurrentMissionInfo(user);
 
                 if (currentStep.managementCheckRequired) {
                     managersTasks.append({currentStep, userId, msg: msg.text});
                     answer = 'Мы отправили задание на проверку менеджеру. Тебе придет уведомление с результатом, когда задание будет проверено';
                 }
                 else if (currentStep.check(msg.text, userId)) {
-                    const completionMsg = currentStep.complete;
-                    // all steps passed
-                    if (missionStep + 1 == pickedMission.steps.length) {
-                        let newAvailable = user.available;
-                        const index = _.findIndex(newAvailable, currentMission);
-
-                        // all missions in this type completed
-                        if (missionStage + 1 == MISSIONS[missionType].length) {
-                            newAvailable.splice(index, 1);
-                        } else {
-                            newAvailable[index] = {[missionType]: missionStage + 1};
-                        }
-
-                        users.update(
-                            {telegramId: userId},
-                            {
-                                $set: {
-                                    onMission: false,
-                                    available: newAvailable,
-                                    balance: pickedMission.reward ? user.balance + pickedMission.reward : user.balance,
-                                },
-                            }
-                        );
-                        users.update(
-                            {telegramId: userId},
-                            {
-                                $unset: {
-                                    pending: '',
-                                    currentMission: '',
-                                    missionStep: '',
-                                }
-                            }
-                        );
-
-                        answer = completionMsg + `\nВы выполнили миссию ${pickedMission.name}`;
-                    } else {
-                        answer += `\nСледующий шаг: ${pickedMission.steps[missionStep + 1].brief}`;
-                        users.update(
-                            {telegramId: userId},
-                            {
-                                $set: {
-                                    missionStep: missionStep + 1,
-                                }
-                            }
-                        );
-                    }
+                    answer = stepCompletion(user);
                 } else {
                     answer = pickedMission.fail ?
                         pickedMission.fail() :
@@ -298,5 +253,84 @@ bot.on('message', (msg) => {
 //       from: null,
 //     }));
 // });
+
+function getCurrentMissionInfo(user) {
+    let {currentMission, missionStep} = user;
+    let [[missionType, missionStage]] = _.entries(currentMission);
+    const pickedMission = MISSIONS[missionType][missionStage];
+    const currentStep = pickedMission.steps[missionStep];
+
+    return {
+        currentMission,
+        missionType,
+        missionStage,
+        missionStep,
+        pickedMission,
+        currentStep,
+    }
+}
+
+// todo move out
+// todo naming <__>
+function stepCompletion(user) {
+    const {
+        currentMission,
+        missionType,
+        missionStage,
+        missionStep,
+        pickedMission,
+        currentStep,
+    } = getCurrentMissionInfo(user);
+    const completionMsg = currentStep.complete;
+    let answer = '';
+
+    // all steps passed
+    if (missionStep + 1 == pickedMission.steps.length) {
+        let newAvailable = user.available;
+        const userId = user.telegramId;
+        const index = _.findIndex(newAvailable, currentMission);
+
+        // all missions in this type completed
+        if (missionStage + 1 == MISSIONS[missionType].length) {
+            newAvailable.splice(index, 1);
+        } else {
+            newAvailable[index] = {[missionType]: missionStage + 1};
+        }
+
+        users.update(
+            {telegramId: userId},
+            {
+                $set: {
+                    onMission: false,
+                    available: newAvailable,
+                    balance: pickedMission.reward ? user.balance + pickedMission.reward : user.balance,
+                },
+            }
+        );
+        users.update(
+            {telegramId: userId},
+            {
+                $unset: {
+                    pending: '',
+                    currentMission: '',
+                    missionStep: '',
+                }
+            }
+        );
+
+        answer = completionMsg + `\nВы выполнили миссию ${pickedMission.name}`;
+    } else {
+        answer += `\nСледующий шаг: ${pickedMission.steps[missionStep + 1].brief}`;
+        users.update(
+            {telegramId: userId},
+            {
+                $set: {
+                    missionStep: missionStep + 1,
+                }
+            }
+        );
+    }
+    return answer;
+}
 
 module.exports = bot;
