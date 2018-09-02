@@ -165,12 +165,9 @@ bot.on('message', (msg) => {
     }
     else if (cmd.startsWith('eth')) {
         // todo do we need cmd with params ?
-        const ethnum = msg.text.match(/.* (\d+)/g)[1];
+        const ethnum = msg.text.match(/.* (\d+)/)[1];
 
         users.findOne({telegramId: userId}, (err, user) => {
-            console.log(user);
-            console.log(ethnum);
-            console.log(userId);
             if (_.isEmpty(user)) {
                 answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
             }
