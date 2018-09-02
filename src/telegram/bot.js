@@ -13,7 +13,8 @@ const path = `/telegram/${config.telegram.webhookEndpoint}${telegramCfg.credenti
 const bot = new TelegramBot(telegramCfg.credentials.authToken, {polling: true});
 bot.setWebHook(`${config.url}${path}`);
 
-const managers = ['201056374'];
+// '201056374'
+const managers = [];
 let managersTasks = [];
 
 const HELP_MESSAGE =
@@ -36,9 +37,13 @@ bot.on('message', (msg) => {
         if (!managersTasks.length) {
             answer = 'Нет заданий для проверки';
         }
-        if (isOkAnswer(cmd)) {
-
+        else if (isOkAnswer(cmd)) {
+            answer = 'Засчитано';
         }
+        else {
+            answer = 'Не засчитано';
+        }
+        bot.sendMessage(msg.chat.id, answer);
     }
     else if (!_.startsWith(msg.text, PREFIX)) {
         users.findOne({telegramId: userId}, (err, user) => {
@@ -47,7 +52,6 @@ bot.on('message', (msg) => {
             } else if (user.pending === 'missionChoice') {
                 // todo handlers for different pending statuses
                 // todo pick from available
-
                 const choice = _.parseInt(msg.text) - 1;
                 const availableMission = user.available[choice];
                 let missionType;
@@ -86,7 +90,7 @@ bot.on('message', (msg) => {
                 const pickedMission = MISSIONS[missionType][missionStage];
                 const currentStep = pickedMission.steps[missionStep];
 
-                if (currentStep.check(msg.text)) {
+                if (currentStep.check(msg.text, userId)) {
                     answer = currentStep.complete;
                     // all steps passed
                     if (missionStep + 1 == pickedMission.steps.length) {
@@ -197,9 +201,10 @@ bot.on('message', (msg) => {
             }
             else {
                 // todo move out user initialization obj
+                // todo remove gamer and programmer ? (for discord)
                 users.insert({
                     telegramId: userId,
-                    available: [{gamer: 0}, {programmer: 0}, {investor: 0}],
+                    available: [{gamer: 0}, {programmer: 0}, {publisher: 0}, {investor: 0},],
                     balance: 0,
                 });
                 answer = 'Ваш телеграм добавлен!';

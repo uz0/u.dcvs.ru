@@ -1,4 +1,5 @@
 const {isOkAnswer} = require("./helpers");
+const {users} = require('../db/mongojs_db');
 
 module.exports = [
     {
@@ -8,12 +9,20 @@ module.exports = [
                 // todo: link to bot ?
                 // todo: XXX eth
                 brief: 'Давай поближе познакомимся, сперва присоединись к моему серверу в Discord, ведь я существую не только в Telegram. Я награжу тебя XXX HTL и расскажу, что требуется сделать дальше. Скажи мне свой Discord-tag.',
-                check: (userAnswer, user) => {
+                check: (userAnswer, userId) => {
                     const match = userAnswer.match(/.*#(\d+)/);
                     if (match === null) {
                         return false;
                     }
                     else {
+                        users.update(
+                            {telegramId: userId},
+                            {
+                                $set: {
+                                    discordId: userAnswer,
+                                },
+                            }
+                        );
                         return true;
                     }
                 },
@@ -45,6 +54,7 @@ module.exports = [
                 // todo: link
                 // todo: autocheck
                 brief: 'Пользователь делает репост одной из наших публикаций в Facebook, вот наша страничка: %http://link%\nЗадание будет засчитано после подтверждения менеджером',
+                // todo add facebook id to db?
                 check: (userAnswer) => {
                     return isOkAnswer(userAnswer);
                 },
