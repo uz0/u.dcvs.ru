@@ -13,65 +13,16 @@ const path = `/telegram/${config.telegram.webhookEndpoint}${telegramCfg.credenti
 const bot = new TelegramBot(telegramCfg.credentials.authToken, {polling: true});
 bot.setWebHook(`${config.url}${path}`);
 
-const HELP_MESSAGE =`${PREFIX}mission to get a new task or get info about your current task;`;
+
+const HELP_MESSAGE =
+    `${PREFIX}balance\t- посмотреть текущий баланс` +
+    `${PREFIX}eth eth_num\t- привязка ethereum кошелька с номером eth_num` +
+    `${PREFIX}hiper\t- привязать телеграм` +
+    `${PREFIX}mission\t- получить новое задание или просмотреть текущее` +
+    `${PREFIX}request\t- сделать запрос на вывод средств`;
 const HELP_REQUEST = `No such command, try ${PREFIX}help`;
 
-const MISSIONS = {
-    gamer: [
-        {
-            name: 'gamer mission 1',
-            steps: [
-                {
-                    brief: 'Type in "correct"',
-                    check: (userAnswer) => {
-                        return userAnswer === 'correct';
-                    },
-                    complete: 'You did gm1-1',
-                },
-                {
-                    brief: 'Type in "answer"',
-                    check: (userAnswer) => {
-                        return userAnswer === 'answer';
-                    },
-                    complete: 'You did gm1-2',
-                },
-            ]
-        },
-        {
-            name: 'gamer mission 2',
-            steps: [
-                {
-                    brief: 'Type in "blabla"',
-                    check: (userAnswer) => {
-                        return userAnswer === 'blabla';
-                    },
-                    complete: 'You did gm2-1',
-                },
-                {
-                    brief: 'Type in "qweqwe"',
-                    check: (userAnswer) => {
-                        return userAnswer === 'qweqwe';
-                    },
-                    complete: 'You did gm2-2',
-                },
-            ]
-        }
-    ],
-    programmer: [
-        {
-            name: 'programmer mission 1',
-            steps: [
-                {
-                    brief: 'Type in "mamaamaprogrammer"',
-                    check: (userAnswer) => {
-                        return userAnswer === 'mamaamaprogrammer';
-                    },
-                    complete: 'You did pm1-1',
-                },
-            ]
-        }
-    ],
-};
+const MISSIONS = require('../missions');
 
 bot.on('message', (msg) => {
     const cmd = _.trimStart(msg.text, PREFIX);
@@ -81,7 +32,7 @@ bot.on('message', (msg) => {
     if (!_.startsWith(msg.text, PREFIX)) {
         users.findOne({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
-                answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
+                answer = `Пожалуйста, активируй свой аккаунт с помощью команды ${PREFIX}hiper прежде, чем мы сможем продолжить.`;
             } else if (user.pending === 'missionChoice') {
                 // todo handlers for different pending statuses
                 // todo pick from available
@@ -116,7 +67,7 @@ bot.on('message', (msg) => {
                     answer =
                         `Mission picked ${pickedMission.name}!\nTask: ${pickedMission.steps[0].brief}`;
                 } else {
-                    answer = 'There\'s no such mission. Please type in mission number.';
+                    answer = 'Миссии с таким номером нет, среди предложенных =\\';
                 }
             } else if (user.pending === 'mission') {
                 let {currentMission, missionStep} = user;
@@ -136,26 +87,8 @@ bot.on('message', (msg) => {
                             newAvailable.splice(index, 1);
                         } else {
                             newAvailable[index] = {[missionType]: missionStage + 1};
-                            // todo >_>
-                            // for (let v in newAvailable) {
-                            //     if (_.keys(v)[0] == )
-                            // }
                         }
 
-                        // users.update(
-                        //     {telegramId: userId},
-                        //     {
-                        //         $set: {
-                        //             onMission: false,
-                        //             available: newAvailable,
-                        //         },
-                        //         $unset: {
-                        //             pending: '',
-                        //             currentMission: '',
-                        //             missionStep: '',
-                        //         }
-                        //     }
-                        // );
                         users.update(
                             {telegramId: userId},
                             {
@@ -165,7 +98,6 @@ bot.on('message', (msg) => {
                                 },
                             }
                         );
-
                         users.update(
                             {telegramId: userId},
                             {
@@ -198,11 +130,52 @@ bot.on('message', (msg) => {
             bot.sendMessage(msg.chat.id, answer);
         });
     }
-
     // todo move out
+    else if ('balance' === cmd) {
+        users.findOne({telegramId: userId}, (err, user) => {
+            if (!_.isEmpty(user)) {
+                answer = `Пожалуйста, активируй свой аккаунт с помощью команды ${PREFIX}hiper прежде, чем мы сможем продолжить.`;
+            }
+            else {
+                // todo move out user initialization obj
+                answer = `Твой баланс: ${user.balance}.`;
+                if (_.isEmpty(user.eth)) {
+                    answer += `Сперва мне требуется твой Ethereum адрес, чтобы перевести на него токены. Сообщи мне его через команду ${PREFIX}eth и далее номер через пробел.`;
+                }
+            }
+            bot.sendMessage(msg.chat.id, answer);
+        });
+    }
+    else if ('eth' === cmd) {
+        // todo do we need cmd with params ?
+        const ethnum = msg.text.match(/.* (\d+)/)[1];
+        if (_.isEmpty(ethnum)) {
+            answer = `Пожалуйста, укажи корректный номер своего ethereum-кошелька через пробел в команде: ${PREFIX}eth номер_кошелька`;
+        }
+        else {
+            users.findOne({telegramId: userId}, (err, user) => {
+                if (!_.isEmpty(user)) {
+                    answer = `Пожалуйста, активируй свой аккаунт с помощью команды ${PREFIX}hiper прежде, чем мы сможем продолжить.`;
+                }
+                else {
+                    users.update(
+                        {telegramId: userId},
+                        {
+                            $set: {
+                                eth: ethnum,
+                            },
+                        }
+                    );
+                    answer = `Я успешно привязала номер твоего Ethereum кошелька (${ethnum}) к твоему аккаунту`;
+                }
+            });
+        }
+        bot.sendMessage(msg.chat.id, answer);
+    }
     else if ('help' === cmd) {
         bot.sendMessage(msg.chat.id, HELP_MESSAGE);
-    } else if ('hiper' === cmd) {
+    }
+    else if ('hiper' === cmd) {
         users.findOne({telegramId: userId}, (err, user) => {
             if (!_.isEmpty(user)) {
                 answer = 'Already signed!';
@@ -211,16 +184,18 @@ bot.on('message', (msg) => {
                 // todo move out user initialization obj
                 users.insert({
                     telegramId: userId,
-                    available: [{gamer: 0}, {programmer: 0}],
+                    available: [{gamer: 0}, {programmer: 0}, {investor: 0}],
+                    balance: 0,
                 });
                 answer = 'Successfully added!';
             }
             bot.sendMessage(msg.chat.id, answer);
         });
-    } else if ('mission' === cmd) {
+    }
+    else if ('mission' === cmd) {
         users.findOne({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
-                answer = `Please, type ${PREFIX}hiper to sign in before get a mission`;
+                answer = `Пожалуйста, активируй свой аккаунт с помощью команды ${PREFIX}hiper прежде, чем мы сможем продолжить.`;
             } else if (!user.onMission) {
                 // todo >_>
                 // generate message from db info
@@ -235,9 +210,9 @@ bot.on('message', (msg) => {
                         {telegramId: userId},
                         {$set: {pending: 'missionChoice'}}
                     );
-                    answer = `Please, choose you mission:\n${availabilityMsg}`;
+                    answer = `Пожалуйста, выбери миссию:\n${availabilityMsg}`;
                 } else {
-                    answer = 'You have no available missions now :(';
+                    answer = 'Ты выполнил все миссии, молодец!';
                 }
             } else {
                 // todo fix
@@ -246,7 +221,11 @@ bot.on('message', (msg) => {
 
             bot.sendMessage(msg.chat.id, answer);
         });
-    } else {
+    }
+    else if ('request' === cmd) {
+
+    }
+    else {
         bot.sendMessage(msg.chat.id, HELP_REQUEST);
     }
 });
