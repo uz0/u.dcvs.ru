@@ -13,8 +13,12 @@ const path = `/telegram/${config.telegram.webhookEndpoint}${telegramCfg.credenti
 const bot = new TelegramBot(telegramCfg.credentials.authToken, {polling: true});
 bot.setWebHook(`${config.url}${path}`);
 
-// '201056374'
-const managers = [];
+const managers = {};
+// value is {userId}
+// const managers = {
+//     '201056374': {},
+// };
+let managersIds = _.keys(managers);
 let managersTasks = [];
 
 const HELP_MESSAGE =
@@ -23,7 +27,7 @@ const HELP_MESSAGE =
     `${PREFIX}hiper\t- привязать телеграм\n` +
     `${PREFIX}mission\t- получить новое задание или просмотреть текущее\n` +
     `${PREFIX}request\t- сделать запрос на вывод средств`;
-const HELP_REQUEST = `No such command, try ${PREFIX}help`;
+const HELP_REQUEST = `Такой команды нет, посмотри в список доступных команд с помощью:\n${PREFIX}help`;
 
 const MISSIONS = require('../missions');
 const {isOkAnswer} = require("../missions/helpers");
@@ -33,19 +37,40 @@ bot.on('message', (msg) => {
     const userId = msg.from.id;
     let answer = '';
 
-    if (managers.includes(userId)) {
-        if (!managersTasks.length) {
-            answer = 'Нет заданий для проверки';
-        }
-        else if (isOkAnswer(cmd)) {
-            answer = 'Засчитано';
-        }
-        else {
-            answer = 'Не засчитано';
-        }
-        bot.sendMessage(msg.chat.id, answer);
-    }
-    else if (!_.startsWith(msg.text, PREFIX)) {
+    // if (managersIds.includes(userId)) {
+    //     const managerId = userId;
+    //     if (!managersTasks.length) {
+    //         answer = 'Нет заданий для проверки';
+    //     }
+    //     else {
+    //         if ('get' === cmd) {
+    //             const {currentStep, userId: uid, msg} = managersTasks.shift();
+    //             answer = `$Задание: ${currentStep.brief}\nОтвет: ${msg}`;
+    //             managers[managerId] = {uid};
+    //         }
+    //         else if (cmd.startsWith('check')) {
+    //             let answerToUser;
+    //             const {uid} = managers[managerId];
+    //             const regexp = msg.text.match(/.* (\d+)/);
+    //             const checkRes = regexp ? regexp[1] : null;
+    //
+    //             if (isOkAnswer(checkRes)) {
+    //                 answer = 'Засчитано';
+    //                 answerToUser = 'Задание проверено менеджером и засчитано';
+    //                 // todo update users state
+    //             }
+    //             else {
+    //                 answerToUser = 'Задание проверено менеджером и засчитано';
+    //                 answer = 'Не засчитано';
+    //             }
+    //
+    //             managers[managerId] = {};
+    //             bot.sendMessage(uid, answerToUser);
+    //         }
+    //     }
+    //     bot.sendMessage(msg.chat.id, answer);
+    // } else
+    if (!_.startsWith(msg.text, PREFIX)) {
         users.findOne({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
                 answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
@@ -60,9 +85,6 @@ bot.on('message', (msg) => {
                 if (availableMission) {
                     // todo >_>
                     [[missionType, missionStage]] = _.entries(availableMission);
-
-                //}
-                //if (_.isInteger(availableMission)) {
                     const pickedMission = MISSIONS[missionType][missionStage];
 
                     users.update(
@@ -90,7 +112,11 @@ bot.on('message', (msg) => {
                 const pickedMission = MISSIONS[missionType][missionStage];
                 const currentStep = pickedMission.steps[missionStep];
 
-                if (currentStep.check(msg.text, userId)) {
+                if (currentStep.managementCheckRequired) {
+                    managersTasks.append({currentStep, userId, msg: msg.text});
+                    answer = 'Мы отправили задание на проверку менеджеру. Тебе придет уведомление с результатом, когда задание будет проверено';
+                }
+                else if (currentStep.check(msg.text, userId)) {
                     const completionMsg = currentStep.complete;
                     // all steps passed
                     if (missionStep + 1 == pickedMission.steps.length) {
