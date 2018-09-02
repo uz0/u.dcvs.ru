@@ -14,23 +14,33 @@ const bot = new TelegramBot(telegramCfg.credentials.authToken, {polling: true});
 bot.setWebHook(`${config.url}${path}`);
 
 const managers = ['201056374'];
+let managersTasks = [];
 
 const HELP_MESSAGE =
-    `${PREFIX}balance\t- посмотреть текущий баланс` +
-    `${PREFIX}eth eth_num\t- привязка ethereum кошелька с номером eth_num` +
-    `${PREFIX}hiper\t- привязать телеграм` +
-    `${PREFIX}mission\t- получить новое задание или просмотреть текущее` +
+    `${PREFIX}balance\t- посмотреть текущий баланс\n` +
+    `${PREFIX}eth eth_num\t- привязка ethereum кошелька с номером eth_num\n` +
+    `${PREFIX}hiper\t- привязать телеграм\n` +
+    `${PREFIX}mission\t- получить новое задание или просмотреть текущее\n` +
     `${PREFIX}request\t- сделать запрос на вывод средств`;
 const HELP_REQUEST = `No such command, try ${PREFIX}help`;
 
 const MISSIONS = require('../missions');
+const {isOkAnswer} = require("../missions/helpers");
 
 bot.on('message', (msg) => {
     const cmd = _.trimStart(msg.text, PREFIX);
     const userId = msg.from.id;
     let answer = '';
 
-    if (!_.startsWith(msg.text, PREFIX)) {
+    if (managers.includes(userId)) {
+        if (!managersTasks.length) {
+            answer = 'Нет заданий для проверки';
+        }
+        if (isOkAnswer(cmd)) {
+
+        }
+    }
+    else if (!_.startsWith(msg.text, PREFIX)) {
         users.findOne({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
                 answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
@@ -151,28 +161,30 @@ bot.on('message', (msg) => {
     }
     else if ('eth' === cmd) {
         // todo do we need cmd with params ?
-        const ethnum = msg.text.match(/.* (\d+)/)[1];
-        if (_.isEmpty(ethnum)) {
-            answer = `Пожалуйста, укажи корректный номер своего ethereum-кошелька через пробел в команде: ${PREFIX}eth номер_кошелька`;
-        }
-        else {
-            users.findOne({telegramId: userId}, (err, user) => {
-                if (!_.isEmpty(user)) {
-                    answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
-                }
-                else {
-                    users.update(
-                        {telegramId: userId},
-                        {
-                            $set: {
-                                eth: ethnum,
-                            },
-                        }
-                    );
-                    answer = `Я успешно привязала номер твоего Ethereum кошелька (${ethnum}) к твоему аккаунту`;
-                }
-            });
-        }
+        const ethnum = msg.text.match(/.* (\d+)/g)[1];
+
+        users.findOne({telegramId: userId}, (err, user) => {
+            if (!_.isEmpty(user)) {
+                answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
+            }
+            else if (_.isEmpty(ethnum)) {
+                answer = `Пожалуйста, укажи корректный номер своего ethereum-кошелька через пробел в команде: ${PREFIX}eth номер_кошелька`;
+            }
+            else if(!_.isEmpty(user.eth)) {
+                answer = `Номер Ethereum кошелька: ${user.eth}`;
+            }
+            else {
+                users.update(
+                    {telegramId: userId},
+                    {
+                        $set: {
+                            eth: ethnum,
+                        },
+                    }
+                );
+                answer = `Я успешно привязала номер твоего Ethereum кошелька (${ethnum}) к твоему аккаунту`;
+            }
+        });
         bot.sendMessage(msg.chat.id, answer);
     }
     else if ('help' === cmd) {
