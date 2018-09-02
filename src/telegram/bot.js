@@ -16,7 +16,7 @@ bot.setWebHook(`${config.url}${path}`);
 // const managers = {};
 // value is {userId} '122657093' - dc
 const managers = {
-    '122657093': {},
+    // '122657093': {},
 };
 let managersIds = _.keys(managers);
 let managersTasks = [];
@@ -242,6 +242,18 @@ bot.on('message', (msg) => {
             }
             bot.sendMessage(msg.chat.id, answer);
         });
+    }
+    // todo delete this pls
+    else if ('makememanager' === cmd) {
+        if (managersIds.includes(userId.toString())) {
+            answer = 'Вы уже манагер';
+        }
+        else {
+            managers.push(userId.toString());
+            managersIds = _.keys(managers);
+            answer = 'Ща добавлю';
+        }
+        bot.sendMessage(msg.chat.id, answer);
     }
     else {
         bot.sendMessage(msg.chat.id, HELP_REQUEST);
