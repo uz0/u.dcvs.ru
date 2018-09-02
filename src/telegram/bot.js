@@ -45,14 +45,13 @@ bot.on('message', (msg) => {
         else {
             if ('get' === cmd) {
                 const {currentStep, userId: uid, msg} = managersTasks.shift();
-                answer = `$Задание: ${currentStep.brief}\nОтвет: ${msg}`;
+                answer = `Задание: ${currentStep.brief}\nОтвет: ${msg}\nНапишите:\n!check ok - если все верно\n!check neok - если нужны исправления`;
                 managers[managerId] = {uid};
             }
             else if (cmd.startsWith('check')) {
                 let answerToUser;
                 const {uid} = managers[managerId];
-                const regexp = msg.text.match(/.* (\d+)/);
-                const checkRes = regexp ? regexp[1] : null;
+                const checkRes = msg.text.split(' ')[];
 
                 if (isOkAnswer(checkRes)) {
                     answer = 'Засчитано';
