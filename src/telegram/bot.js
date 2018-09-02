@@ -51,7 +51,7 @@ bot.on('message', (msg) => {
             else if (cmd.startsWith('check')) {
                 let answerToUser;
                 const {uid} = managers[managerId];
-                const checkRes = msg.text.split(' ')[];
+                const checkRes = msg.text.split(' ')[1];
 
                 if (isOkAnswer(checkRes)) {
                     answer = 'Засчитано';
