@@ -91,7 +91,7 @@ bot.on('message', (msg) => {
                 const currentStep = pickedMission.steps[missionStep];
 
                 if (currentStep.check(msg.text, userId)) {
-                    answer = currentStep.complete;
+                    const completionMsg = currentStep.complete;
                     // all steps passed
                     if (missionStep + 1 == pickedMission.steps.length) {
                         let newAvailable = user.available;
@@ -124,7 +124,7 @@ bot.on('message', (msg) => {
                             }
                         );
 
-                        answer = answer + `\nВы выполнили миссию ${pickedMission.name}`;
+                        answer = completionMsg + `\nВы выполнили миссию ${pickedMission.name}`;
                     } else {
                         answer += `\nСледующий шаг: ${pickedMission.steps[missionStep + 1].brief}`;
                         users.update(
