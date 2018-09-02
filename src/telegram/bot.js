@@ -13,11 +13,11 @@ const path = `/telegram/${config.telegram.webhookEndpoint}${telegramCfg.credenti
 const bot = new TelegramBot(telegramCfg.credentials.authToken, {polling: true});
 bot.setWebHook(`${config.url}${path}`);
 
-const managers = {};
+// const managers = {};
 // value is {userId}
-// const managers = {
-//     '201056374': {},
-// };
+const managers = {
+    '201056374': {},
+};
 let managersIds = _.keys(managers);
 let managersTasks = [];
 
@@ -58,6 +58,9 @@ bot.on('message', (msg) => {
                     answer = 'Засчитано';
                     answerToUser = 'Задание проверено менеджером и засчитано';
                     // todo update users state
+                    users.findOne({telegramId: uid}, (err, user) => {
+                        answerToUser += stepCompletion(user);
+                    });
                 }
                 else {
                     answerToUser = 'Задание проверено менеджером и не засчитано. Вышлите ответ еще раз.';
