@@ -13,6 +13,7 @@ const path = `/telegram/${config.telegram.webhookEndpoint}${telegramCfg.credenti
 const bot = new TelegramBot(telegramCfg.credentials.authToken, {polling: true});
 bot.setWebHook(`${config.url}${path}`);
 
+const managers = ['201056374'];
 
 const HELP_MESSAGE =
     `${PREFIX}balance\t- посмотреть текущий баланс` +
@@ -27,12 +28,12 @@ const MISSIONS = require('../missions');
 bot.on('message', (msg) => {
     const cmd = _.trimStart(msg.text, PREFIX);
     const userId = msg.from.id;
-    let answer;
+    let answer = '';
 
     if (!_.startsWith(msg.text, PREFIX)) {
         users.findOne({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
-                answer = `Пожалуйста, активируй свой аккаунт с помощью команды ${PREFIX}hiper прежде, чем мы сможем продолжить.`;
+                answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
             } else if (user.pending === 'missionChoice') {
                 // todo handlers for different pending statuses
                 // todo pick from available
@@ -65,7 +66,7 @@ bot.on('message', (msg) => {
                     );
 
                     answer =
-                        `Mission picked ${pickedMission.name}!\nTask: ${pickedMission.steps[0].brief}`;
+                        `Вы выбрали миссию ${pickedMission.name}!\nЗадание: ${pickedMission.steps[0].brief}`;
                 } else {
                     answer = 'Миссии с таким номером нет, среди предложенных =\\';
                 }
@@ -109,9 +110,9 @@ bot.on('message', (msg) => {
                             }
                         );
 
-                        answer = `You complete your mission ${pickedMission.name}`;
+                        answer = `Вы выполнили миссию ${pickedMission.name}`;
                     } else {
-                        answer += `\nNext step: ${pickedMission.steps[missionStep + 1].brief}`;
+                        answer += `\nСледующий шаг: ${pickedMission.steps[missionStep + 1].brief}`;
                         users.update(
                             {telegramId: userId},
                             {
@@ -122,7 +123,9 @@ bot.on('message', (msg) => {
                         );
                     }
                 } else {
-                    answer = 'Something\'s terribly wrong just happened';
+                    answer = pickedMission.fail ?
+                        pickedMission.fail() :
+                        'Проверка задания провалена :( Попробуй исправить и выслать ответ ещё раз.';
                 }
             } else if (!user.pending) {
                 answer = HELP_REQUEST;
@@ -134,7 +137,7 @@ bot.on('message', (msg) => {
     else if ('balance' === cmd) {
         users.findOne({telegramId: userId}, (err, user) => {
             if (!_.isEmpty(user)) {
-                answer = `Пожалуйста, активируй свой аккаунт с помощью команды ${PREFIX}hiper прежде, чем мы сможем продолжить.`;
+                answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
             }
             else {
                 // todo move out user initialization obj
@@ -155,7 +158,7 @@ bot.on('message', (msg) => {
         else {
             users.findOne({telegramId: userId}, (err, user) => {
                 if (!_.isEmpty(user)) {
-                    answer = `Пожалуйста, активируй свой аккаунт с помощью команды ${PREFIX}hiper прежде, чем мы сможем продолжить.`;
+                    answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
                 }
                 else {
                     users.update(
@@ -187,7 +190,7 @@ bot.on('message', (msg) => {
                     available: [{gamer: 0}, {programmer: 0}, {investor: 0}],
                     balance: 0,
                 });
-                answer = 'Successfully added!';
+                answer = 'Ваш телеграм добавлен!';
             }
             bot.sendMessage(msg.chat.id, answer);
         });
@@ -195,7 +198,7 @@ bot.on('message', (msg) => {
     else if ('mission' === cmd) {
         users.findOne({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
-                answer = `Пожалуйста, активируй свой аккаунт с помощью команды ${PREFIX}hiper прежде, чем мы сможем продолжить.`;
+                answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
             } else if (!user.onMission) {
                 // todo >_>
                 // generate message from db info
@@ -216,14 +219,26 @@ bot.on('message', (msg) => {
                 }
             } else {
                 // todo fix
-                answer = `Your current mission is ${user.currentMission}`;
+                answer = `Текущая миссия: ${user.currentMission}`;
             }
 
             bot.sendMessage(msg.chat.id, answer);
         });
     }
     else if ('request' === cmd) {
-
+        users.findOne({telegramId: userId}, (err, user) => {
+            if (_.isEmpty(user)) {
+                answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
+            }
+            else if (_.isEmpty(user.eth)) {
+                answer = `Сперва мне требуется твой Ethereum адрес, чтобы перевести на него токены. Сообщи мне его через команду ${PREFIX}eth и далее номер через пробел.`;
+            }
+            else {
+                // todo transaction here
+                answer = `Твой текущий баланс – ХХХ HTL. Чтобы получить токены на свой кошелек, воспользуйся командой ${PREFIX}request После этого запроса я сформирую транзакцию и скажу тебе точную дату получения. Учти что на все токены распространяется вестинг, это значит, что после получения они будут заморожены на срок 5 месяцев.`;
+            }
+            bot.sendMessage(msg.chat.id, answer);
+        });
     }
     else {
         bot.sendMessage(msg.chat.id, HELP_REQUEST);
