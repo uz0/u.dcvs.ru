@@ -124,7 +124,7 @@ bot.on('message', (msg) => {
                             }
                         );
 
-                        answer = `Вы выполнили миссию ${pickedMission.name}`;
+                        answer = answer + `\nВы выполнили миссию ${pickedMission.name}`;
                     } else {
                         answer += `\nСледующий шаг: ${pickedMission.steps[missionStep + 1].brief}`;
                         users.update(
@@ -207,7 +207,7 @@ bot.on('message', (msg) => {
                     available: [{gamer: 0}, {programmer: 0}, {publisher: 0}, {investor: 0},],
                     balance: 0,
                 });
-                answer = 'Ваш телеграм добавлен!';
+                answer = `Ваш телеграм добавлен!\nВот список доступных команд:\n${HELP_MESSAGE}`;
             }
             bot.sendMessage(msg.chat.id, answer);
         });
