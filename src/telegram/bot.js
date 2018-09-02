@@ -163,7 +163,7 @@ bot.on('message', (msg) => {
             bot.sendMessage(msg.chat.id, answer);
         });
     }
-    else if ('eth' === cmd) {
+    else if (cmd.startsWith('eth')) {
         // todo do we need cmd with params ?
         const ethnum = msg.text.match(/.* (\d+)/g)[1];
 
