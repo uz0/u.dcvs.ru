@@ -37,40 +37,40 @@ bot.on('message', (msg) => {
     const userId = msg.from.id;
     let answer = '';
 
-    // if (managersIds.includes(userId)) {
-    //     const managerId = userId;
-    //     if (!managersTasks.length) {
-    //         answer = 'Нет заданий для проверки';
-    //     }
-    //     else {
-    //         if ('get' === cmd) {
-    //             const {currentStep, userId: uid, msg} = managersTasks.shift();
-    //             answer = `$Задание: ${currentStep.brief}\nОтвет: ${msg}`;
-    //             managers[managerId] = {uid};
-    //         }
-    //         else if (cmd.startsWith('check')) {
-    //             let answerToUser;
-    //             const {uid} = managers[managerId];
-    //             const regexp = msg.text.match(/.* (\d+)/);
-    //             const checkRes = regexp ? regexp[1] : null;
-    //
-    //             if (isOkAnswer(checkRes)) {
-    //                 answer = 'Засчитано';
-    //                 answerToUser = 'Задание проверено менеджером и засчитано';
-    //                 // todo update users state
-    //             }
-    //             else {
-    //                 answerToUser = 'Задание проверено менеджером и засчитано';
-    //                 answer = 'Не засчитано';
-    //             }
-    //
-    //             managers[managerId] = {};
-    //             bot.sendMessage(uid, answerToUser);
-    //         }
-    //     }
-    //     bot.sendMessage(msg.chat.id, answer);
-    // } else
-    if (!_.startsWith(msg.text, PREFIX)) {
+    if (managersIds.includes(userId)) {
+        const managerId = userId;
+        if (!managersTasks.length) {
+            answer = 'Нет заданий для проверки';
+        }
+        else {
+            if ('get' === cmd) {
+                const {currentStep, userId: uid, msg} = managersTasks.shift();
+                answer = `$Задание: ${currentStep.brief}\nОтвет: ${msg}`;
+                managers[managerId] = {uid};
+            }
+            else if (cmd.startsWith('check')) {
+                let answerToUser;
+                const {uid} = managers[managerId];
+                const regexp = msg.text.match(/.* (\d+)/);
+                const checkRes = regexp ? regexp[1] : null;
+
+                if (isOkAnswer(checkRes)) {
+                    answer = 'Засчитано';
+                    answerToUser = 'Задание проверено менеджером и засчитано';
+                    // todo update users state
+                }
+                else {
+                    answerToUser = 'Задание проверено менеджером и не засчитано. Вышлите ответ еще раз.';
+                    answer = 'Не засчитано';
+                }
+
+                managers[managerId] = {};
+                bot.sendMessage(uid, answerToUser);
+            }
+        }
+        bot.sendMessage(msg.chat.id, answer);
+    }
+    else if (!_.startsWith(msg.text, PREFIX)) {
         users.findOne({telegramId: userId}, (err, user) => {
             if (_.isEmpty(user)) {
                 answer = `Пожалуйста, активируй свой аккаунт с помощью команды \n${PREFIX}hiper\nпрежде, чем мы сможем продолжить.`;
@@ -136,6 +136,7 @@ bot.on('message', (msg) => {
                                 $set: {
                                     onMission: false,
                                     available: newAvailable,
+                                    balance: pickedMission.reward ? user.balance + pickedMission.reward : user.balance,
                                 },
                             }
                         );
