@@ -1,5 +1,7 @@
 // Inner kitchen our bot service
 
+const {db} = require('./db');
+
 module.exports = function() {
     let modules = [];
 
@@ -10,7 +12,6 @@ module.exports = function() {
             return self;
         },
         async process({ input = '', ...options }) {
-            // const dbInstance = ...;
             let response = {
                 output: '',
             };
@@ -21,9 +22,9 @@ module.exports = function() {
                 }
 
                 response = await executor(response, {
-                    // db: dbInstance,
+                    ...options,
                     input,
-                    ...options
+                    db,
                 });
             }
 

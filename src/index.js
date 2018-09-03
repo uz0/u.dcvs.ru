@@ -4,11 +4,14 @@ const botApp = require('./app');
 const pongModule = require('./modules/pong.command');
 const hiperModule = require('./modules/hiper.command');
 const emptyModule = require('./modules/empty');
+const userModule = require('./modules/user');
 
 const expressApp = express();
 
 const appInstance = botApp().register([
     // KEEP IN MIND, ORDER IMPORTANT!!!
+    userModule,
+
     pongModule,
     hiperModule,
 
@@ -34,6 +37,7 @@ const appInstance = botApp().register([
 expressApp.use('/api/message', (req, res) => {
     appInstance.process({
         input: req.query.message,
+        id: req.query.id,
         from: 'web',
         handle({ output }) {
             res.send(output);
