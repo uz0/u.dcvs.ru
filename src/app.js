@@ -16,6 +16,10 @@ module.exports = function() {
             };
 
             for (const executor of modules)  {
+                if (executor.command && executor.command !== input) {
+                    continue;
+                }
+
                 response = await executor(response, {
                     // db: dbInstance,
                     input,
