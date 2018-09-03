@@ -1,33 +1,31 @@
-const express = require('express');
-// const uuidv1 = require('uuid/v1');
-const config = require('./config');
-// const {handleTelegramMsg} = require('./telegram/handler');
-const telegramBot = require('./telegram/bot');
-const {telegram: telegramCfg} = config;
-const app = express();
+// Inner kitchen our bot service
 
-// web bot incoming
-app.use('/api/message', function(req, res) {
+module.exports = function() {
+    let modules = [];
 
-  // TODO, INCOMING MESSAGE FROM WEB BOT
-  // call something like process()
+    const self = {
+        register(executors) {
+            modules = [...executors];
 
-    res.json({ hello: true });
-});
+            return self;
+        },
+        async process({ input = '', ...options }) {
+            // const dbInstance = ...;
+            let response = {};
 
-// telegram
-const path = `/telegram/${config.telegram.webhookEndpoint}${telegramCfg.credentials.authToken}`;
-app.post(path, (req, res) => {
-    telegramBot.processUpdate(req.body);
-    res.sendStatus(200);
-});
+            for (const executor of modules)  {
+                response = await executor(response, {
+                    // db: dbInstance,
+                    input,
+                    ...options
+                });
+            }
 
-// discord bot incoming
-// TODO
+            options.handle(response);
 
-// process
-function process() {
-  // body...
+            return self;
+        }
+    }
+
+    return self;
 }
-
-module.exports = app;
