@@ -10,6 +10,7 @@ const helpModule = require('./modules/help.command');
 const ethModule = require('./modules/eth.command');
 const balanceModule = require('./modules/balance.command');
 const emptyModule = require('./modules/empty');
+const errorModule = require('./modules/error');
 const userModule = require('./modules/user');
 
 const expressApp = express();
@@ -27,6 +28,7 @@ const appInstance = botApp().register([
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE
     emptyModule,
+    errorModule,
 ]);
 
 // hook with telegram

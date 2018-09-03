@@ -22,11 +22,15 @@ module.exports = function() {
                     continue;
                 }
 
-                response = await executor(response, {
-                    ...options,
-                    input,
-                    db,
-                });
+                try {
+                    response = await executor(response, {
+                        ...options,
+                        input,
+                        db,
+                    });
+                } catch (error) {
+                    response.error = error;
+                }
             }
 
             options.handle(response);
