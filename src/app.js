@@ -11,7 +11,9 @@ module.exports = function() {
         },
         async process({ input = '', ...options }) {
             // const dbInstance = ...;
-            let response = {};
+            let response = {
+                output: '',
+            };
 
             for (const executor of modules)  {
                 response = await executor(response, {
