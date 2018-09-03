@@ -5,6 +5,7 @@ const pongModule = require('./modules/pong.command');
 const hiperModule = require('./modules/hiper.command');
 const helpModule = require('./modules/help.command');
 const ethModule = require('./modules/eth.command');
+const balanceModule = require('./modules/balance.command');
 const emptyModule = require('./modules/empty');
 const userModule = require('./modules/user');
 
@@ -18,6 +19,7 @@ const appInstance = botApp().register([
     hiperModule,
     helpModule,
     ethModule,
+    balanceModule,
 
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE
