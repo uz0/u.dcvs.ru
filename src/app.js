@@ -17,7 +17,7 @@ module.exports = function() {
             };
 
             for (const executor of modules)  {
-                if (executor.command && executor.command !== input) {
+                if (executor.command && !input.startsWith(executor.command)) {
                     continue;
                 }
 
