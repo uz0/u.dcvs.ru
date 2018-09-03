@@ -1,6 +1,7 @@
 // Inner kitchen our bot service
 
 const {db} = require('./db');
+const {PREFIX} = require('./config');
 
 module.exports = function() {
     let modules = [];
@@ -17,7 +18,7 @@ module.exports = function() {
             };
 
             for (const executor of modules)  {
-                if (executor.command && !input.startsWith(executor.command)) {
+                if (executor.command && !input.startsWith(`${PREFIX}${executor.command}`)) {
                     continue;
                 }
 
