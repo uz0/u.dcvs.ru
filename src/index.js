@@ -44,7 +44,7 @@ if (telegram.authToken) { // for local dev purposes
         res.sendStatus(200);
     });
 
-    telegramClient.on(({ from, text }) => {
+    telegramClient.on('message', ({ from, text }) => {
         const { id } = from;
 
         appInstance.process({
