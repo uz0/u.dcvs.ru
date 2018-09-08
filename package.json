@@ -18,6 +18,7 @@
     "mongojs": "^2.6.0",
     "node-telegram-bot-api": "0.30.0",
     "promised-csv": "^1.0.1",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "wallet-address-validator": "^0.1.7"
   }
 }

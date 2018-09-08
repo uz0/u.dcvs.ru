@@ -1,7 +1,21 @@
+const WAValidator = require('wallet-address-validator');
 
-module.exports = async function(response, { input, db, id }) {
-    const regexp = input.match(/.* (\d+)/);
-    const ethAdress = regexp ? regexp[1] : null;
+module.exports = async function(response, { input, db, id, i18n }) {
+    const {user} = response;
+
+    const [, ethAdress] = input.split(' ');
+
+    if (!ethAdress) {
+        response.output = i18n('eth', { ethAdress: user.eth });
+
+        return response;
+    }
+
+    const isValid = WAValidator.validate(ethAdress, 'ETH');
+
+    if (!isValid) {
+        throw(i18n('ethError', { ethAdress }))
+    }
 
     db.users.update({ telegramId: id }, {
         $set: {
@@ -9,13 +23,9 @@ module.exports = async function(response, { input, db, id }) {
         },
     });
 
-    response.output = `Я успешно привязала номер твоего Ethereum кошелька (${ethAdress}) к твоему аккаунту`;
+    response.output = i18n('ethUpdated', { ethAdress });
 
-    if(!ethAdress) {
-        response.output = `Пожалуйста, укажи корректный номер своего ethereum-кошелька через пробел в команде: eth номер_кошелька`;
-    }
-
-    return Promise.resolve(response);
+    return response;
 };
 
 module.exports.command = 'eth';

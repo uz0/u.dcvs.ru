@@ -10,7 +10,7 @@ module.exports = async function(response, { input, i18n }) {
 
     response.output = i18n('balance', { balance: user.balance });
 
-    return Promise.resolve(response);
+    return response;
 }
 
 module.exports.command = 'balance';
