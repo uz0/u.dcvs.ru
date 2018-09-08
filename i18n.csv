@@ -1,0 +1,6 @@
+help,test
+test,test2
+empty,"I didn't understand what you want.   use /help to get the full list of commands."
+error,"Error"
+noLogged,"You're not logged in yet"
+noMissions,"No available missions for now <____>"

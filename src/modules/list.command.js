@@ -5,25 +5,22 @@ function getMissionMessage(mission) {
     return `${PREFIX}${mission.command} ${mission.name} reward: ${mission.reward} ${mission.completed ? 'completed' : ''}`;
 }
 
-module.exports = async function(response, { input, db, id }) {
+module.exports = async function(response, { input, db, id, i18n }) {
     const {user} = response;
 
     if (!user) {
-        response.output = 'You\'re not logged in yet';
+        throw(i18n('noLogged'));
     }
-
 
     if (_.isEmpty(user.available)) {
-        response.output = 'No available missions for now <____>';
+        throw(i18n('noMissions'))
     }
 
-    if (!response.output) {
-        response.output =
-            _.map(user.available, mission => getMissionMessage(mission))
-            .join('\n');
-    }
+    response.output =
+        _.map(user.available, mission => getMissionMessage(mission))
+        .join('\n');
 
-    return Promise.resolve(response);
+    return response;
 };
 
 module.exports.command = 'list';

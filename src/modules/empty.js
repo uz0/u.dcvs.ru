@@ -1,10 +1,13 @@
 
-module.exports = async function(response, { input }) {
+module.exports = async function(response, { input, i18n }) {
 
-    if (response.output === '') {
-        response.output = 'Прости семпай я не поняла что ты хотел от меня, попробуй help или типо того';
+    if (response.output === '' && !response.error) {
+        // response.error = i18n('empty'); // [1]
+
+        throw(i18n('empty')); // [2]
     }
 
-    return Promise.resolve(response);
+    // return Promise.reject(i18n('empty')); // [3]
+    return response;
 };
 
