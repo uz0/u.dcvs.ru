@@ -1,10 +1,11 @@
 
-module.exports = async function(response, { input }) {
+module.exports = async function(response, { inpu, i18n }) {
 
     if (response.error) {
-        response.output = 'АЙ АЙ, мне больно... что-то сломаллсь... пожалуйста, загляни в мои, ммм, логи...';
+        response.output = response.error || i18n('otherError');
+        console.error(response.error);
     }
 
-    return Promise.resolve(response);
+    return response;
 }
 

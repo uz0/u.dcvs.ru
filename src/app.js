@@ -2,8 +2,10 @@
 
 const {db} = require('./db');
 const {PREFIX} = require('./config');
+const {i18nFactory} = require('./i18n');
 
 module.exports = function() {
+    const i18n = i18nFactory();
     let modules = [];
 
     const self = {
@@ -25,6 +27,7 @@ module.exports = function() {
                 try {
                     response = await executor(response, {
                         ...options,
+                        i18n,
                         input,
                         db,
                     });

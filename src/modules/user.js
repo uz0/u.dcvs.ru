@@ -6,6 +6,6 @@ module.exports = function(response, { db, id }) {
             response.user = user;
 
             resolve(response);
-        })
-    })
-};
+        });
+    });
+}
