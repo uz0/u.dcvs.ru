@@ -10,6 +10,7 @@ module.exports = async function(response, { input, id, db }) {
             telegramId: id,
             isManager: false,
             available: initMissions,
+            completed: [],
             balance: 0,
         });
 

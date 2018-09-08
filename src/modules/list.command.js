@@ -1,6 +1,10 @@
 const _ = require('lodash');
 const {PREFIX} = require('../config');
 
+function getMissionMessage(mission) {
+    return `${PREFIX}${mission.command} ${mission.name} reward: ${mission.reward} ${mission.completed ? 'completed' : ''}`;
+}
+
 module.exports = async function(response, { input, db, id }) {
     return new Promise((resolve, reject) => {
         const {user} = response;
@@ -14,7 +18,7 @@ module.exports = async function(response, { input, db, id }) {
             }
             else {
                 response.output =
-                    _.map(user.available, mission => `${PREFIX}${mission.command} ${mission.name} reward: ${mission.reward}`)
+                    _.map(user.available, mission => getMissionMessage(mission))
                     .join('\n');
             }
         }

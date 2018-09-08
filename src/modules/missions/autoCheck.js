@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const telegram = require('./telegram.mission');
+const {getActiveMission, getActiveMissionIndex} = require("./helpers");
 
 function unsetPending(db, id) {
     db.users.update({telegramId: id}, {
@@ -9,25 +10,36 @@ function unsetPending(db, id) {
     });
 }
 
-function removeFromAvailable(db, id, user) {
-    let newAvailable = user.available;
-    const index = _.findIndex(newAvailable, (mission) => mission.command === user.pending);
-    const reward = newAvailable[index].reward;
-    newAvailable.splice(index, 1);
+function updateAnswer(db, id, input) {
+    const index = getActiveMissionIndex(user);
 
     db.users.update({telegramId: id}, {
         $set: {
-            available: newAvailable,
-            balance: reward ? user.balance + reward : user.balance,
+            [`available.${index}.answer`] : input,
+        },
+    });
+}
+
+function updateAvailable(db, id, user) {
+    const index = getActiveMissionIndex(user);
+    const mission = getActiveMission(user);
+
+    db.users.update({telegramId: id}, {
+        $set: {
+            [`available.${index}.completed`] : true,
+            balance: mission.reward ? user.balance + mission.reward : user.balance,
+        },
+    });
+
+    db.users.update({telegramId: id}, {
+        $push: {
+            completed: mission.command,
         },
     });
 }
 
 module.exports = async function(response, { input, db, id }) {
     return new Promise((resolve, reject) => {
-        // db.users.findOne({
-        //     telegramId: id,
-        // }, (err, user) => {
         const {user} = response;
         //todo  move to init checks
         if (!user) {
@@ -44,8 +56,9 @@ module.exports = async function(response, { input, db, id }) {
                 }
 
                 unsetPending(db, id);
+                updateAnswer(db, id, input);
                 if (checked) {
-                    removeFromAvailable(db, id, user);
+                    updateAvailable(db, id, user);
                 }
                 response.output = checked ? 'Mission completed' : 'Mission failed, try again';
             }
@@ -53,5 +66,4 @@ module.exports = async function(response, { input, db, id }) {
 
         resolve(response);
     });
-    // });
 };

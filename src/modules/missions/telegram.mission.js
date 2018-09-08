@@ -8,6 +8,12 @@ const missionData = {
 };
 
 module.exports = async function(response, { input, db, id }) {
+    if (response.user.completed.includes(missionData.command)) {
+        response.output = 'You had already finished this mission';
+
+        return Promise.resolve(response)
+    }
+
     db.users.update({
         telegramId: id,
     }, {
