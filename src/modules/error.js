@@ -7,5 +7,5 @@ module.exports = async function(response, { i18n }) {
     }
 
     return response;
-}
+};
 

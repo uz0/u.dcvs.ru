@@ -2,9 +2,9 @@ const _ = require('lodash');
 const {makeMission} = require("./helpers");
 
 const missionData = {
-    command: 'telegram',
-    name: 'join telegram',
-    brief: 'tell us your telegram nickname',
+    command: 'discord',
+    name: 'join discord',
+    brief: 'tell us your discord tag',
     reward: 1,
 };
 

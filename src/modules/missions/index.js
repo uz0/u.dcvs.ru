@@ -1,8 +1,10 @@
 const _ = require('lodash');
 const telegramMission = require('./telegram.mission');
+const discordMission = require('./discord.mission');
 
 const missions = {
     telegramMission,
+    discordMission,
 };
 
 const initMissions = _.map(
