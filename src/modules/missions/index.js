@@ -1,9 +1,7 @@
 const _ = require('lodash');
-const bitcointalkMission = require('./bitcointalk.mission');
 const telegramMission = require('./telegram.mission');
 
 const missions = {
-    // bitcointalkMission,
     telegramMission,
 };
 

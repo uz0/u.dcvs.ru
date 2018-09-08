@@ -13,7 +13,6 @@ const listModule = require('./modules/list.command');
 
 const autoCheck = require('./modules/missions/autoCheck');
 const telegramMission = require('./modules/missions/telegram.mission');
-const bitcointalkMission = require('./modules/missions/bitcointalk.mission');
 
 const emptyModule = require('./modules/empty');
 const errorModule = require('./modules/error');
@@ -32,7 +31,6 @@ const appInstance = botApp().register([
     balanceModule,
     listModule,
     telegramMission,
-    bitcointalkMission,
 
     autoCheck,
 
