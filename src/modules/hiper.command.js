@@ -1,3 +1,4 @@
+const {initMissions} = require('./missions');
 
 module.exports = async function(response, { input, id, db }) {
     if (response.user) {
@@ -7,7 +8,8 @@ module.exports = async function(response, { input, id, db }) {
     if (!response.user) {
         db.users.insert({
             telegramId: id,
-            available: [{gamer: 0}, {programmer: 0}, {publisher: 0}, {investor: 0},],
+            isManager: false,
+            available: initMissions,
             balance: 0,
         });
 
@@ -15,6 +17,6 @@ module.exports = async function(response, { input, id, db }) {
     }
 
     return Promise.resolve(response);
-}
+};
 
 module.exports.command = 'hiper';

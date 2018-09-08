@@ -6,5 +6,5 @@ module.exports = async function(response, { input }) {
     }
 
     return Promise.resolve(response);
-}
+};
 

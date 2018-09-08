@@ -7,7 +7,7 @@ module.exports = async function(response, { input, db, id }) {
         $set: {
             eth: ethAdress,
         },
-    })
+    });
 
     response.output = `Я успешно привязала номер твоего Ethereum кошелька (${ethAdress}) к твоему аккаунту`;
 
@@ -16,6 +16,6 @@ module.exports = async function(response, { input, db, id }) {
     }
 
     return Promise.resolve(response);
-}
+};
 
 module.exports.command = 'eth';

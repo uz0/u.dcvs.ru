@@ -11,6 +11,6 @@ module.exports = async function(response, { input }) {
     // any aditional staff here
 
     return Promise.resolve(response);
-}
+};
 
 module.exports.command = 'help';

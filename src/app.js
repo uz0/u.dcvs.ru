@@ -17,7 +17,7 @@ module.exports = function() {
                 output: '',
             };
 
-            for (const executor of modules)  {
+            for (const executor of modules) {
                 if (executor.command && !input.startsWith(`${PREFIX}${executor.command}`)) {
                     continue;
                 }
@@ -37,7 +37,7 @@ module.exports = function() {
 
             return self;
         }
-    }
+    };
 
     return self;
-}
+};
