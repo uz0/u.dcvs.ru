@@ -1,6 +1,5 @@
-help,test
-test,test2
 empty,"I didn't understand what you want.   use /help to get the full list of commands."
-error,"Error"
+otherError,"Error"
 noLogged,"You're not logged in yet"
 noMissions,"No available missions for now <____>"
+balance,"You have earned ${balance} HLT, but you can get more. Please see all not yet completed bounty mission, type in /list"
