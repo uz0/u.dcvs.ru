@@ -63,12 +63,12 @@ function makeMission(missionData) {
         response.output = missionData.brief;
         response.pending = missionData.command;
 
-        return Promise.resolve(response)
+        return response;
     }
 }
 
 function makeChecker(command, check) {
-    return async function(response, { input, db, id }) {
+    return async function(response, { input }) {
         const {user} = response;
         //todo  move to init checks
         if (!user) {
@@ -81,7 +81,7 @@ function makeChecker(command, check) {
             response.output = checked ? 'Mission completed' : 'Mission failed, try again';
         }
 
-        return Promise.resolve(response);
+        return response;
     }
 }
 
