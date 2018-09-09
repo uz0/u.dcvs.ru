@@ -6,4 +6,4 @@ function check(answer) {
     return !_.isEmpty(answer);
 }
 
-module.exports = makeChecker(telegram.command, check);
+module.exports = makeChecker(telegram.missionData, check);

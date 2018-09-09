@@ -11,14 +11,10 @@ const ethModule = require('./modules/eth.command');
 const balanceModule = require('./modules/balance.command');
 const listModule = require('./modules/list.command');
 
-// const autoCheck = require('./modules/missions/autoCheck');
-const telegramMission = require('./modules/missions/telegram.mission');
-const discordMission = require('./modules/missions/discord.mission');
-//const bitcointalkMission = require('./modules/missions/bitcointalk.mission');
+const {missions} = require('./modules/missions');
 
 const telegramChecker = require('./modules/missions/telegram.mission.checker');
 const discordChecker = require('./modules/missions/discord.mission.checker');
-//const bitcointalkChecker = require('./modules/missions/bitcointalk.mission.checker');
 
 const commonMissionBefore = require('./modules/missions/commonMissionBefore');
 const emptyModule = require('./modules/empty');
@@ -42,16 +38,10 @@ const appInstance = botApp().register([
     balanceModule,
     listModule,
 
-    telegramMission,
-    discordMission,
-    // bitcointalkMission,
+    ...missions,
 
-//    autoCheck,
     telegramChecker,
     discordChecker,
-    // bitcointalkChecker,
-
-    // managerChecker,
 
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE

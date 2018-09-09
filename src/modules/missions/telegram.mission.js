@@ -2,8 +2,10 @@ const {makeMission} = require("./helpers");
 
 const missionData = {
     command: 'telegram',
-    name: 'join telegram',
-    brief: 'tell us your telegram nickname',
+    name: 'Join us on Telegram chat',
+    brief: 'telegramBriefing',
+    complete: 'telegramSuccess',
+    failed: 'telegramFail',
     reward: 1,
 };
 

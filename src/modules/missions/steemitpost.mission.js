@@ -1,11 +1,11 @@
 const {makeMission} = require("./helpers");
 
 const missionData = {
-    command: 'discord',
-    name: 'Join us on Discord channel',
-    brief: 'discordBriefing',
-    complete: 'discordSuccess',
-    failed: 'discordFail',
+    command: 'steemitpost',
+    name: 'Make a post about the Hyperloot in Steemit',
+    brief: 'steemitpostBriefing',
+    complete: 'steemitpostSuccess',
+    failed: 'steemitpostFail',
     reward: 1,
 };
 

@@ -7,3 +7,51 @@ missionInfo,"${PREFIX}${command} ${name} reward: ${reward} ${completed}"
 eth,"Your ETH address is ${ethAdress}\nTo set new address use: /eth your_eth_addr"
 ethUpdated,"You address ${ethAdress} is accepted, to change it use: /eth your_eth_addr"
 ethError,"The address doesn't seem right. Maybe you typed in your BTC address or maybe there is not enough symbols. Note that we only accept ETH addresses containing 20 symbols"
+
+twitterBriefing,"Follow us on Twitter https://twitter.com/Hyperloot,  Re-tweet PIN message, stay with us till the end of the year. Will be checked automatically."
+twitterSuccess,"You earned your Twitter Bounty.  Good job! Move to the next bounty,  use /list to see what you can do."
+twitterFail,"We are unable to record the accomplishment of your Bounty.  You need to follow us AND retweet pin message. Please do it and check again.  use /support to explain us your situation, we will try to help"
+
+linkedinBriefing,"Follow us on LinkedIn and send us your linkedin user name."
+linkedinSuccess,"I'll get it, %USERNAME%, you on the right way to get maximum reward, you will recieve %REWARD% on your /balance, check your progress on /list command"
+linkedinFail,"We could not verify this bounty.  You need to follow us on Linkedin AND send us valid user name that you are following us from.  if you send us random user name, you will not get qualified.   If problems continue, use /support to explain us your situation, we will try to help"
+
+telegramBriefing,"Join our Telegram Channel and stay with us till the end of the year. and you get the bounty."
+telegramSuccess,"You earned your Telegram bounty.  Good Job!"
+telegramFail,"We are unable to record the accomplishment of your Bounty. You need to follow. Please do it and check again. use /support to explain us your situation, we will try to help"
+
+discordBriefing,"Join our Discord Channel, @discord, and send us your user name.   You will have to stay with us till the end of the year:("
+discordSuccess,"You earned your Discords bounty.  Good Job!"
+discordFail,"We are unable to record the accomplishment of your Bounty. You need to follow us AND retweet pin message. Please do it and check again. use /support to explain us your situation, we will try to help"
+
+bitcointalkBriefing,"Make a good BitcoinTalk post about Hyperloot project min 100characters and input the link to our ANN thread. Submit url or screenshot to be qualifed."
+bitcointalkSuccess,""
+bitcointalkFail,""
+
+redditpostSubscribeBriefing,"Subscribe HyperLoot sub-reddit account and stay with us till the end of the year to earn 2 HLT"
+redditpostSubscribeSuccess,""
+redditpostSubscribeFail,""
+
+blogpostBriefing,"Do a good 1000 character blog post about Hyperloot.  include links to website, github and social media.  Submit the url link as a proof and make xxx HLT"
+blogpostSuccess,""
+blogpostFail,""
+
+steemitpostBriefing,"Do a good 750 character Steemit post about Hyperloot.  include links to website, github and social media.  Submit the url link as a proof and make xxx HLT"
+steemitpostSuccess,""
+steemitpostFail,""
+
+redditpostBriefing,"Make a good sub-Reddit post inside gamedev communities, min 75 characters.  Need to include the link to github.  Submit link to be qualified"
+redditpostSuccess,""
+redditpostFail,""
+
+videopostBriefing,"Do a good short video about HyperLoot on Twitch or YouTube, you put links to HyperLoot website, and social media channels below the video.  send us the link for verification. After verification, you get REWARDED 100 HLT."
+videopostSuccess,""
+videopostFail,""
+
+gamedevBriefing,"if you worked for game developer for more then 2 year and you can proof that. We will reward you 50 HLT. you will need to send us the linkedin profile, and fill in application form."
+gamedevSuccess,""
+gamedevFail,""
+
+integrationBriefing,"if you own a video game that qualifies for HyperLoot integration, you can earn $1000 in HLT tokens. You need to fill in the form, describing your game. After integrating your game with Hyperloot through SDK, we will get Reward."
+integrationSuccess,""
+integrationFail,""

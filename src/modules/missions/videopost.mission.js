@@ -1,11 +1,11 @@
 const {makeMission} = require("./helpers");
 
 const missionData = {
-    command: 'discord',
-    name: 'Join us on Discord channel',
-    brief: 'discordBriefing',
-    complete: 'discordSuccess',
-    failed: 'discordFail',
+    command: 'videopost',
+    name: 'Video review to the project in your personal vlog',
+    brief: 'videopostBriefing',
+    complete: 'videopostSuccess',
+    failed: 'videopostFail',
     reward: 1,
 };
 

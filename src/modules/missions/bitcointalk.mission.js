@@ -1,11 +1,11 @@
 const {makeMission} = require("./helpers");
 
 const missionData = {
-    command: 'discord',
-    name: 'Join us on Discord channel',
-    brief: 'discordBriefing',
-    complete: 'discordSuccess',
-    failed: 'discordFail',
+    command: 'bitcointalk',
+    name: 'Post about Hyperloot inside BitcoinTalk',
+    brief: 'bitcointalkBriefing',
+    complete: 'bitcointalkSuccess',
+    failed: 'bitcointalkFail',
     reward: 1,
 };
 

@@ -14,7 +14,7 @@ module.exports = async function(response, { input, db, id, i18n, missions }) {
     }
 
     const missionsInfo = missions.map(mission => {
-        const availableMission = getMissionByCommand(user, mission.command);
+        const availableMission = getMissionByCommand(user.available, mission.command);
         return _.extend(mission, {answer: availableMission.answer, completed: availableMission.completed});
     });
 

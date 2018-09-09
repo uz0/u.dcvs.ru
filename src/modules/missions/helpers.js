@@ -1,20 +1,11 @@
 const _ = require('lodash');
 
-function getActiveMissionIndex(user) {
-    return getMissionIndexByCommand(user, user.pending);
+function getMissionIndexByCommand(missionsList, command) {
+    return _.findIndex(missionsList, (mission) => mission.command === command);
 }
 
-function getMissionIndexByCommand(user, command) {
-    const {available} = user;
-    return _.findIndex(available, (mission) => mission.command === command);
-}
-
-function getActiveMission(user) {
-    return user.available[getActiveMissionIndex(user)];
-}
-
-function getMissionByCommand(user, command) {
-    return user.available[getMissionIndexByCommand(user, command)];
+function getMissionByCommand(missionsList, command) {
+    return missionsList[getMissionIndexByCommand(missionsList, command)];
 }
 
 function unsetPending(db, id) {
@@ -26,7 +17,7 @@ function unsetPending(db, id) {
 }
 
 function updateAnswer(db, id, input, user) {
-    const index = getActiveMissionIndex(user);
+    const index = getMissionIndexByCommand(user.available, user.pending);
 
     db.users.update({telegramId: id}, {
         $set: {
@@ -35,26 +26,27 @@ function updateAnswer(db, id, input, user) {
     });
 }
 
-function updateAvailable(db, id, user) {
-    const index = getActiveMissionIndex(user);
-    const mission = getActiveMission(user);
+function updateAvailable(db, id, user, missions) {
+    const {available, balance, pending} = user;
+    const index = getMissionIndexByCommand(available, pending);
+    const {reward} = getMissionByCommand(missions, pending);
 
     db.users.update({telegramId: id}, {
         $set: {
             [`available.${index}.completed`] : true,
-            balance: mission.reward ? user.balance + mission.reward : user.balance,
+            balance: reward ? balance + reward : balance,
         },
     });
 
     db.users.update({telegramId: id}, {
         $push: {
-            completed: mission.command,
+            completed: pending,
         },
     });
 }
 
 function makeMission(missionData) {
-    return async function(response, { input, db, id }) {
+    return async function(response, { input, db, id, i18n }) {
         if (response.user.completed.includes(missionData.command)) {
             throw('You had already finished this mission');
         }
@@ -67,14 +59,14 @@ function makeMission(missionData) {
             },
         });
 
-        response.output = missionData.brief;
+        response.output = i18n(missionData.brief);
         response.pending = missionData.command;
 
         return response;
     }
 }
 
-function makeChecker(command, check) {
+function makeChecker(missionData, check) {
     return async function(response, { input, i18n }) {
         const {user} = response;
         //todo  move to init checks
@@ -82,11 +74,11 @@ function makeChecker(command, check) {
             throw(i18n('noLogged'));
         }
 
-        if (user.pending && (user.pending === command)) {
+        if (user.pending && (user.pending === missionData.command)) {
             let checked = check(input);
 
             response.checked = checked;
-            response.output = checked ? 'Mission completed' : 'Mission failed, try again';
+            response.output = checked ? i18n(missionData.complete) : i18n(missionData.failed);
         }
 
         return Promise.resolve(response);
@@ -94,8 +86,6 @@ function makeChecker(command, check) {
 }
 
 module.exports = {
-    getActiveMission,
-    getActiveMissionIndex,
     getMissionByCommand,
     getMissionIndexByCommand,
     unsetPending,
