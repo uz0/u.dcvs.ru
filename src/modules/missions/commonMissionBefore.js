@@ -10,7 +10,7 @@ module.exports = async function(response, { input, db, id, missions }) {
         unsetPending(db, id);
         updateAnswer(db, id, input, user);
         if (checked) {
-            updateAvailable(db, id, user, missions);
+            updateAvailable(db, id, user, missions, user.pending);
         }
     }
 

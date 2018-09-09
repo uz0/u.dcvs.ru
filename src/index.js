@@ -18,20 +18,25 @@ const discordChecker = require('./modules/missions/discord.mission.checker');
 const twitterChecker = require('./modules/missions/twitter.mission.checker');
 const linkedinChecker = require('./modules/missions/linkedin.mission.checker');
 
+const getModule = require('./modules/moderation/get.command');
+const moderatorCheck = require('./modules/moderation/moderatorCheck');
+const sendToModeration = require('./modules/missions/sendToModeration');
+
 const commonMissionBefore = require('./modules/missions/commonMissionBefore');
 const emptyModule = require('./modules/empty');
 const errorModule = require('./modules/error');
 const userModule = require('./modules/user');
 
-//const managerModule = require('./modules/moderation/manager');
-//const managerChecker = require('./modules/moderation/manager.checker');
+const moderatorModule = require('./modules/moderation/moderator');
+const setmoderatorModule = require('./modules/moderation/setmoderator.command');
+const unsetmoderatorModule = require('./modules/moderation/unsetmoderator.command');
 
 const expressApp = express();
 
 const appInstance = botApp().register([
     // KEEP IN MIND, ORDER IMPORTANT!!!
     userModule,
-    //managerModule,
+    moderatorModule,
 
     startModule,
     pongModule,
@@ -40,12 +45,18 @@ const appInstance = botApp().register([
     balanceModule,
     listModule,
 
+    getModule,
+    setmoderatorModule,
+    unsetmoderatorModule,
+
     ...missions,
 
     telegramChecker,
     discordChecker,
     twitterChecker,
     linkedinChecker,
+    moderatorCheck,
+    sendToModeration,
 
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE

@@ -16,6 +16,14 @@ function unsetPending(db, id) {
     });
 }
 
+function unsetModerationPending(db, id) {
+    db.users.update({telegramId: id}, {
+        $unset: {
+            pendingModeration: '',
+        }
+    });
+}
+
 function updateAnswer(db, id, input, user) {
     const index = getMissionIndexByCommand(user.available, user.pending);
 
@@ -26,10 +34,10 @@ function updateAnswer(db, id, input, user) {
     });
 }
 
-function updateAvailable(db, id, user, missions) {
-    const {available, balance, pending} = user;
-    const index = getMissionIndexByCommand(available, pending);
-    const {reward} = getMissionByCommand(missions, pending);
+function updateAvailable(db, id, user, missions, command) {
+    const {available, balance} = user;
+    const index = getMissionIndexByCommand(available, command);
+    const {reward} = getMissionByCommand(missions, command);
 
     db.users.update({telegramId: id}, {
         $set: {
@@ -40,8 +48,19 @@ function updateAvailable(db, id, user, missions) {
 
     db.users.update({telegramId: id}, {
         $push: {
-            completed: pending,
+            completed: command,
         },
+    });
+}
+
+function updateModerationList(db, id, user, username, input) {
+    const {pending} = user;
+
+    db.moderation.insert({
+        username,
+        id,
+        command: pending,
+        answer: input,
     });
 }
 
@@ -89,8 +108,10 @@ module.exports = {
     getMissionByCommand,
     getMissionIndexByCommand,
     unsetPending,
+    unsetModerationPending,
     updateAnswer,
     updateAvailable,
     makeMission,
     makeChecker,
+    updateModerationList,
 };

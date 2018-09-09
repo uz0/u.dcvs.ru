@@ -7,6 +7,7 @@ const missionData = {
     complete: 'integrationSuccess',
     failed: 'integrationFail',
     reward: 1,
+    needModeration: true,
 };
 
 module.exports = makeMission(missionData);

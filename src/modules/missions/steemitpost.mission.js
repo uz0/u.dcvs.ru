@@ -7,6 +7,7 @@ const missionData = {
     complete: 'steemitpostSuccess',
     failed: 'steemitpostFail',
     reward: 1,
+    needModeration: true,
 };
 
 module.exports = makeMission(missionData);

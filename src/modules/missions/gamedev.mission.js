@@ -7,6 +7,7 @@ const missionData = {
     complete: 'gamedevSuccess',
     failed: 'gamedevFail',
     reward: 1,
+    needModeration: true,
 };
 
 module.exports = makeMission(missionData);

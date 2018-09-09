@@ -7,6 +7,7 @@ const missionData = {
     complete: 'videopostSuccess',
     failed: 'videopostFail',
     reward: 1,
+    needModeration: true,
 };
 
 module.exports = makeMission(missionData);

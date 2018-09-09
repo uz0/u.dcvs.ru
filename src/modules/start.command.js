@@ -9,7 +9,7 @@ module.exports = async function(response, { input, username, id, db }) {
         const newUser = {
             telegramId: id,
             telegramUsername: username,
-            isManager: false,
+            isModerator: false,
             available: initMissions,
             completed: [],
             balance: 0,

@@ -7,6 +7,7 @@ const missionData = {
     complete: 'blogpostSuccess',
     failed: 'blogpostFail',
     reward: 1,
+    needModeration: true,
 };
 
 module.exports = makeMission(missionData);

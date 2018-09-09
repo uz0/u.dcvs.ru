@@ -55,3 +55,15 @@ gamedevFail,""
 integrationBriefing,"if you own a video game that qualifies for HyperLoot integration, you can earn $1000 in HLT tokens. You need to fill in the form, describing your game. After integrating your game with Hyperloot through SDK, we will get Reward."
 integrationSuccess,""
 integrationFail,""
+
+notmoderator,"You're not authorized to do this"
+noUserNickname,"There's no user with that nickname ${nickname}"
+noTasks,"There is no task for checking"
+setModerator,"User ${username} is moderator now"
+unsetModerator,"User ${username} is not moderator now"
+sendToModeration,"Answer has been sent to moderation"
+moderationTask,"mission: ${command}\nuser: ${username}\nanswer:${answer}"
+cantUnsetAdmin,"You are not allowed to unset admin"
+acceptedMission,"Your mission was accepted by moderator",
+notAcceptedMission,"Your mission was not accepted by moderator",
+taskChecked,"Task checking completed"

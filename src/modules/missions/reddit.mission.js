@@ -7,6 +7,7 @@ const missionData = {
     complete: 'redditSuccess',
     failed: 'redditFail',
     reward: 1,
+    needModeration: true,
 };
 
 module.exports = makeMission(missionData);

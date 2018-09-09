@@ -7,6 +7,7 @@ const missionData = {
     complete: 'bitcointalkSuccess',
     failed: 'bitcointalkFail',
     reward: 1,
+    needModeration: true,
 };
 
 module.exports = makeMission(missionData);
