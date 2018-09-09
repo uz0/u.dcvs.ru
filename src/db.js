@@ -4,18 +4,9 @@ const {mongoURI} = require('./config');
 
 const DB = 'hyperloot';
 const USERS = 'users';
+const MODERATION = 'moderation';
 
-// TODO user mongo model
-// const colomns = [
-//     'id',
-//     'telegram_state',
-//     'discord_state',
-//     'eth_addr',
-//     'balance'
-// ];
-
-const db = mongo(mongoURI, [USERS]);
-// const users = db.collection(USERS);
+const db = mongo(mongoURI, [USERS, MODERATION]);
 
 db.on('error', err => {
     console.log('database error', err);

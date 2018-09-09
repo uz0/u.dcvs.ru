@@ -6,15 +6,17 @@ module.exports = async function(response, { input, id, db }) {
     }
 
     if (!response.user) {
-        db.users.insert({
+        const newUser = {
             telegramId: id,
             isManager: false,
             available: initMissions,
             completed: [],
             balance: 0,
-        });
+        };
+        db.users.insert(newUser);
 
-        response.output = 'Пользователь создан и авторизован';
+        response.user = newUser;
+        response.output = 'User has been created';
     }
 
     return Promise.resolve(response);
