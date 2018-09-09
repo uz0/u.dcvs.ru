@@ -15,6 +15,10 @@ module.exports = function() {
             return self;
         },
         async process({ input = '', ...options }) {
+            const missions = modules
+                .filter(module => module.missionData)
+                .map(module => module.missionData);
+
             let response = {
                 output: '',
             };
@@ -30,6 +34,7 @@ module.exports = function() {
                         i18n,
                         input,
                         db,
+                        missions,
                     });
                 } catch (error) {
                     response.error = error;

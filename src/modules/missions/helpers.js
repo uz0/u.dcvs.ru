@@ -1,12 +1,20 @@
 const _ = require('lodash');
 
 function getActiveMissionIndex(user) {
+    return getMissionIndexByCommand(user, user.pending);
+}
+
+function getMissionIndexByCommand(user, command) {
     const {available} = user;
-    return _.findIndex(available, (mission) => mission.command === user.pending);
+    return _.findIndex(available, (mission) => mission.command === command);
 }
 
 function getActiveMission(user) {
     return user.available[getActiveMissionIndex(user)];
+}
+
+function getMissionByCommand(user, command) {
+    return user.available[getMissionIndexByCommand(user, command)];
 }
 
 function unsetPending(db, id) {
@@ -49,7 +57,6 @@ function makeMission(missionData) {
     return async function(response, { input, db, id }) {
         if (response.user.completed.includes(missionData.command)) {
             throw('You had already finished this mission');
-            // return Promise.resolve(response)
         }
 
         db.users.update({
@@ -68,26 +75,29 @@ function makeMission(missionData) {
 }
 
 function makeChecker(command, check) {
-    return async function(response, { input }) {
+    return async function(response, { input, i18n }) {
         const {user} = response;
         //todo  move to init checks
         if (!user) {
-            response.output = 'You\'re not logged in yet';
+            throw(i18n('noLogged'));
         }
-        else if (user.pending === command) {
+
+        if (user.pending && (user.pending === command)) {
             let checked = check(input);
 
             response.checked = checked;
             response.output = checked ? 'Mission completed' : 'Mission failed, try again';
         }
 
-        return response;
+        return Promise.resolve(response);
     }
 }
 
 module.exports = {
     getActiveMission,
     getActiveMissionIndex,
+    getMissionByCommand,
+    getMissionIndexByCommand,
     unsetPending,
     updateAnswer,
     updateAvailable,

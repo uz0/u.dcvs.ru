@@ -20,4 +20,4 @@ module.exports = async function(response, { input, id, db }) {
     return Promise.resolve(response);
 };
 
-module.exports.command = 'hiper';
+module.exports.command = 'start';

@@ -5,7 +5,7 @@ const botApp = require('./app');
 const {telegram, url} = require('./config');
 
 const pongModule = require('./modules/pong.command');
-const hiperModule = require('./modules/hiper.command');
+const startModule = require('./modules/start.command');
 const helpModule = require('./modules/help.command');
 const ethModule = require('./modules/eth.command');
 const balanceModule = require('./modules/balance.command');
@@ -14,23 +14,29 @@ const listModule = require('./modules/list.command');
 // const autoCheck = require('./modules/missions/autoCheck');
 const telegramMission = require('./modules/missions/telegram.mission');
 const discordMission = require('./modules/missions/discord.mission');
+//const bitcointalkMission = require('./modules/missions/bitcointalk.mission');
+
 const telegramChecker = require('./modules/missions/telegram.mission.checker');
 const discordChecker = require('./modules/missions/discord.mission.checker');
-// const bitcointalkMission = require('./modules/missions/bitcointalk.mission');
+//const bitcointalkChecker = require('./modules/missions/bitcointalk.mission.checker');
 
 const commonMissionBefore = require('./modules/missions/commonMissionBefore');
 const emptyModule = require('./modules/empty');
 const errorModule = require('./modules/error');
 const userModule = require('./modules/user');
 
+//const managerModule = require('./modules/moderation/manager');
+//const managerChecker = require('./modules/moderation/manager.checker');
+
 const expressApp = express();
 
 const appInstance = botApp().register([
     // KEEP IN MIND, ORDER IMPORTANT!!!
     userModule,
+    //managerModule,
 
+    startModule,
     pongModule,
-    hiperModule,
     helpModule,
     ethModule,
     balanceModule,
@@ -38,10 +44,14 @@ const appInstance = botApp().register([
 
     telegramMission,
     discordMission,
+    // bitcointalkMission,
 
 //    autoCheck,
     telegramChecker,
     discordChecker,
+    // bitcointalkChecker,
+
+    // managerChecker,
 
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE
@@ -73,7 +83,6 @@ if (telegram.authToken) { // for local dev purposes
                 telegramClient.sendMessage(id, output);
             },
         })
-
     });
 }
 
