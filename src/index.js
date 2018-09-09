@@ -15,6 +15,8 @@ const {missions} = require('./modules/missions');
 
 const telegramChecker = require('./modules/missions/telegram.mission.checker');
 const discordChecker = require('./modules/missions/discord.mission.checker');
+const twitterChecker = require('./modules/missions/twitter.mission.checker');
+const linkedinChecker = require('./modules/missions/linkedin.mission.checker');
 
 const commonMissionBefore = require('./modules/missions/commonMissionBefore');
 const emptyModule = require('./modules/empty');
@@ -42,6 +44,8 @@ const appInstance = botApp().register([
 
     telegramChecker,
     discordChecker,
+    twitterChecker,
+    linkedinChecker,
 
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE
@@ -64,10 +68,11 @@ if (telegram.authToken) { // for local dev purposes
     });
 
     telegramClient.on('message', ({ from, text }) => {
-        const { id } = from;
+        const { id, username } = from;
 
         appInstance.process({
             input: text,
+            username,
             id,
             from: 'telegram',
             handle({ output }) {
@@ -83,6 +88,7 @@ expressApp.use('/api/message', (req, res) => {
     appInstance.process({
         input: req.query.message,
         id: req.query.id,
+        username: req.query.username,
         from: 'web',
         handle({ output }) {
             res.send(output);

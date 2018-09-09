@@ -1,6 +1,6 @@
 const {initMissions} = require('./missions');
 
-module.exports = async function(response, { input, id, db }) {
+module.exports = async function(response, { input, username, id, db }) {
     if (response.user) {
         response.output = `Вы уже авторизованы ${JSON.stringify(response.user)}`;
     }
@@ -8,6 +8,7 @@ module.exports = async function(response, { input, id, db }) {
     if (!response.user) {
         const newUser = {
             telegramId: id,
+            telegramUsername: username,
             isManager: false,
             available: initMissions,
             completed: [],
