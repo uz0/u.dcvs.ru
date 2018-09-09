@@ -68,6 +68,7 @@ if (telegram.authToken) { // for local dev purposes
 
         appInstance.process({
             input: text,
+            id,
             from: 'telegram',
             handle({ output }) {
                 telegramClient.sendMessage(id, output);
