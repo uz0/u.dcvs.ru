@@ -94,7 +94,7 @@ function makeChecker(missionData, check) {
         }
 
         if (user.pending && (user.pending === missionData.command)) {
-            let checked = check(input);
+            let checked = await check(input);
 
             response.checked = checked;
             response.output = checked ? i18n(missionData.complete) : i18n(missionData.failed);
