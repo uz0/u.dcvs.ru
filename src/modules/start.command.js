@@ -1,8 +1,10 @@
 const {initMissions} = require('./missions');
+const {PREFIX} = require('../config');
 
-module.exports = async function(response, { input, username, id, db }) {
+module.exports = async function(response, { input, username, id, db, commands, i18n }) {
     if (response.user) {
-        response.output = `Вы уже авторизованы ${JSON.stringify(response.user)}`;
+        response.output = i18n('startHey', { username });
+        console.log('debug', response.user)
     }
 
     if (!response.user) {
@@ -16,11 +18,16 @@ module.exports = async function(response, { input, username, id, db }) {
         };
         db.users.insert(newUser);
 
+        const help = commands
+            .filter(command => command.help)
+            .map(command => i18n('help', { PREFIX, ...command }))
+            .join('\n')
+
         response.user = newUser;
-        response.output = 'User has been created';
+        response.output = `${i18n('startHey', { username })} \n\n ${i18n('start')} \n\n ${help}`;
     }
 
-    return Promise.resolve(response);
+    return response;
 };
 
 module.exports.command = 'start';

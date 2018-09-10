@@ -1,16 +1,12 @@
+const {PREFIX} = require('../config');
 
-module.exports = async function(response, { input }) {
-    response.output = `
-        /balance\t- посмотреть текущий баланс
-        /eth eth_num\t- привязка ethereum кошелька с номером eth_num
-        /start\t- привязать телеграм
-        /mission\t- получить новое задание или просмотреть текущее
-        /request\t- сделать запрос на вывод средств
-    `;
+module.exports = async function(response, { input, commands, i18n }) {
+    response.output = commands
+        .filter(command => command.help)
+        .map(command => i18n('help', { PREFIX, ...command }))
+        .join('\n')
 
-    // any aditional staff here
-
-    return Promise.resolve(response);
+    return response;
 };
 
 module.exports.command = 'help';

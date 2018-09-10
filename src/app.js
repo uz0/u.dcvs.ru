@@ -19,6 +19,14 @@ module.exports = function() {
                 .filter(module => module.missionData)
                 .map(module => module.missionData);
 
+            const commands = modules
+                .filter(module => module.command)
+                .map(({ command }) => ({
+                    command,
+                    help: i18n(`command.${command}`)
+                }));
+
+
             let response = {
                 output: '',
             };
@@ -35,6 +43,7 @@ module.exports = function() {
                         input,
                         db,
                         missions,
+                        commands,
                     });
                 } catch (error) {
                     response.error = error;

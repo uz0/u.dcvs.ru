@@ -10,6 +10,9 @@ const helpModule = require('./modules/help.command');
 const ethModule = require('./modules/eth.command');
 const balanceModule = require('./modules/balance.command');
 const listModule = require('./modules/list.command');
+const faqModule = require('./modules/faq.command');
+const supportModule = require('./modules/support.command');
+const termsModule = require('./modules/terms.command');
 
 const {missions} = require('./modules/missions');
 
@@ -44,6 +47,9 @@ const appInstance = botApp().register([
     ethModule,
     balanceModule,
     listModule,
+    faqModule,
+    supportModule,
+    termsModule,
 
     getModule,
     setmoderatorModule,
@@ -102,7 +108,7 @@ expressApp.use('/api/message', (req, res) => {
         username: req.query.username,
         from: 'web',
         handle({ output }) {
-            res.send(output);
+            res.send(`<pre>${output}</pre>`);
         },
     });
 });
