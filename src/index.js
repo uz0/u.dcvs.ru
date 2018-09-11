@@ -84,8 +84,10 @@ if (telegram.authToken) { // for local dev purposes
         res.sendStatus(200);
     });
 
-    telegramClient.on('message', ({ from, text }) => {
-        const { id, username } = from;
+    // todo remove chat
+    telegramClient.on('message', ({ from, text, chat }) => {
+        const { id, username,  } = from;
+        console.log(`test chat: ${chat.id}`);
 
         appInstance.process({
             input: text,
@@ -95,6 +97,7 @@ if (telegram.authToken) { // for local dev purposes
             handle({ output }) {
                 telegramClient.sendMessage(id, output);
             },
+            telegramClient,
         })
     });
 }
