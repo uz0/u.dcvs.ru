@@ -87,7 +87,7 @@ if (telegram.authToken) { // for local dev purposes
     // todo remove chat
     telegramClient.on('message', ({ from, text, chat }) => {
         const { id, username,  } = from;
-        console.log(`test chat: ${chat.id}`);
+        // console.log(`test chat: ${chat.id}`);
 
         appInstance.process({
             input: text,
