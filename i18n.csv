@@ -25,9 +25,9 @@ twitterBriefing,"Follow us on Twitter https://twitter.com/Hyperloot,  Re-tweet t
 twitterSuccess,"You earned your Twitter Bounty. Awesome! Move to the next bounty,  use /list to see what you can do."
 twitterFail,"I'm  unable to record the accomplishment of your Bounty.  You need to follow us AND retweet pin message. Please do it and check again.  use /support to explain us your situation, we will try to help"
 
-linkedinBriefing,"Follow us on LinkedIn and send us your linkedin user name."
-linkedinSuccess,"Got it, %USERNAME%, you on the right way to get maximum reward, you will recieve %REWARD% on your /balance, check your progress on /list command"
-linkedinFail,"I could not verify this bounty.  You need to follow us on Linkedin AND send us valid user name that you are following us from.  If you send us a random user name, you will not get qualified. If problems continue, use /support to explain us your situation, we will try to help"
+linkedinBriefing,"Follow us on LinkedIn https://www.linkedin.com/company/hyperloot/ and send me message with your linkedin username"
+linkedinSuccess,"Got it, {username}, you on the right way to get maximum reward, you will recieve on your /balance, check your progress on /list command"
+linkedinFail,"I could not verify LinkedIn bounty. You need to follow us on Linkedin AND send us valid user name that you are following us from. If you send us a random user name, you will not get qualified. If problems continue, use /support to explain us your situation, we will try to help"
 
 telegramBriefing,"Join our Telegram Channel and stay with us till the end of the year to you get the bounty."
 telegramSuccess,"You earned your Telegram bounty.  Good Job!"
