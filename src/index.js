@@ -87,15 +87,17 @@ if (telegram.authToken) { // for local dev purposes
     telegramClient.on('message', ({ from, text }) => {
         const { id, username } = from;
 
-        appInstance.process({
-            input: text,
-            username,
-            id,
-            from: 'telegram',
-            handle({ output }) {
-                telegramClient.sendMessage(id, output);
-            },
-        })
+        // appInstance.process({
+        //     input: text,
+        //     username,
+        //     id,
+        //     from: 'telegram',
+        //     handle({ output }) {
+        //         telegramClient.sendMessage(id, output);
+        //     },
+        // });
+
+        telegramClient.sendMessage(id, 'HyperLoot will start Airdrop campaign in 15.09.2018 at 0:00am UTC0, everyone can participate. Join Discord group for updates – https://discord.gg/BE6DMvy');
     });
 }
 
