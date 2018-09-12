@@ -11,7 +11,7 @@ faq,"https://github.com/HyperLootProtocol/Starter-Pack/wiki/Bounty-FAQ"
 support,"You can get all of the questions answered in the Discord chat here: https://discord.gg/qEH8PHk, but first check out the FAQ page:https://github.com/HyperLootProtocol/Starter-Pack/wiki/Bounty-FAQ"
 startHey,"Hey, ${username}"
 start,"My name is Hyper, and I'm an expert on all things Hyperloot!💰.  It's dangerous to go alone, so take a list of missions you can do to get your FREE HLT tokens:"
-terms,"link on gdocs"
+terms,"https://github.com/HyperLootProtocol/Starter-Pack/wiki/Bounty-Terms-&-Conditions"
 help,"${PREFIX}${command} - ${help}"
 
 command.list, "A list fo all completed and incomplete bounties 👈❗"
