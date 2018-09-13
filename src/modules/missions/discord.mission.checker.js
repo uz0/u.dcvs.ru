@@ -9,6 +9,7 @@ module.exports = async function(response, { input, id, i18n, username, discordCl
     }
 
     return new Promise((resolve, reject) => {
+        console.log(`pending: ${user.pending}, command: ${missionData.command}`);
         if (user.pending && (user.pending === missionData.command)) {
             const guild = discordClient.guilds.get(guildId);
             const match = guild.members.filter(member =>
