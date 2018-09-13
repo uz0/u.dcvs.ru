@@ -1,6 +1,6 @@
 const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
-const discordClient = require('discordBot');
+const discordClient = require('./discordBot');
 
 const botApp = require('./app');
 const {telegram, url} = require('./config');
