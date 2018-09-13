@@ -18,7 +18,7 @@ module.exports = async function(response, { input, id, i18n, username, discordCl
             );
 
             let checked = !_.isEmpty(match);
-
+            console.log(`checked: ${checked}`);
             response.checked = checked;
             response.output = checked ? i18n(missionData.complete, {username}) : i18n(missionData.failed, {username});
         }

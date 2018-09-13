@@ -17,7 +17,7 @@ module.exports = async function(response, { input, id, db, i18n, missions, usern
         unsetPending(db, id);
         updateAnswer(db, id, input, user);
         updateModerationList(db, id, user, username, input);
-
+        console.log(`checked: ${checked}`);
         response.output = i18n('sendToModeration');
     }
     return Promise.resolve(response);
