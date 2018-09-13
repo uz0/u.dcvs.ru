@@ -20,7 +20,6 @@ const {missions} = require('./modules/missions');
 const telegramChecker = require('./modules/missions/telegram.mission.checker');
 const discordChecker = require('./modules/missions/discord.mission.checker');
 const twitterChecker = require('./modules/missions/twitter.mission.checker');
-const linkedinChecker = require('./modules/missions/linkedin.mission.checker');
 
 const getModule = require('./modules/moderation/get.command');
 const moderatorCheck = require('./modules/moderation/moderatorCheck');
@@ -34,6 +33,7 @@ const userModule = require('./modules/user');
 const moderatorModule = require('./modules/moderation/moderator');
 const setmoderatorModule = require('./modules/moderation/setmoderator.command');
 const unsetmoderatorModule = require('./modules/moderation/unsetmoderator.command');
+const linkedInComplete = require('./modules/moderation/linkedInComplete');
 
 const expressApp = express();
 
@@ -61,9 +61,9 @@ const appInstance = botApp().register([
     telegramChecker,
     discordChecker,
     twitterChecker,
-    linkedinChecker,
     moderatorCheck,
     sendToModeration,
+    linkedInComplete,
 
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE
