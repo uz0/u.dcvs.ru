@@ -8,20 +8,21 @@ module.exports = async function(response, { input, id, i18n, username, discordCl
         throw(i18n('noLogged'));
     }
 
-    if (user.pending && (user.pending === missionData.command)) {
-        const guild = discordClient.guilds.get(guildId);
+    return new Promise((resolve, reject) => {
+        if (user.pending && (user.pending === missionData.command)) {
+            const guild = discordClient.guilds.get(guildId);
+            const match = guild.members.filter(member =>
+                member.user.username === input &&
+                // member.user.discriminator === '3422' &&
+                !member.deleted
+            );
 
-        const match = guild.members.filter(member =>
-            member.user.username === input &&
-            // member.user.discriminator === '3422' &&
-            !member.deleted
-        );
+            let checked = !_.isEmpty(match);
 
-        let checked = !_.isEmpty(match);
+            response.checked = checked;
+            response.output = checked ? i18n(missionData.complete, {username}) : i18n(missionData.failed, {username});
+        }
 
-        response.checked = checked;
-        response.output = checked ? i18n(missionData.complete, {username}) : i18n(missionData.failed, {username});
-    }
-
-    return Promise.resolve(response);
+        resolve(response);
+    });
 };
