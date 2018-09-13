@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const {missionData} = require('./discord.mission');
 const {discord: {guildId}} = require('../../config');
 
@@ -8,22 +9,20 @@ module.exports = async function(response, { input, id, i18n, username, discordCl
         throw(i18n('noLogged'));
     }
 
-    return new Promise((resolve, reject) => {
-        console.log(`pending: ${user.pending}, command: ${missionData.command}`);
-        if (user.pending && (user.pending === missionData.command)) {
-            const guild = discordClient.guilds.get(guildId);
-            const match = guild.members.filter(member =>
-                member.user.username === input &&
-                // member.user.discriminator === '3422' &&
-                !member.deleted
-            );
+    if (user.pending && (user.pending === missionData.command)) {
+        const guild = discordClient.guilds.get(guildId);
+        const match = guild.members.filter(member =>
+            member.user.username === input &&
+            // member.user.discriminator === '3422' &&
+            !member.deleted
+        );
 
-            let checked = !_.isEmpty(match);
-            console.log(`checked: ${checked}`);
-            response.checked = checked;
-            response.output = checked ? i18n(missionData.complete, {username}) : i18n(missionData.failed, {username});
-        }
+        let checked = !_.isEmpty(match);
 
-        resolve(response);
-    });
+        response.checked = checked;
+        response.output = checked ? i18n(missionData.complete, {username}) : i18n(missionData.failed, {username});
+    }
+
+    return Promise.resolve(response);
+
 };
