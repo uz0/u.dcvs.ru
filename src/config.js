@@ -9,7 +9,8 @@ module.exports = {
         webhookEndpoint: process.env.TELEGRAM_WEBHOOKENDPOINT || '',
     },
     discord: {
-        authToken: process.env.DISCORD_AUTH_TOKEN,
+        authToken: process.env.DISCORD_AUTH_TOKEN || 'NDc5Njg4MTcwODM3OTAxMzcx.Dlyd6Q.dCvaAquznBiAQAaZSQXQFyAx9k8',
         webhookEndpoint: process.env.DISCORD_WEBHOOKENDPOINT,
+        guildId: process.env.GUILD_ID || '292411714069331969',
     },
 };

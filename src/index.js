@@ -1,5 +1,6 @@
 const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
+const discordClient = require('discordBot');
 
 const botApp = require('./app');
 const {telegram, url} = require('./config');
@@ -98,6 +99,7 @@ if (telegram.authToken) { // for local dev purposes
                 telegramClient.sendMessage(id, output);
             },
             telegramClient,
+            discordClient,
         })
     });
 }
