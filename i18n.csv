@@ -75,7 +75,7 @@ noTasks,"There is no task for checking"
 setModerator,"User ${username} is moderator now"
 unsetModerator,"User ${username} is not moderator now"
 sendToModeration,"Answer has been sent to moderation"
-moderationTask,"mission: ${command}\nuser: ${username}\nanswer:${answer}"
+moderationTask,"mission: ${command}\\nuser: ${username}\\nanswer:${answer}"
 cantUnsetAdmin,"You are not allowed to unset admin"
 acceptedMission,"Your mission was accepted by moderator",
 notAcceptedMission,"Your mission was not accepted by moderator",
