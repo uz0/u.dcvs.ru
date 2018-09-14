@@ -22,7 +22,7 @@ module.exports = async function(response, { input, id, db, i18n }) {
                     pendingModeration: task,
                 }
             });
-            response.output = i18n('moderationTask', {username, command, answer});
+            response.output = `mission: ${command}\nuser: ${username}\nanswer: ${answer}`;
             resolve(response);
         });
     });
