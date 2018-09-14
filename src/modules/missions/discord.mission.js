@@ -6,7 +6,7 @@ const missionData = {
     brief: 'discordBriefing',
     complete: 'discordSuccess',
     failed: 'discordFail',
-    reward: 1,
+    reward: 2,
 };
 
 module.exports = makeMission(missionData);

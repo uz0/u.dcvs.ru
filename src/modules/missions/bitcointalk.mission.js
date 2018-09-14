@@ -6,7 +6,7 @@ const missionData = {
     brief: 'bitcointalkBriefing',
     complete: 'bitcointalkSuccess',
     failed: 'bitcointalkFail',
-    reward: 1,
+    reward: 2,
     needModeration: true,
 };
 
