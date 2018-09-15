@@ -2,7 +2,7 @@ const {makeMission} = require("./helpers");
 
 const missionData = {
     command: 'gamedev',
-    name: 'Game Developer with min 3 years of experiecne',
+    name: 'Game Developer with min 3 years of experience',
     brief: 'gamedevBriefing',
     complete: 'gamedevSuccess',
     failed: 'gamedevFail',
