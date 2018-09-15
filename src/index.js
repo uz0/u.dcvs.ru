@@ -96,7 +96,7 @@ if (telegram.authToken) { // for local dev purposes
             handle({ output }) {
                 telegramClient.sendMessage(id, output);
 
-                console.log(`${username} ${chat.id}> ${input}\n${output}`);
+                console.log(`${username} ${chat.id}> ${text}\n${output}`);
             },
             telegramClient,
             discordClient,
