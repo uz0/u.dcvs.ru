@@ -61,11 +61,11 @@ videopostBriefing,"Do a good short video about HyperLoot on Twitch or YouTube, y
 videopostSuccess,""
 videopostFail,""
 
-gamedevBriefing,"if you worked for game developer for more then 2 year and you can prove that. We will reward you 50 HLT. You will need to send us the linkedin profile, and fill in application form [here](https://goo.gl/forms/5YllXsVEoAh0BhvF3)."
+gamedevBriefing,"if you worked for game developer for more then 2 year and you can prove that. We will reward you 50 HLT. You will need to send us the linkedin profile, and fill in application form here: https://goo.gl/forms/5YllXsVEoAh0BhvF3."
 gamedevSuccess,""
 gamedevFail,""
 
-integrationBriefing,"if you own a video game that qualifies for HyperLoot integration, you can earn $1000 in HLT tokens. You need to fill in the [form](https://goo.gl/forms/BtYfKpXO5Rzb5sIi2), describing your game. After integrating your game with Hyperloot through SDK, we will get Reward."
+integrationBriefing,"if you own a video game that qualifies for HyperLoot integration, you can earn $1000 in HLT tokens. You need to fill in the form here: https://goo.gl/forms/BtYfKpXO5Rzb5sIi2, describing your game. After integrating your game with Hyperloot through SDK, we will get Reward."
 integrationSuccess,""
 integrationFail,""
 
