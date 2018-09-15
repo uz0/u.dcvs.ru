@@ -14,8 +14,12 @@ module.exports = async function(response, { input, id, db, i18n }) {
         db.moderation.findOne({}, (err, task) => {
             if (!task) {
                 reject(i18n('noTasks'));
+
+                return;
             }
+
             const {username, command, answer} = task;
+
             db.moderation.remove({_id: task._id});
             db.users.update({telegramId: id}, {
                 $set: {
