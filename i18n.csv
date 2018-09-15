@@ -61,13 +61,13 @@ videopostBriefing,"Do a good short video about HyperLoot on Twitch or YouTube, y
 videopostSuccess,"I'll got this! You earn your Video bounty soon as we moderate your accomplishment. Thank you!"
 videopostFail,"Something went wrong. Please do it again or use /support to explain us your situation, we will try to help"
 
-gamedevBriefing,"if you worked for game developer for more then 2 year and you can proof that. We will reward you 50 HLT. Fill in application form and SEND me your profile link on LinkedIn"
-gamedevSuccess,"I'll got this! You earn your GameDev bounty soon as we moderate your accomplishment. Thank you {username}!"
-gamedevFail,"Something went wrong. Please do it again or use /support to explain us your situation, we will try to help"
+gamedevBriefing,"if you worked for game developer for more then 2 year and you can prove that. We will reward you 50 HLT. You will need to send us the linkedin profile, and fill in application form here: https://goo.gl/forms/5YllXsVEoAh0BhvF3."
+gamedevSuccess,""
+gamedevFail,""
 
-integrationBriefing,"if you own a video game that qualifies for HyperLoot integration, you can earn $1000 in HLT tokens. You need to fill in the form, describing your game. After integrating your game with Hyperloot through SDK, we will get Reward."
-integrationSuccess,"I'll got this! You earn your Game bounty soon as we moderate your accomplishment. Thank you ${username}!"
-integrationFail,"Something went wrong. Please do it again or use /support to explain us your situation, we will try to help"
+integrationBriefing,"if you own a video game that qualifies for HyperLoot integration, you can earn $1000 in HLT tokens. You need to fill in the form here: https://goo.gl/forms/BtYfKpXO5Rzb5sIi2, describing your game. After integrating your game with Hyperloot through SDK, we will get Reward."
+integrationSuccess,""
+integrationFail,""
 
 notmoderator,"You're not authorized to do this"
 noUserNickname,"There's no user with that nickname ${nickname}"
