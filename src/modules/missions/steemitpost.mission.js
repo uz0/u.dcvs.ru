@@ -6,7 +6,7 @@ const missionData = {
     brief: 'steemitpostBriefing',
     complete: 'steemitpostSuccess',
     failed: 'steemitpostFail',
-    reward: 1,
+    reward: 15,
     needModeration: true,
 };
 

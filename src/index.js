@@ -1,5 +1,6 @@
 const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
+const discordClient = require('./discordBot');
 
 const botApp = require('./app');
 const {telegram, url} = require('./config');
@@ -19,7 +20,6 @@ const {missions} = require('./modules/missions');
 const telegramChecker = require('./modules/missions/telegram.mission.checker');
 const discordChecker = require('./modules/missions/discord.mission.checker');
 const twitterChecker = require('./modules/missions/twitter.mission.checker');
-const linkedinChecker = require('./modules/missions/linkedin.mission.checker');
 
 const getModule = require('./modules/moderation/get.command');
 const moderatorCheck = require('./modules/moderation/moderatorCheck');
@@ -33,6 +33,7 @@ const userModule = require('./modules/user');
 const moderatorModule = require('./modules/moderation/moderator');
 const setmoderatorModule = require('./modules/moderation/setmoderator.command');
 const unsetmoderatorModule = require('./modules/moderation/unsetmoderator.command');
+const linkedInComplete = require('./modules/moderation/linkedInComplete');
 
 const expressApp = express();
 
@@ -60,9 +61,9 @@ const appInstance = botApp().register([
     telegramChecker,
     discordChecker,
     twitterChecker,
-    linkedinChecker,
     moderatorCheck,
     sendToModeration,
+    linkedInComplete,
 
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE
@@ -84,20 +85,22 @@ if (telegram.authToken) { // for local dev purposes
         res.sendStatus(200);
     });
 
-    telegramClient.on('message', ({ from, text }) => {
-        const { id, username } = from;
+    // todo remove chat
+    telegramClient.on('message', ({ from, text, chat }) => {
+        const { id, username,  } = from;
+        // console.log(`test chat: ${chat.id}`);
 
-        // appInstance.process({
-        //     input: text,
-        //     username,
-        //     id,
-        //     from: 'telegram',
-        //     handle({ output }) {
-        //         telegramClient.sendMessage(id, output);
-        //     },
-        // });
-
-        telegramClient.sendMessage(id, 'HyperLoot will start Airdrop campaign in 15.09.2018 at 0:00am UTC0, everyone can participate. Join Discord group for updates – https://discord.gg/BE6DMvy');
+        appInstance.process({
+            input: text,
+            username,
+            id,
+            from: 'telegram',
+            handle({ output }) {
+                telegramClient.sendMessage(id, output);
+            },
+            telegramClient,
+            discordClient,
+        });
     });
 }
 

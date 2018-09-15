@@ -6,7 +6,7 @@ const missionData = {
     brief: 'gamedevBriefing',
     complete: 'gamedevSuccess',
     failed: 'gamedevFail',
-    reward: 1,
+    reward: 50,
     needModeration: true,
 };
 

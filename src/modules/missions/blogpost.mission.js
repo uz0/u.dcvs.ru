@@ -6,7 +6,7 @@ const missionData = {
     brief: 'blogpostBriefing',
     complete: 'blogpostSuccess',
     failed: 'blogpostFail',
-    reward: 1,
+    reward: 15,
     needModeration: true,
 };
 
