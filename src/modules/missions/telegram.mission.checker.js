@@ -18,6 +18,7 @@ module.exports = async function(response, { input, id, i18n, username, telegramC
         } catch (e) {
             console.log(11, e)
         }
+        console.log(1, chatMember)
         const userStatus = _.get(chatMember, 'status');
 
         let checked = allowedStatuses.includes(userStatus);
