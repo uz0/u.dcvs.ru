@@ -11,15 +11,9 @@ module.exports = async function(response, { input, id, i18n, username, telegramC
         throw(i18n('noLogged'));
     }
 
-    console.log('console log driven development')
-
-    console.log(user.pending && (user.pending === missionData.command))
-    console.log(user)
-    console.log(response)
-    console.log(missionData)
-
     if (user.pending && (user.pending === missionData.command)) {
         const chatMember = await telegramClient.getChatMember(chatId, id);
+        console.log('111', chatMember)
         const userStatus = _.get(chatMember, 'status');
 
         let checked = allowedStatuses.includes(userStatus);
