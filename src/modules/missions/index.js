@@ -41,7 +41,7 @@ const missionIniter = async function(response, context) {
     }
 
     const { user } = response;
-    const data = user.data[mission.command] || {};
+    const data = get(user, `data.${mission.command}`, {});
 
     if (data.completed) {
         throw(i18n('completed'));
@@ -96,7 +96,7 @@ const missionChecker = async function(response, context) {
         return response;
     };
 
-    const data = user.data[mission.command] || {};
+    const data = get(user, `data.${mission.command}`, {});
 
     if (data.completed) {
         return response;
