@@ -11,7 +11,7 @@ module.exports = {
         }, {
             $set: {
                 pending: false,
-                balance: user.balance + mission.reward,
+                balance: user.balance + 1,
                 wantLinkedin: true,
                 'data.linkedin.completed': true,
             },

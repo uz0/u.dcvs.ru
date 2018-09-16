@@ -1,6 +1,6 @@
 const {admin} = require('../../config');
 
-module.exports = async function(response, { input, username, id, db, i18n }) {
+module.exports = async function(response, { input, id, db, i18n }) {
     const {user, isModerator} = response;
 
     if (!user) {
@@ -29,7 +29,7 @@ module.exports = async function(response, { input, username, id, db, i18n }) {
                 }
             });
 
-            response.output = i18n('unsetModerator', {username});
+            response.output = i18n('unsetModerator', {nickname});
             resolve(response);
         });
     });

@@ -42,9 +42,8 @@ module.exports = async function(response, { input, id, db, i18n, telegramClient 
                 telegramId: pendingModeration.id,
             }, {
                 $set: {
-                    balance,
+                    balance: moderatedUser.balance + mission.reward,
                     [`data.${mission.command}`]: {
-                        balance: moderatedUser.balance + mission.reward,
                         completed: true,
                     },
                 },
