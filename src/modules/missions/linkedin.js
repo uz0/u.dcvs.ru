@@ -4,6 +4,8 @@ module.exports = {
     brief: 'linkedinBriefing',
     reward: 1,
     init(response, { db, id }) {
+        const {user} = response;
+
         db.users.update({
             telegramId: id,
         }, {
