@@ -7,10 +7,11 @@ module.exports = {
     telegram: {
         authToken: process.env.TELEGRAM_AUTH_TOKEN,
         webhookEndpoint: process.env.TELEGRAM_WEBHOOKENDPOINT || '',
+        allowedStatuses: ['creator', 'administrator', 'member'],
     },
     discord: {
         authToken: process.env.DISCORD_AUTH_TOKEN || 'NDc5Njg4MTcwODM3OTAxMzcx.Dlyd6Q.dCvaAquznBiAQAaZSQXQFyAx9k8',
         webhookEndpoint: process.env.DISCORD_WEBHOOKENDPOINT,
-        guildId: process.env.GUILD_ID || '292411714069331969',
+        guildId: process.env.GUILD_ID || '450987902667718656',
     },
 };

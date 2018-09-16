@@ -11,6 +11,7 @@ module.exports = async function(response, { input, username, id, db, commands, i
             telegramId: id,
             telegramUsername: username,
             isModerator: false,
+            pending: false,
             balance: 0,
             data: {
                 // key: { }

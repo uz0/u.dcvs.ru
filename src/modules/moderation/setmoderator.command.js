@@ -26,7 +26,7 @@ module.exports = async function(response, { input, username, id, db, i18n }) {
             response.output = i18n('setModerator', {nickname});
             resolve(response);
         });
-    })
+    });
 };
 
 module.exports.command = 'setmoderator';

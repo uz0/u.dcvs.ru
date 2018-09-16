@@ -3,49 +3,54 @@ const TelegramBot = require('node-telegram-bot-api');
 const discordClient = require('./discordBot');
 
 const botApp = require('./app');
-const {telegram, url} = require('./config');
+const {telegram: telegramCfg, url} = require('./config');
 
-const userModule = require('./modules/user');
-const errorModule = require('./modules/error');
-const emptyModule = require('./modules/empty');
+const user = require('./modules/user');
+const error = require('./modules/error');
+const empty = require('./modules/empty');
+const pending = require('./modules/pending');
 
-const startModule = require('./modules/start.command');
-const pongModule = require('./modules/pong.command');
-const helpModule = require('./modules/help.command');
-const ethModule = require('./modules/eth.command');
-const balanceModule = require('./modules/balance.command');
-const listModule = require('./modules/list.command');
-const faqModule = require('./modules/faq.command');
-const supportModule = require('./modules/support.command');
-const termsModule = require('./modules/terms.command');
+const start = require('./modules/start.command');
+const pong = require('./modules/pong.command');
+const help = require('./modules/help.command');
+const eth = require('./modules/eth.command');
+const balance = require('./modules/balance.command');
+const faq = require('./modules/faq.command');
+const support = require('./modules/support.command');
+const terms = require('./modules/terms.command');
+
+const missions = require('./modules/missions');
+const moderation = require('./modules/moderation');
 
 const expressApp = express();
 
 const appInstance = botApp().register([
     // KEEP IN MIND, ORDER IMPORTANT!!!
-    // userModule,
+    user,
 
-    // startModule,
-    // pongModule,
-    // helpModule,
-    // ethModule,
-    // balanceModule,
-    // listModule,
-    // faqModule,
-    // supportModule,
-    // termsModule,
+    start,
+    pong,
+    help,
+    eth,
+    balance,
+    faq,
+    support,
+    terms,
+
+    ...missions,
+    ...moderation,
 
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE
-    emptyModule,
-    errorModule,
+    empty,
+    error,
 ]);
 
 // hook with telegram
-const path = `/telegram/${telegram.webhookEndpoint}${telegram.authToken}`;
+const path = `/telegram/${telegramCfg.webhookEndpoint}${telegramCfg.authToken}`;
 
-if (telegram.authToken) { // for local dev purposes
-    const telegramClient = new TelegramBot(telegram.authToken, {polling: true});
+if (telegramCfg.authToken) { // for local dev purposes
+    const telegramClient = new TelegramBot(telegramCfg.authToken, {polling: true});
 
     telegramClient.setWebHook(`${url}${path}`);
 
@@ -82,6 +87,7 @@ expressApp.use('/api/message', (req, res) => {
         handle({ output }) {
             res.send(`<pre>${output}</pre>`);
         },
+        discordClient,
     });
 });
 
