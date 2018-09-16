@@ -85,8 +85,8 @@ const missionChecker = async function(response, context) {
         ...commands.map(({command}) => command),
     ];
 
-    const command = fullCommandsList.filter(command => input.startsWith(`${PREFIX}${command}`))[0];
-    if(command) {
+    const inputedCommand = fullCommandsList.filter(command => input.startsWith(`${PREFIX}${command}`))[0];
+    if(inputedCommand) {
         return response;
     }
 
