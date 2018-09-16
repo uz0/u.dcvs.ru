@@ -1,45 +1,169 @@
-const _ = require('lodash');
-const twitterMission = require('./twitter.mission');
-const linkedinMission = require('./linkedin.mission');
-const telegramMission = require('./telegram.mission');
-const discordMission = require('./discord.mission');
-const bitcointalkMission = require('./bitcointalk.mission');
-const redditMission = require('./reddit.mission');
-const blogpostMission = require('./blogpost.mission');
-const steemitpostMission = require('./steemitpost.mission');
-const redditpostMission = require('./redditpost.mission');
-const videopostMission = require('./videopost.mission');
-const gamedevMission = require('./gamedev.mission');
-const integrationMission = require('./integration.mission');
+const map = require('lodash/map');
+const get = require('lodash/get');
+const {PREFIX} = require('../../config');
 
-//const bitcointalkMission = require('./bitcointalk.mission');
+const bitcointalk = require('./bitcointalk');
+const blogpost = require('./blogpost');
+const gamedev = require('./gamedev');
+const integration = require('./integration');
+const reddit = require('./reddit');
+const redditpost = require('./redditpost');
+const steemitpost = require('./steemitpost');
+const videopost = require('./videopost');
+
+const linkedin = require('./linkedin');
+const discord = require('./discord');
+const telegram = require('./telegram');
+const twitter = require('./twitter');
 
 const missions = [
-    twitterMission,
-    linkedinMission,
-    telegramMission,
-    discordMission,
-    bitcointalkMission,
-    redditMission,
-    blogpostMission,
-    steemitpostMission,
-    redditpostMission,
-    videopostMission,
-    gamedevMission,
-    integrationMission,
+    bitcointalk,
+    blogpost,
+    gamedev,
+    integration,
+    reddit,
+    redditpost,
+    steemitpost,
+    videopost,
+
+    linkedin,
+    discord,
+    telegram,
+    twitter,
 ];
 
-const initMissions = _.map(
-    missions,
-    mission => {
-        return _.extend(
-            _.pick(mission.missionData, ['command']),
-            {answer: ''},
-        );
-    }
-);
+const missionIniter = async function(response, context) {
+    const { db, id, i18n, input } = context;
 
-module.exports = {
-    missions,
-    initMissions,
+    const mission = missions.filter(({ command }) => input.startsWith(`${PREFIX}${command}`))[0];
+    if (!mission) {
+        return response;
+    }
+
+    const { user } = response;
+    const data = user.data[mission.command] || {};
+
+    if (data.completed) {
+        throw(i18n('completed'));
+    }
+
+    if (mission.init) {
+        response = await mission.init(response, context);
+    }
+
+    if (mission.needAnswer || mission.needModeration) {
+        db.users.update({
+            telegramId: id,
+        }, {
+            $set: {
+                pending: mission.command,
+            },
+        });
+    }
+
+    response.output = i18n(mission.brief);
+
+    return response;
 };
+
+const missionChecker = async function(response, context) {
+    const { user } = response;
+    const { input, db, id, i18n, username, commands } = context;
+
+    // any time reset pending
+    db.users.update({
+        telegramId: id,
+    }, {
+        $set: {
+            pending: false,
+        },
+    });
+
+    // any command reset checker
+    const fullCommandsList = [
+        ...missions.map(mission => mission.command),
+        ...commands.map(({command}) => command),
+    ];
+
+    const command = fullCommandsList.filter(command => input.startsWith(`${PREFIX}${command}`))[0];
+    if(command) {
+        return response;
+    }
+
+    // mission checker body
+    const mission = missions.filter(({ command }) => user.pending === command)[0];
+    if (!mission) {
+        return response;
+    };
+
+    const data = user.data[mission.command] || {};
+
+    if (data.completed) {
+        return response;
+    }
+
+    if (mission.needModeration) {
+        db.moderation.insert({
+            username,
+            id,
+            command: mission.command,
+            answer: input,
+        });
+
+        response.output = i18n('sendToModeration');
+    }
+
+    if(mission.checker) {
+        const checked = await mission.checker(context);
+
+        let balance = user.balance;
+        let output = i18n(mission.failed, {username});
+
+        if (checked) {
+            balance = user.balance + mission.reward;
+            output = i18n(mission.complete, {username});
+        }
+
+        db.users.update({
+            telegramId: id,
+        }, {
+            $set: {
+                pending: false,
+                balance,
+                [`data.${mission.command}`]: {
+                    answer: input,
+                    completed: checked,
+                },
+            },
+        });
+
+        response.output = output;
+    }
+
+    return response;
+}
+
+const missionList = async function(response, { input, db, id, i18n }) {
+    const {user} = response;
+
+    if (!user) {
+        throw(i18n('noLogged'));
+    }
+
+    response.output =
+        map(missions, mission => i18n('missionInfo', {
+            PREFIX,
+            completed: get(user, `data.${mission.command}.completed`) ? 'completed' : '',
+            command: mission.command,
+            reward: mission.reward,
+            help: i18n(mission.help),
+        }))
+        .join('\n');
+
+    return response;
+};
+
+missionList.command = 'list';
+
+module.exports = [missionIniter, missionChecker, missionList];
+module.exports.missions = missions;

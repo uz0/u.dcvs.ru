@@ -1,8 +1,6 @@
+const {reward} = require('../missions/linkedin');
 
-const _ = require('lodash');
-const {updateAvailable}= require("../missions/helpers");
-
-module.exports = async function(response, { input, id, db, i18n, handle, missions }) {
+module.exports = async function(response, { db, i18n, handle }) {
     const {user, isModerator} = response;
 
     if (!user) {
@@ -10,12 +8,22 @@ module.exports = async function(response, { input, id, db, i18n, handle, mission
     }
 
     if (!isModerator) {
-        throw('You\'re not moderator');
+        throw(i18n('notmoderator'));
     }
 
     db.users.find({wantLinkedin: true}).forEach((err, user) => {
         handle(user.telegramId, {output: i18n('linkedinSuccess')});
-        updateAvailable(db, user.telegramId, user, missions, 'linkedin');
+
+        db.users.update({
+            telegramId: user.telegramId,
+        }, {
+            $set: {
+                balance: user.balance + reward,
+                [`data.linkedin`]: {
+                    completed: true,
+                },
+            },
+        });
     });
 
     response.output = i18n('taskChecked');

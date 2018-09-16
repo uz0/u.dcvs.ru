@@ -7,7 +7,7 @@ module.exports = async function(response, { input, id, db, i18n }) {
     }
 
     if (!isModerator) {
-        throw('You\'re not moderator');
+        throw(i18n('notmoderator'));
     }
 
     return new Promise((resolve, reject) => {
@@ -26,7 +26,8 @@ module.exports = async function(response, { input, id, db, i18n }) {
                     pendingModeration: task,
                 }
             });
-            response.output = `mission: ${command}\nuser: ${username}\nanswer: ${answer}`;
+
+            response.output = `mission: ${command}\nuser: @${username}\nanswer: ${answer}`;
             resolve(response);
         });
     });
