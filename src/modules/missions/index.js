@@ -160,7 +160,7 @@ const missionList = async function(response, { input, db, id, i18n }) {
     response.output =
         map(missions, mission => i18n('missionInfo', {
             PREFIX,
-            completed: get(user, `data.${mission.command}.completed`) ? 'completed' : '',
+            completed: get(user, `data.${mission.command}.completed`) ? '✅' : '',
             command: mission.command,
             reward: mission.reward,
             help: i18n(mission.help),
