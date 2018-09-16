@@ -27,7 +27,7 @@ module.exports = async function(response, { input, id, db, i18n }) {
                 }
             });
 
-            response.output = `mission: ${command}\nuser: ${username}\nanswer: ${answer}`;
+            response.output = `mission: ${command}\nuser: @${username}\nanswer: ${answer}`;
             resolve(response);
         });
     });

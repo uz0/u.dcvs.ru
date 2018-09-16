@@ -61,7 +61,6 @@ const missionIniter = async function(response, context) {
         });
     }
 
-
     response.output = i18n(mission.brief);
 
     return response;
@@ -69,12 +68,33 @@ const missionIniter = async function(response, context) {
 
 const missionChecker = async function(response, context) {
     const { user } = response;
-    const { input, db, id, i18n, username } = context;
+    const { input, db, id, i18n, username, commands } = context;
 
+    // any time reset pending
+    db.users.update({
+        telegramId: id,
+    }, {
+        $set: {
+            pending: false,
+        },
+    });
+
+    // any command reset checker
+    const fullCommandsList = [
+        ...missions.map(mission => mission.command),
+        ...commands.map(({command}) => command),
+    ];
+
+    const command = fullCommandsList.filter(command => input.startsWith(`${PREFIX}${command}`))[0];
+    if(command) {
+        return response;
+    }
+
+    // mission checker body
     const mission = missions.filter(({ command }) => user.pending === command)[0];
     if (!mission) {
         return response;
-    }
+    };
 
     const data = user.data[mission.command] || {};
 
@@ -120,14 +140,6 @@ const missionChecker = async function(response, context) {
         response.output = output;
     }
 
-    db.users.update({
-        telegramId: id,
-    }, {
-        $set: {
-            pending: false,
-        },
-    });
-
     return response;
 }
 
@@ -154,3 +166,4 @@ const missionList = async function(response, { input, db, id, i18n }) {
 missionList.command = 'list';
 
 module.exports = [missionIniter, missionChecker, missionList];
+module.exports.missions = missions;

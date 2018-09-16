@@ -46,9 +46,9 @@ bitcointalkSuccess,"I'll got this! You earn your BitcoinTalk bounty soon as we m
 bitcointalkFail,"You need to submit url link into your post. Please do it and check again or use /support to explain us your situation, we will try to help."
 
 redditHelp, "Subscribe to Hyperloot on Reddit"
-redditpostSubscribeBriefing,"Subscribe to HyperLoot sub-reddit https://reddit.com/r/hyperloot/ and stay with us till the end of the year to earn 2 HLT. For accomplishment send me your reddit username."
-redditpostSubscribeSuccess,"I'll got this! You earn your reddit bounty soon as we moderate your accomplishment. Thank you!"
-redditpostSubscribeFail,"Something went wrong. Please do it again or use /support to explain us your situation, we will try to help"
+redditBriefing,"Subscribe to HyperLoot sub-reddit https://reddit.com/r/hyperloot/ and stay with us till the end of the year to earn 2 HLT. For accomplishment send me your reddit username."
+redditSuccess,"I'll got this! You earn your reddit bounty soon as we moderate your accomplishment. Thank you!"
+redditFail,"Something went wrong. Please do it again or use /support to explain us your situation, we will try to help"
 
 blogpostHelp, "Prepare Hyperloot project overview and post it on your blog, website or other channel"
 blogpostBriefing,"Do a good 1000 character blog post about Hyperloot. Include links to website, github and social media. Send me the url as a proof and make 15 HLT."
@@ -90,5 +90,6 @@ moderationTask,""
 cantUnsetAdmin,"You are not allowed to unset admin."
 acceptedMission,"Your mission was accepted by moderator.",
 notAcceptedMission,"Your mission was not accepted by moderator.",
-taskChecked,"Task checking completed."
+taskCheckedOk,"Task Completed!"
+taskCheckedFailed,"Task failed!"
 completed, "You had already finished this mission"
