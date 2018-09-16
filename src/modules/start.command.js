@@ -1,4 +1,3 @@
-const {initMissions} = require('./missions');
 const {PREFIX} = require('../config');
 
 module.exports = async function(response, { input, username, id, db, commands, i18n }) {
@@ -12,9 +11,10 @@ module.exports = async function(response, { input, username, id, db, commands, i
             telegramId: id,
             telegramUsername: username,
             isModerator: false,
-            available: initMissions,
-            completed: [],
             balance: 0,
+            data: {
+                // key: { }
+            },
         };
         db.users.insert(newUser);
 

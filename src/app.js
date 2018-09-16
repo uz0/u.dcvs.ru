@@ -15,9 +15,9 @@ module.exports = function() {
             return self;
         },
         async process({ input = '', ...options }) {
-            const missions = modules
-                .filter(module => module.missionData)
-                .map(module => module.missionData);
+            // const missions = modules
+            //     .filter(module => module.missionData)
+            //     .map(module => module.missionData);
 
             const commands = modules
                 .filter(module => module.command)

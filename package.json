@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "license": "Apache-2.0",
   "dependencies": {
@@ -21,5 +22,8 @@
     "request": "^2.88.0",
     "uuid": "^3.2.1",
     "wallet-address-validator": "^0.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
   }
 }

@@ -5,8 +5,12 @@ const discordClient = require('./discordBot');
 const botApp = require('./app');
 const {telegram, url} = require('./config');
 
-const pongModule = require('./modules/pong.command');
+const userModule = require('./modules/user');
+const errorModule = require('./modules/error');
+const emptyModule = require('./modules/empty');
+
 const startModule = require('./modules/start.command');
+const pongModule = require('./modules/pong.command');
 const helpModule = require('./modules/help.command');
 const ethModule = require('./modules/eth.command');
 const balanceModule = require('./modules/balance.command');
@@ -15,59 +19,24 @@ const faqModule = require('./modules/faq.command');
 const supportModule = require('./modules/support.command');
 const termsModule = require('./modules/terms.command');
 
-const {missions} = require('./modules/missions');
-
-const telegramChecker = require('./modules/missions/telegram.mission.checker');
-const discordChecker = require('./modules/missions/discord.mission.checker');
-const twitterChecker = require('./modules/missions/twitter.mission.checker');
-
-const getModule = require('./modules/moderation/get.command');
-const moderatorCheck = require('./modules/moderation/moderatorCheck');
-const sendToModeration = require('./modules/missions/sendToModeration');
-
-const commonMissionBefore = require('./modules/missions/commonMissionBefore');
-const emptyModule = require('./modules/empty');
-const errorModule = require('./modules/error');
-const userModule = require('./modules/user');
-
-const moderatorModule = require('./modules/moderation/moderator');
-const setmoderatorModule = require('./modules/moderation/setmoderator.command');
-const unsetmoderatorModule = require('./modules/moderation/unsetmoderator.command');
-const linkedInComplete = require('./modules/moderation/linkedInComplete');
-
 const expressApp = express();
 
 const appInstance = botApp().register([
     // KEEP IN MIND, ORDER IMPORTANT!!!
-    userModule,
-    moderatorModule,
+    // userModule,
 
-    startModule,
-    pongModule,
-    helpModule,
-    ethModule,
-    balanceModule,
-    listModule,
-    faqModule,
-    supportModule,
-    termsModule,
-
-    getModule,
-    setmoderatorModule,
-    unsetmoderatorModule,
-
-    ...missions,
-
-    telegramChecker,
-    discordChecker,
-    twitterChecker,
-    moderatorCheck,
-    sendToModeration,
-    linkedInComplete,
+    // startModule,
+    // pongModule,
+    // helpModule,
+    // ethModule,
+    // balanceModule,
+    // listModule,
+    // faqModule,
+    // supportModule,
+    // termsModule,
 
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE
-    commonMissionBefore,
     emptyModule,
     errorModule,
 ]);
@@ -95,8 +64,6 @@ if (telegram.authToken) { // for local dev purposes
             from: 'telegram',
             handle({ output }) {
                 telegramClient.sendMessage(id, output);
-
-                console.log(`${username} ${chat.id}> ${text}\n${output}`);
             },
             telegramClient,
             discordClient,

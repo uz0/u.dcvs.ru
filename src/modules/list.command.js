@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const {getMissionByCommand} = require("./missions/helpers");
+// const {getMissionByCommand} = require("./missions/helpers");
 const {PREFIX} = require('../config');
 
 module.exports = async function(response, { input, db, id, i18n, missions }) {
@@ -13,14 +13,14 @@ module.exports = async function(response, { input, db, id, i18n, missions }) {
         throw(i18n('noMissions'))
     }
 
-    const missionsInfo = missions.map(mission => {
-        const availableMission = getMissionByCommand(user.available, mission.command);
-        return _.extend(mission, {answer: availableMission.answer, completed: availableMission.completed});
-    });
+    // const missionsInfo = missions.map(mission => {
+    //     const availableMission = getMissionByCommand(user.available, mission.command);
+    //     return _.extend(mission, {answer: availableMission.answer, completed: availableMission.completed});
+    // });
 
-    response.output =
-        _.map(missionsInfo, mission => i18n('missionInfo', {...mission, PREFIX, completed: mission.completed ? 'completed' : ''}))
-        .join('\n');
+    // response.output =
+    //     _.map(missionsInfo, mission => i18n('missionInfo', {...mission, PREFIX, completed: mission.completed ? 'completed' : ''}))
+    //     .join('\n');
 
     return response;
 };
