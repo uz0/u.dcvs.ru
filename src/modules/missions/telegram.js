@@ -10,7 +10,7 @@ module.exports = {
     failed: 'telegramFail',
     reward: 1,
     needAnswer: true,
-    async checker({ telegramClient }) {
+    async checker({ telegramClient, id }) {
         const chatMember = await telegramClient.getChatMember(chatId, id);
         const userStatus = get(chatMember, 'status');
 
