@@ -59,6 +59,8 @@ const missionIniter = async function(response, context) {
                 pending: mission.command,
             },
         });
+
+        response.pendingInited = true;
     }
 
     response.output = i18n(mission.brief);
@@ -67,8 +69,13 @@ const missionIniter = async function(response, context) {
 };
 
 const missionChecker = async function(response, context) {
-    const { user } = response;
+    const { user, pendingInited } = response;
     const { input, db, id, i18n, username, commands } = context;
+
+    // we init something mission
+    if (pendingInited) {
+        return response;
+    }
 
     // any time reset pending
     db.users.update({
