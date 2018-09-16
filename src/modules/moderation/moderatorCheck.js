@@ -26,7 +26,7 @@ module.exports = async function(response, { input, id, db, i18n, telegramClient 
     const messageToUser = accepted ? i18n(mission.complete) : i18n(mission.failed);
     const messageToModerator = accepted ? i18n('taskCheckedOk') : i18n('taskCheckedFailed');
 
-    // telegramClient.sendMessage(pendingModeration.id, messageToUser);
+    telegramClient.sendMessage(pendingModeration.id, messageToUser);
 
     db.users.update({telegramId: id}, {
         $set: {
