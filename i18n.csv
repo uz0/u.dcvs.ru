@@ -36,7 +36,7 @@ telegramSuccess,"Congratulations. You earned your Telegram bounty. Good Job!"
 telegramFail,"I'm unable to record the accomplishment of your Telegram Bounty. You need to follow our group. Please do it and check again. Use /support to explain us your situation, we will try to help"
 
 discordHelp, "Join us on Discord channel"
-discordBriefing,"Join our Discord Channel, https://discord.gg/qEH8PHk, and send us your user name. You will have to stay with us till the end of the year!"
+discordBriefing,"Join our Discord Channel, https://discord.gg/qEH8PHk, and send us your user name without the numbers. You will have to stay with us till the end of the year!"
 discordSuccess,"You earned your Discords bounty. Good Job!"
 discordFail,"I'm unable to record the accomplishment of your Discords Bounty. You need to join our Discord Channel (https://discord.gg/qEH8PHk). Please do it and check again or use /support to explain us your situation, we will try to help."
 
