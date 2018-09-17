@@ -28,7 +28,7 @@ module.exports = async function(response, { input, id, db, i18n, telegramClient 
 
             db.users.update({telegramUsername: nickname}, {
                 $set: {
-                    balance: moderatedUser.balance + mission.reward,
+                    balance: user.balance + mission.reward,
                     [`data.${mission.command}`]: {
                         completed: true,
                     },
