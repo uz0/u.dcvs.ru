@@ -1,5 +1,5 @@
 module.exports = {
-    command: 'redditpost',
+    command: 'postreddit',
     help: 'redditpostHelp',
     brief: 'redditpostBriefing',
     complete: 'redditpostSuccess',
