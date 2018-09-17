@@ -17,7 +17,7 @@ const telegram = require('./telegram');
 const twitter = require('./twitter');
 
 const missions = [
-    bitcointalk,
+//     bitcointalk,
     blogpost,
     gamedev,
     integration,
