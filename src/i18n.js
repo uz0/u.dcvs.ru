@@ -11,7 +11,7 @@ function i18nFactory() {
     reader.read('i18n.csv', rawData)
 
     return (key, props = {}) => {
-        let string = rawData[key];
+        let string = rawData[key] || key;
 
         for(let prop in props) {
             string = string.replace(`\${${prop}}`, props[prop]);
