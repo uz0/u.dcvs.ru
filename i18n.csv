@@ -88,8 +88,8 @@ unsetModerator,"User ${nickname} is not moderator now"
 sendToModeration,"Answer has been sent to moderation."
 moderationTask,""
 cantUnsetAdmin,"You are not allowed to unset admin."
-acceptedMission,"Your mission was accepted by moderator.",
-notAcceptedMission,"Your mission was not accepted by moderator.",
+acceptedMission,"Your mission was accepted by moderator."
+notAcceptedMission,"Your mission was not accepted by moderator."
 taskCheckedOk,"Task Completed!"
 taskCheckedFailed,"Task failed!"
 completed, "You had already finished this mission"
