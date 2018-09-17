@@ -6,6 +6,7 @@ const isModerator = require('./moderator');
 const setmoderator = require('./setmoderator.command');
 const unsetmoderator = require('./unsetmoderator.command');
 const linkedInComplete = require('./linkedInComplete');
+const complete = require('./complete');
 
 module.exports = [
     isModerator,
@@ -15,4 +16,5 @@ module.exports = [
     setmoderator,
     unsetmoderator,
     linkedInComplete,
+    complete,
 ]
