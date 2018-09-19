@@ -20,7 +20,7 @@ module.exports = function() {
                 .map(({ command, moderator }) => ({
                     command,
                     moderator,
-                    help: i18n(`command.${command}`)
+                    help: i18n(`command.${command}`, { strict: true })
                 }));
 
 
