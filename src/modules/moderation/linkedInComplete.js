@@ -32,3 +32,4 @@ module.exports = async function(response, { db, i18n, handle }) {
 };
 
 module.exports.command = 'linkedin-complete';
+module.exports.moderator = true;

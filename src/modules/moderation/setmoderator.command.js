@@ -30,3 +30,4 @@ module.exports = async function(response, { input, id, db, i18n }) {
 };
 
 module.exports.command = 'setmoderator';
+module.exports.moderator = true;

@@ -17,8 +17,9 @@ module.exports = function() {
         async process({ input = '', ...options }) {
             const commands = modules
                 .filter(module => module.command)
-                .map(({ command }) => ({
+                .map(({ command, moderator }) => ({
                     command,
+                    moderator,
                     help: i18n(`command.${command}`)
                 }));
 
