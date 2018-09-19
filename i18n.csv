@@ -21,7 +21,7 @@ command.faq,"To get a link to the FAQ page"
 command.terms,"Get the list of terms & conditions for payments"
 ,
 twitterHelp, "Follow Twitter and Re-tweet"
-twitterBriefing,"Follow us on Twitter https://twitter.com/Hyperloot re-tweet the pinned message, send me your twitter handle so I can reward you!"
+twitterBriefing,"Follow us on Twitter https://twitter.com/Hyperloot re-tweet the pinned message and like it, send me your twitter handle so I can reward you!"
 twitterSuccess,"You earned your Twitter Bounty. Awesome! Move to the next bounty, use /list to see what you can do."
 twitterFail,"I'm unable to record the accomplishment of your Bounty. You need to follow us,  retweet pinned message and send me your twitter handle. Please do it and check again. Use /support to explain us your situation, we will try to help."
 ,
