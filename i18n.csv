@@ -84,6 +84,10 @@ integrationBriefing,"if you own a video game that qualifies for HyperLoot integr
 integrationSuccess,""
 integrationFail,""
 ,
+facebookHelp, "Like our Facebook page and repost the pinned post!"
+facebookBriefing, " Go to our Facebook page: https://www.facebook.com/hyperloot/, like it and repost our pinned message. Send me you Facebook account link. Reward 1 HLT"
+facebookSuccess, "We've got it. I will contact you regarding reward after the bounty campaign is complete!"
+,
 notmoderator,"You're not authorized to do this."
 noUserNickname,"There's no user with that nickname ${nickname}."
 noTasks,"There is no task for checking."
