@@ -5,7 +5,7 @@ const moderatorCheck = require('./moderatorCheck');
 const isModerator = require('./moderator');
 const setmoderator = require('./setmoderator.command');
 const unsetmoderator = require('./unsetmoderator.command');
-const linkedInComplete = require('./linkedInComplete');
+// const linkedInComplete = require('./linkedInComplete');
 const complete = require('./complete');
 
 module.exports = [
@@ -15,6 +15,6 @@ module.exports = [
     moderatorCheck,
     setmoderator,
     unsetmoderator,
-    linkedInComplete,
+    // linkedInComplete,
     complete,
 ]

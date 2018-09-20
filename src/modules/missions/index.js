@@ -151,8 +151,8 @@ const missionChecker = async function(response, context) {
         response.output = output;
     }
 
-    if (mission.finalize) {
-        response = mission.finalize(response, context);
+    if (mission.final) {
+        response = mission.final(response, context);
     }
 
     return response;
