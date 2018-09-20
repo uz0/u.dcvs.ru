@@ -20,6 +20,10 @@ command.support,"If you need help with bounties"
 command.faq,"To get a link to the FAQ page"
 command.terms,"Get the list of terms & conditions for payments"
 ,
+facebookHelp, "Like our Facebook page and repost the pinned post!"
+facebookBriefing, " Go to our Facebook page https://www.facebook.com/hyperloot/, like it and repost our pinned message. Send me you Facebook account link. Reward 1 HLT."
+facebookSuccess, "We've got it. I will contact you regarding reward after the bounty campaign is complete!"
+,
 twitterHelp, "Follow Twitter and Re-tweet"
 twitterBriefing,"Follow us on Twitter https://twitter.com/Hyperloot re-tweet the pinned message and like it, send me your twitter handle so I can reward you!"
 twitterSuccess,"You earned your Twitter Bounty. Awesome! Move to the next bounty, use /list to see what you can do."
