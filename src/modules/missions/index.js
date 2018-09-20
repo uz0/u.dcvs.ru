@@ -12,6 +12,8 @@ const steemitpost = require('./steemitpost');
 const videopost = require('./videopost');
 
 const linkedin = require('./linkedin');
+const facebook = require('./facebook');
+
 const discord = require('./discord');
 const telegram = require('./telegram');
 const twitter = require('./twitter');
@@ -27,6 +29,8 @@ const missions = [
     videopost,
 
     linkedin,
+    facebook,
+
     discord,
     telegram,
     twitter,
@@ -145,6 +149,10 @@ const missionChecker = async function(response, context) {
         });
 
         response.output = output;
+    }
+
+    if (mission.finalize) {
+        response = mission.finalize(response, context);
     }
 
     return response;
