@@ -42,3 +42,4 @@ module.exports = async function(response, { input, id, db, i18n, telegramClient 
 };
 
 module.exports.command = 'complete';
+module.exports.moderator = true;
