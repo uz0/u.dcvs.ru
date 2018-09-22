@@ -22,6 +22,8 @@ module.exports = async function(response, { input, id, db, i18n, telegramClient 
         db.users.findOne({telegramUsername: nickname}, (err, completeUser) => {
             if (!completeUser) {
                 reject(i18n('noUserNickname', {nickname}));
+
+                return;
             }
 
             telegramClient.sendMessage(completeUser.telegramId, i18n(mission.complete));
