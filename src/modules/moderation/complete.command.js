@@ -19,16 +19,16 @@ module.exports = async function(response, { input, id, db, i18n, telegramClient 
     }
 
     return new Promise((resolve, reject) => {
-        db.users.findOne({telegramUsername: nickname}, (err, user) => {
-            if (!user) {
+        db.users.findOne({telegramUsername: nickname}, (err, completeUser) => {
+            if (!completeUser) {
                 reject(i18n('noUserNickname', {nickname}));
             }
 
-            telegramClient.sendMessage(user.telegramId, i18n(mission.complete));
+            telegramClient.sendMessage(completeUser.telegramId, i18n(mission.complete));
 
             db.users.update({telegramUsername: nickname}, {
                 $set: {
-                    balance: user.balance + mission.reward,
+                    balance: completeUser.balance + mission.reward,
                     [`data.${mission.command}`]: {
                         completed: true,
                     },
