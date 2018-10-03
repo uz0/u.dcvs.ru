@@ -61,18 +61,21 @@ if (telegramCfg.authToken) { // for local dev purposes
 
     telegramClient.on('message', ({ from, text, chat }) => {
         const { id, username,  } = from;
+        
+        telegramClient.sendMessage(id, 'Thank you for participating in HyperLoot bounty 1.0! We will calculate the end proceeding and airdrop them out on February 15th, 2019. Stay tuned for more missions in Bounty 2.0! I will contact everyone soon!');
+        return;
 
-        appInstance.process({
-            input: text,
-            username,
-            id,
-            from: 'telegram',
-            handle({ output }) {
-                telegramClient.sendMessage(id, output);
-            },
-            telegramClient,
-            discordClient,
-        });
+//         appInstance.process({
+//             input: text,
+//             username,
+//             id,
+//             from: 'telegram',
+//             handle({ output }) {
+//                 telegramClient.sendMessage(id, output);
+//             },
+//             telegramClient,
+//             discordClient,
+//         });
     });
 }
 
