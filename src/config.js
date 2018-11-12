@@ -12,11 +12,8 @@ module.exports = {
     discord: {
         authToken: process.env.DISCORD_AUTH_TOKEN || 'NDc5Njg4MTcwODM3OTAxMzcx.Dlyd6Q.dCvaAquznBiAQAaZSQXQFyAx9k8',
         webhookEndpoint: process.env.DISCORD_WEBHOOKENDPOINT,
-        // hlt ?
         guildId: process.env.GUILD_ID || '450987902667718656',
-        // dcversus
-        // guildId: process.env.GUILD_ID || '4919905946763266402',
-        // greetingsChannelId: process.env.GREETING_CHANNEL_ID || '510871958104309770',
+        greetingsChannelId: process.env.GREETING_CHANNEL_ID || '510871958104309770',
         // test
         // authToken: 'NDc5Njg4MTcwODM3OTAxMzcx.DspLDQ.1-Ve9-_Gqeih623USmwWxFwvz2w',
         // guildId: '292411714069331969',
