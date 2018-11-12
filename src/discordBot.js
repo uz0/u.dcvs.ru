@@ -10,6 +10,16 @@ bot.on('ready', () => {
     console.log('Discord bot is ready to serve!');
 });
 
+bot.on('guildMemberAdd', (member) => {
+    console.log(`New guild member added: ${member.user.id}`);
+    const guild = member.guild;
+    const defaultChannel = guild.channels.find(channel => channel.id === discordCfg.greetingsChannelId);
+
+    if (defaultChannel) {
+        defaultChannel.send(`<@${member.user.id}>, welcome to our great server!`);
+    }
+});
+
 // bot.on('channelCreate', async channel => {
 //     console.log('New channel opened!');
 //
