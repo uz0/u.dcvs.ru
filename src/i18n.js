@@ -27,4 +27,4 @@ function i18nFactory() {
 
 module.exports = {
     i18nFactory,
-}
+};

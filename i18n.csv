@@ -12,6 +12,7 @@ startHey,"Hey, ${username}"
 start,"My name is Hyper and I'm an expert on all things Hyperloot!💰 It's dangerous to go alone, so take a list of missions you can do to get your FREE HLT tokens:"
 terms,"https://github.com/HyperLootProtocol/Starter-Pack/wiki/Bounty-Terms-&-Conditions"
 help,"${PREFIX}${command} - ${help}"
+guildMemberAdd,"<@${id}>, welcome to our server!"
 ,
 command.list, "A list fo all completed and incomplete bounties 👈❗"
 command.eth,"Use this to provide us your ETH wallet address or check your current ETH💰🔖 "

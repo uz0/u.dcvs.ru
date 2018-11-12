@@ -2,6 +2,8 @@ const _ = require('lodash');
 const Discord = require("discord.js");
 const bot = new Discord.Client();
 const config = require('./config');
+const {i18nFactory} = require('./i18n');
+const i18n = i18nFactory();
 
 const {discord: discordCfg} = config;
 const token = discordCfg.authToken;
@@ -16,7 +18,7 @@ bot.on('guildMemberAdd', (member) => {
     const defaultChannel = guild.channels.find(channel => channel.id === discordCfg.greetingsChannelId);
 
     if (defaultChannel) {
-        defaultChannel.send(`<@${member.user.id}>, welcome to our great server!`);
+        defaultChannel.send(i18n('guildMemberAdd', {id: member.user.id}));
     }
 });
 
