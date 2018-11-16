@@ -1,7 +1,8 @@
 // Inner kitchen our bot service
 
+const isArray = require('lodash/isArray');
+const isFunction = require('lodash/isFunction');
 const {db} = require('./db');
-const {PREFIX} = require('./config');
 const {i18nFactory} = require('./i18n');
 
 module.exports = function() {
@@ -15,13 +16,14 @@ module.exports = function() {
             return self;
         },
         async process({ input = '', ...options }) {
-            const commands = modules
-                .filter(module => module.command)
-                .map(({ command, moderator }) => ({
-                    command,
-                    moderator,
-                    help: i18n(`command.${command}`, { strict: true })
-                }));
+            // TODO: remove
+            // const commands = modules
+            //     .filter(module => module.command)
+            //     .map(({ command, moderator }) => ({
+            //         command,
+            //         moderator,
+            //         help: i18n(`command.${command}`, { strict: true })
+            //     }));
 
 
             let response = {
@@ -29,17 +31,13 @@ module.exports = function() {
             };
 
             for (const executor of modules) {
-                if (executor.command && !input.startsWith(`${PREFIX}${executor.command}`)) {
-                    continue;
-                }
 
                 try {
-                    response = await executor(response, {
+                    await executeSubchain(executor, response, {
                         ...options,
                         i18n,
                         input,
                         db,
-                        commands,
                     });
                 } catch (error) {
                     response.error = error;
@@ -55,3 +53,24 @@ module.exports = function() {
 
     return self;
 };
+
+async function executeSubchain(executor, response, options) {
+    if (isArray(executor)) {
+        for (let i = 0; i < executor.length; i++) {
+            await executeSubchain(executor[i], response, options);
+
+            if (response.skipChain) {
+                response.skipChain = false;
+                break;
+            }
+        }
+
+        return response;
+    }
+
+    if (isFunction(executor)) {
+        return await executor(response, options)
+    }
+
+    throw(options.i18n('badSubchain'));
+}
