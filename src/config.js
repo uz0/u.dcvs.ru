@@ -19,4 +19,6 @@ module.exports = {
         // guildId: '292411714069331969',
         // greetingsChannelId: '511318565308071952',
     },
+    // see: https://github.com/yagop/node-telegram-bot-api/issues/319#issuecomment-324963294
+    NTBA_FIX_319: true,
 };
