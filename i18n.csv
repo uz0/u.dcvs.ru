@@ -101,3 +101,8 @@ taskCheckedFailed,"Task failed!"
 completed, "You had already finished this mission"
 noCommand, "Command not found"
 manualCompleted, "Manual completed ${command} for ${nickname}"
+
+ping, "pong1"
+ping, "pong2"
+ping, "pong3"
+ping, "pong4"
