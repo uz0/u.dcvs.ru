@@ -1,14 +1,23 @@
 const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
-const discordClient = require('./discordBot');
+const {
+    client: discordClient,
+    init: discordInit,
+} = require('./discordBot');
 
 const botApp = require('./app');
 const {telegram: telegramCfg, url} = require('./config');
+const {discord: discordCfg} = require('./config');
 
 const user = require('./modules/user');
+const discordUser = require('./modules/discordUser');
 const error = require('./modules/error');
 const empty = require('./modules/empty');
 const pending = require('./modules/pending');
+const event = require('./modules/event');
+const source = require('./modules/source');
+const addExp = require('./modules/addExp');
+const updateExp = require('./modules/updateExp');
 
 const parseCommand = require('./modules/parseCommand');
 const start = require('./modules/start.command');
@@ -27,29 +36,57 @@ const expressApp = express();
 
 const appInstance = botApp().register([
     // KEEP IN MIND, ORDER IMPORTANT!!!
-    user,
 
-    // simple commands
+    // telegram
     [
-        parseCommand,
+        source('telegram'),
 
-        start,
-        pong,
-        help,
-        eth,
-        balance,
-        faq,
-        support,
-        terms,
+        user,
+
+        [
+            parseCommand,
+
+            start,
+            pong,
+            help,
+            eth,
+            balance,
+            faq,
+            support,
+            terms,
+
+            // TODO: refactor missions
+            // ...missions,
+            // moderation,
+        ],
+
+        empty,
     ],
 
-    // TODO: refactor missions
-    // ...missions,
-    moderation,
+    // discord
+    [
+        source('discord'),
+        discordUser,
+
+        [
+            event('message'),
+
+            addExp(1),
+
+            [
+                parseCommand,
+
+                pong,
+
+                empty,
+            ],
+        ],
+
+        updateExp,
+    ],
 
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE
-    empty,
     error,
 ]);
 
@@ -84,6 +121,10 @@ if (telegramCfg.authToken) { // for local dev purposes
 //             discordClient,
 //         });
     });
+}
+
+if (discordCfg.authToken) {
+    discordInit(appInstance);
 }
 
 // web api, i use it for local testing
