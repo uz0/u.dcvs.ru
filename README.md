@@ -4,7 +4,21 @@ Bot is powerful service what provide communication between people in community.
 ## Abstract
 
 ### executor
-atomic element, we use it to build bot functionality. It simple function what get `response` and `context` and return `response` object, signature and basic example:
+Atomic element, we use it to build all bot functionality. It simple function what get `response` and `context` and return new mutated `response` object. 
+
+`response` like temp container what keep all session data (UNDERWORK! Signature unstable).
+* `response.output: string` Output need to send text message as handler emiter (user get this as answer).
+
+`context` immutable structure what contain basic functions, what provide from app.js (core?) (UNDERWORK!)
+* `context.i18n: (keyword: string) => string` provide function what return string by unique keyword from string lib, see more in i18n
+* `context.db: object` provide mongo connector, _in future provide helpers for fast module scope acces and user data_
+* `context.input: string` contain text view of event (like user msg text in most cases)
+* `context.from: CLIENT_ID` client name (discord/telegram/etc)
+* `context.handle: (response) => void` method for calling client callback (in-future need provide cross-client handling)
+* `context.id: string` client specific id (for unuqie provide client+id)
+* `context.username: string` client specific username
+
+Basic example (signature):
 ```
 async (response, context) => {
     //... CHECKERS (to prevent unexpected mutation)
@@ -42,6 +56,9 @@ only concept, like filtering
 
 ### context
 signature and methods
+
+#### i18n
+#### db
 
 ### response
 signature and lock-in keys
