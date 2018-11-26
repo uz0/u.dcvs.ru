@@ -1,3 +1,4 @@
+const expCap = 50;
 
 module.exports = function(response, { id, db }) {
     const { exp } = response;
@@ -8,12 +9,16 @@ module.exports = function(response, { id, db }) {
 
     return new Promise((resolve, reject) => {
         db.users.findOne({discordId: id}, (err, user) => {
+
             db.users.update({
                 discordId: id,
             }, {
-                $set: {
-                    'data.exp': user.data.exp + exp,
+                $inc: {
+                    'data.exp': exp,
                 },
+                $set: {
+// TODO
+                }
             });
 
             resolve(response);

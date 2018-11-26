@@ -16,6 +16,7 @@ module.exports = async function(response, { input, db, id }) {
 
     const updateQuery = {
         $inc: {
+            'data.logText.lastMsgData': new Date(),
             'data.logText.allCounter': 1,
         },
     };
