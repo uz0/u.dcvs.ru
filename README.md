@@ -3,9 +3,9 @@ Bot is powerful service what provide communication between people in community.
 
 ## Usage
 
-`npm run dev` start in development mode (with nodemon, it will reload after any changes), u can use web adapter for local work, easy start and call `//localhost:3000/api/message?message=text&id=1&username=test`
-`npm test` run jest and eslint (please check it before commit)
-`npm start` start bundle in prod mode (TODO)
+* `npm run dev` start in development mode (with nodemon, it will reload after any changes), u can use web adapter for local work, easy start and call `//localhost:3000/api/message?message=text&id=1&username=test`
+* `npm test` run jest and eslint (please check it before commit)
+* `npm start` start bundle in prod mode (TODO)
 
 ## Abstract
 
