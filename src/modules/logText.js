@@ -10,22 +10,29 @@ const conditions = [
 module.exports = async function(response, { input, db, id }) {
     const msgFit = reduce(
         conditions,
-        condition => condition(input),
+        (acc, condition) => condition(input),
         true
     );
 
+    // TODO one request/query
     const updateQuery = {
         $inc: {
-            'data.logText.lastMsgData': new Date(),
-            'data.logText.allCounter': 1,
+            'data.log.allCounter': 1,
+        },
+    };
+
+    const setQuery = {
+        $set: {
+            'data.log.lastMsgData': new Date(),
         },
     };
 
     if (msgFit) {
-        extend(updateQuery['$inc'], {'data.logText.fitCounter': 1})
+        extend(updateQuery['$inc'], {'data.log.fitCounter': 1})
     }
 
     db.users.update({discordId: id}, updateQuery);
+    db.users.update({discordId: id}, setQuery);
 
     return response;
 };

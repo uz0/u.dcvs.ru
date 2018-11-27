@@ -8,6 +8,7 @@ eth,"Your ETH address is ${ethAdress}. To set new address use: /eth ETH_ADDRESS.
 ethUpdated,"You address ${ethAdress} is accepted, to change it use: /eth ETH_ADDRESS (example: /eth 0x5B31Bb52bdd7006ae57F9d9506c0FF995229b63c)."
 ethError,"The address doesn't seem right. Any chance you put in your BTC address? My transfers are limited to ETH network and addresses containing 20 symbols."
 faq,"https://github.com/HyperLootProtocol/Starter-Pack/wiki/Bounty-FAQ"
+lvlUp, "Hey, congratulations, <@${id}>! Level up! Your new level is ${lvl}, keep it up!"
 support,"You can get all of the questions answered in the Discord chat here: https://discord.gg/qEH8PHk, but first check out the FAQ page https://github.com/HyperLootProtocol/Starter-Pack/wiki/Bounty-FAQ"
 startHey,"Hey, ${username}"
 start,"My name is Hyper and I'm an expert on all things Hyperloot!💰 It's dangerous to go alone, so take a list of missions you can do to get your FREE HLT tokens:"

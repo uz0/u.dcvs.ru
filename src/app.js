@@ -57,9 +57,9 @@ module.exports = function() {
 async function executeSubchain(executor, response, options) {
     if (isArray(executor)) {
         for (let i = 0; i < executor.length; i++) {
-            const response = await executeSubchain(executor[i], response, options);
+            const res = await executeSubchain(executor[i], response, options);
 
-            if (response) {
+            if (res === null) {
                 break;
             }
         }

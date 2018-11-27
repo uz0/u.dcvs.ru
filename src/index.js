@@ -17,7 +17,9 @@ const pending = require('./modules/pending');
 const event = require('./modules/event');
 const source = require('./modules/source');
 const addExp = require('./modules/addExp');
+const logText = require('./modules/logText');
 const updateExp = require('./modules/updateExp');
+const updateLvl = require('./modules/updateLvl');
 
 const parseCommand = require('./modules/parseCommand');
 const start = require('./modules/start.command');
@@ -70,7 +72,7 @@ const appInstance = botApp().register([
 
         [
             event('message'),
-
+            logText,
             addExp(1),
 
             [
@@ -81,12 +83,12 @@ const appInstance = botApp().register([
                 empty,
             ],
         ],
-
-        updateExp,
     ],
 
     // ITS LIKE ERROR HANDLER? NOCOMAND HANDLER OR SOMETHING LIKE
     // PLACE LAST, THEN ALL OTHER MODULES EXECUTE
+    updateExp,
+    updateLvl,
     error,
 ]);
 
