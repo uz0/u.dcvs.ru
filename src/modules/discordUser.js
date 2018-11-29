@@ -1,5 +1,5 @@
 
-module.exports = function(response, { db, id }) {
+module.exports = async function(response, { db, id }) {
 
     return new Promise((resolve, reject) => {
         db.users.findOne({discordId: id}, (err, user) => {

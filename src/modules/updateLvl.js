@@ -12,7 +12,7 @@ function amountTillNextLevel(lvl) {
     return Math.floor(10*(Math.pow(lvl, 1.5)));
 }
 
-module.exports = function(response, { id, i18n, db }) {
+module.exports = async function(response, { id, i18n, db }) {
     const { lvlUp, output } = response;
 
     if (!lvlUp) {

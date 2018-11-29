@@ -4,7 +4,7 @@ const extend = require('lodash/extend');
 const DAY = 1000*60*60*24; // 5000;
 const MAX_CAP = 100; // 5;
 
-module.exports = function(response, { id, db }) {
+module.exports = async function(response, { id, db }) {
     const { exp } = response;
 
     if (!exp) {
