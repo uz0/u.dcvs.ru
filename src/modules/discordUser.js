@@ -4,16 +4,7 @@ module.exports = function(response, { db, id }) {
     return new Promise((resolve, reject) => {
         db.users.findOne({discordId: id}, (err, user) => {
             if (!user) {
-                user = {
-                    discordId: id,
-                    isModerator: false,
-                    pending: false,
-                    balance: 0,
-                    data: {
-                        exp: 0,
-                        // key: { }
-                    },
-                };
+                user = {discordId: id};
 
                 db.users.insert(user);
             }
