@@ -1,75 +1,94 @@
-// Inner kitchen our bot service
-
 const isArray = require('lodash/isArray');
 const isFunction = require('lodash/isFunction');
+const invariant = require('invariant');
+
 const {db} = require('./db');
 const {i18nFactory} = require('./i18n');
 
-module.exports = function() {
-    const i18n = i18nFactory();
-    let modules = [];
 
-    const self = {
-        register(executors) {
-            modules = [...executors];
+module.exports = class App {
 
-            return self;
-        },
-        async process({ input = '', ...options }) {
-            // TODO: remove
-            // const commands = modules
-            //     .filter(module => module.command)
-            //     .map(({ command, moderator }) => ({
-            //         command,
-            //         moderator,
-            //         help: i18n(`command.${command}`, { strict: true })
-            //     }));
+    // TODO: PASS context functions in constructor, dont inject itself here)
+    constructor() {
+        this.modules = [];
+
+        // setup context here
+        this.context = {
+            i18n: i18nFactory(),
+            db,
+        };
+    }
+
+    use(module) {
+        // TODO: additional initialization, (support factory modules and modules with metadata)
+        this.modules.push(module);
+
+        // for chaining :)
+        return this;
+    }
+
+    async process({ input = '', handle, ...context }) {
+        invariant(isFunction(handle), 'handle must be function');
+
+        // reference for response object, in future need add here comments and additional universal (non-client-locked) fields
+        let response = {
+            output: '',
+            // attachments: [],
+            // stack: {
+            //   [moduleName]: { ... ??? }
+            //},
+            // ...
+        };
+
+        // TODO: i prefer to check it before inject here!
+        // let context = {
+        //     input: '',
+        //     handle: () => {}
+        // }
 
 
-            let response = {
-                output: '',
-            };
+        response = await this._execute(this.modules, response, {
+            ...this.context,
+            ...context, // Dirty need some standard structure
+            input,
+            // handle,
+        });
 
-            for (const executor of modules) {
+        // after all modules we call one
+        handle(response, context.data);
+
+        return this;
+    }
+
+    async _execute(module, response, context) {
+        invariant(isArray(module) || isFunction(module), 'module should be array or function');
+
+        if (isArray(module)) {
+            for (let i = 0; i < module.length; i++) {
+                let _response = response;
 
                 try {
-                    await executeSubchain(executor, response, {
-                        ...options,
-                        i18n,
-                        input,
-                        db,
-                    });
+                    _response = await this._execute(module[i], response, context);
                 } catch (error) {
                     response.error = error;
-                    console.error(error);
+                    console.error('error', error);
+
+                    break;
+                }
+
+                if (_response === null) {
+                    break;
+                } else {
+                    response = _response;
                 }
             }
 
-            options.handle(response, options.data);
-
-            return self;
-        }
-    };
-
-    return self;
-};
-
-async function executeSubchain(executor, response, options) {
-    if (isArray(executor)) {
-        for (let i = 0; i < executor.length; i++) {
-            const res = await executeSubchain(executor[i], response, options);
-
-            if (res === null) {
-                break;
-            }
+            return response;
         }
 
-        return response;
+        // if module is simple executor
+        if (isFunction(module)) {
+            return await module(response, context)
+        }
     }
-
-    if (isFunction(executor)) {
-        return await executor(response, options)
-    }
-
-    throw(options.i18n('badSubchain'));
 }
