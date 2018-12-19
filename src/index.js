@@ -34,12 +34,10 @@ instance.use([
         logText,
     ],
 
-    [
-        pong,
-        status,
+    pong,
+    status,
 
-        empty,
-    ],
+    // empty,
 
     updateExp,
     updateLvl,

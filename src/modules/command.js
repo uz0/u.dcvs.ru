@@ -6,7 +6,7 @@ module.exports = rawCommand => (response, { input }) => {
     const [cmd, ...rawArgs] = input.split(' ');
 
     if (!cmd.startsWith(`${PREFIX}`)) {
-        return response;
+        return null;
     }
 
     if (cmd.substring(1) !== command) {
