@@ -22,7 +22,6 @@ const updateLvl = require('./modules/updateLvl');
 const user = require('./modules/user');
 
 // commands initializers
-const parseCommand = require('./modules/parseCommand');
 const pong = require('./modules/pong.command');
 const status = require('./modules/status.command');
 
@@ -36,8 +35,6 @@ instance.use([
     ],
 
     [
-        parseCommand,
-
         pong,
         status,
 
