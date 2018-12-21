@@ -18,16 +18,12 @@ const error = require('./modules/error');
 const event = require('./modules/event');
 const logText = require('./modules/logText');
 const updateExp = require('./modules/updateExp');
-const updateLvl = require('./modules/updateLvl');
-const user = require('./modules/user');
 
 // commands initializers
 const pong = require('./modules/pong.command');
 const status = require('./modules/status.command');
 
 instance.use([
-    user,
-
     [
         event('message'),
         addExp(1),
@@ -40,7 +36,6 @@ instance.use([
     // empty,
 
     updateExp,
-    updateLvl,
 
     error,
 ]);
@@ -51,8 +46,8 @@ expressApp.use('/api', (req, res) => {
     instance.process({
         input: req.query.message,
         from: 'json',
-        handle(response) {
-            res.json(response);
+        handle(response, context) {
+            res.json({ response, context });
         },
         ...req.query,
     });
