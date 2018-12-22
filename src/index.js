@@ -80,7 +80,11 @@ if (discordCfg.authToken) {
                 msg.channel.send(output);
 
                 if (reactions.length) {
-                    reactions.forEach(reaction => msg.react(reaction));
+                    reactions.forEach((reaction) => {
+                        msg
+                            .react(reaction)
+                            .catch(() => {});
+                    });
                 }
             },
         });
