@@ -5,7 +5,7 @@ const DAY = 1000 * 60 * 60 * 24; // 5000;
 const MAX_CAP = 100; // 5;
 
 function amountTillNextLevel(lvl) {
-    return Math.floor(10 * (lvl ** 1.5));
+    return Math.floor(10 * (lvl ** 1.5)) + 10;
 }
 
 module.exports = async function updateExp(response, context) {
