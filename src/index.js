@@ -74,6 +74,7 @@ if (discordCfg.authToken) {
             event: 'message',
             handle({ output, reactions }) {
                 if (reactions.length) {
+                    // TODO: need check permissions!
                     reactions.forEach((reaction) => {
                         msg
                             .react(reaction)
@@ -85,7 +86,10 @@ if (discordCfg.authToken) {
                     return;
                 }
 
-                msg.channel.send(output);
+                // TODO: need check permissions!
+                msg.channel
+                    .send(output)
+                    .catch(() => {});
             },
         });
     });
