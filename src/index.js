@@ -73,12 +73,6 @@ if (discordCfg.authToken) {
             from: 'discord',
             event: 'message',
             handle({ output, reactions }) {
-                if (!msg.channel || !output) {
-                    return;
-                }
-
-                msg.channel.send(output);
-
                 if (reactions.length) {
                     reactions.forEach((reaction) => {
                         msg
@@ -86,6 +80,12 @@ if (discordCfg.authToken) {
                             .catch(() => {});
                     });
                 }
+
+                if (!msg.channel || !output) {
+                    return;
+                }
+
+                msg.channel.send(output);
             },
         });
     });
