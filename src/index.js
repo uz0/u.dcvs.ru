@@ -12,6 +12,8 @@ const App = require('./app');
 
 const instance = new App();
 
+const quiz = require('./modules/quiz');
+
 const addExp = require('./modules/addExp');
 // const empty = require('./modules/empty');
 const error = require('./modules/error');
@@ -32,6 +34,7 @@ instance.use([
 
     pong,
     status,
+    quiz,
 
     // empty,
 
