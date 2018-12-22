@@ -35,6 +35,7 @@ module.exports = class App {
         let response = {
             output: '',
             stack: [],
+            reactions: [],
             // attachments: [],
             // stack: {
             //   [moduleName]: { ... ??? }

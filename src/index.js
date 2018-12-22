@@ -18,6 +18,7 @@ const error = require('./modules/error');
 const event = require('./modules/event');
 const logText = require('./modules/logText');
 const updateExp = require('./modules/updateExp');
+const autoReaction = require('./modules/autoReaction');
 
 // commands initializers
 const pong = require('./modules/pong.command');
@@ -34,6 +35,8 @@ instance.use([
     status,
 
     // empty,
+
+    autoReaction,
 
     updateExp,
 
@@ -70,12 +73,16 @@ if (discordCfg.authToken) {
             input: msg.content || '',
             from: 'discord',
             event: 'message',
-            handle({ output }) {
+            handle({ output, reactions }) {
                 if (!msg.channel || !output) {
                     return;
                 }
 
                 msg.channel.send(output);
+
+                if (reactions.length) {
+                    reactions.forEach(reaction => msg.react(reaction));
+                }
             },
         });
     });
