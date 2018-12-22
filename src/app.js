@@ -1,5 +1,6 @@
 const isArray = require('lodash/isArray');
 const isFunction = require('lodash/isFunction');
+const cloneDeep = require('lodash/cloneDeep');
 const invariant = require('invariant');
 
 const db = require('./db');
@@ -35,6 +36,7 @@ module.exports = class App {
         let response = {
             output: '',
             stack: [],
+            reactions: [],
             // attachments: [],
             // stack: {
             //   [moduleName]: { ... ??? }
@@ -74,7 +76,7 @@ module.exports = class App {
 
         if (isArray(module)) {
             for (let i = 0; i < module.length; i++) {
-                let _response = response;
+                let _response = cloneDeep(response);
 
                 try {
                     _response = await this._execute(module[i], response, context);
