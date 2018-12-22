@@ -8,9 +8,10 @@ const { discord: discordCfg } = require('./config');
 
 const discordBot = new Discord.Client();
 
+const db = require('./db');
 const App = require('./app');
 
-const instance = new App();
+const instance = new App({ db });
 
 const addExp = require('./modules/addExp');
 // const empty = require('./modules/empty');
