@@ -1,4 +1,3 @@
-const isEmpty = require('lodash/isEmpty');
 const isEqual = require('lodash/isEqual');
 
 const command = require('../command');
@@ -33,8 +32,10 @@ async function checkQuiz(response, {
     id,
 }) {
     const { list = [] } = await getModuleData('quiz');
+    console.log('check', list)
 
-    if (!isEmpty(list.find(q => q.isOpen))) {
+    if (list.find(q => q.isOpen)) {
+        console.log('check2');
         const output = [];
 
         const newList = list.map((q) => {
