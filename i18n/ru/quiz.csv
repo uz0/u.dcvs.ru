@@ -2,6 +2,6 @@ quiz.info, "<@${id}> предлагает разгадать: \n\n${description}
 quiz.created, "Викторина создана... ждем победителя :)"
 quiz.winner, "<@${id}> выиграл ${prize}! Поздравляю <3"
 ,
-quiz.list, "Создатель | Описание | Приз"
-quiz.listLine, "<@${id}> | ${description} | ${prize}"
+quiz.list, "Создатель | Описание | Приз\n\n"
+quiz.listLine, "<@${authorId}> | ${description} | ${prize}"
 `<@${id}> winner and got ${q.prize}!!111`

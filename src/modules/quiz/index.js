@@ -25,7 +25,10 @@ async function addQuiz(response, {
         list: [...list, newQuiz],
     });
 
-    response.output = [i18n('quiz.created'), { channelName: broadcastChannelName, message: i18n('quiz.info', newQuiz) }];
+    response.output = [
+        i18n('quiz.created'),
+        { channelName: broadcastChannelName, message: i18n('quiz.info', { id, ...newQuiz }) },
+    ];
 
     return response;
 }
@@ -51,7 +54,7 @@ async function checkQuiz(response, {
                 return q;
             }
 
-            output.push({ channelName: broadcastChannelName, message: i18n('quiz.winner') });
+            output.push({ channelName: broadcastChannelName, message: i18n('quiz.winner', { id, ...q }) });
 
             return {
                 ...q,
