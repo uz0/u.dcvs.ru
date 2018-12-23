@@ -114,6 +114,8 @@ if (discordCfg.authToken) {
             // send to another destination or with params
             if (isObject(output)) {
                 const { channelName, message } = output;
+                console.log('channelName', channelName)
+                console.log('f', discordBot.channels)
                 const channel = discordBot.channels.find(ch => ch.name === channelName);
                 channel
                     .send(message)

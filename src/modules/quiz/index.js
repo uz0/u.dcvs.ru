@@ -1,8 +1,8 @@
 const command = require('../command');
 const { broadcastChannelName } = require('../../config');
 
-async function addQuiz(response, { updateModuleData }) {
-    const { args: { description, prize, answers }, id } = response;
+async function addQuiz(response, { updateModuleData, id }) {
+    const { args: { description, prize, answers } } = response;
 
     const newQuiz = {
         authorId: id,
