@@ -85,7 +85,6 @@ async function updateModuleData(moduleName, query, { user } = {}) {
     // TODO PLEASE STOP PLEASE REWORK IT PLEASE!
     const currentData = await getModuleData(moduleName, { user });
     const actualQuery = extend(currentData, query);
-    console.log('updateModuleData', moduleName, currentData, query, actualQuery);
 
     if (!user) {
         if (isEmpty(currentData)) { // $setOrInsert???

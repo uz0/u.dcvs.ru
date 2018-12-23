@@ -14,7 +14,6 @@ describe('quiz', () => {
         instance.process({
             input: '/quiz',
             handle(response) {
-                console.log('response', response);
                 expect(response).toHaveProperty('output', '');
                 done();
             },

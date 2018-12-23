@@ -13,10 +13,6 @@ async function addQuiz(response, { getModuleData, updateModuleData, id }) {
         answers,
     };
 
-    console.log('======')
-    console.log('quiz', [...list, newQuiz])
-    console.log('======')
-
     updateModuleData('quiz', {
         list: [...list, newQuiz],
     });
@@ -26,7 +22,8 @@ async function addQuiz(response, { getModuleData, updateModuleData, id }) {
     return response;
 }
 
-function checkQuiz(response) {
+function checkQuiz(response, { input }) {
+
     return response;
 }
 
