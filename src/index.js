@@ -78,10 +78,6 @@ if (discordCfg.authToken) {
         const handle = (context) => {
             const { output, reactions } = context;
 
-            if (isEmpty(output)) {
-                return;
-            }
-
             // TODO rework!
             if (!isEmpty(reactions)) {
                 reactions.forEach((reaction) => {
@@ -91,6 +87,10 @@ if (discordCfg.authToken) {
                             console.error(e.message);
                         });
                 });
+            }
+
+            if (isEmpty(output)) {
+                return;
             }
 
             // TODO: need check permissions!

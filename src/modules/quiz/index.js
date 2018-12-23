@@ -1,3 +1,6 @@
+const isEmpty = require('lodash/isEmpty');
+const isEqual = require('lodash/isEqual');
+
 const command = require('../command');
 const { discord: { broadcastChannelName } } = require('../../config');
 
@@ -11,6 +14,7 @@ async function addQuiz(response, { getModuleData, updateModuleData, id }) {
         description,
         prize,
         answers,
+        winnerId: null,
     };
 
     updateModuleData('quiz', {
@@ -22,7 +26,37 @@ async function addQuiz(response, { getModuleData, updateModuleData, id }) {
     return response;
 }
 
-function checkQuiz(response, { input }) {
+async function checkQuiz(response, {
+    getModuleData,
+    updateModuleData,
+    input,
+    id,
+}) {
+    const { list = [] } = await getModuleData('quiz');
+
+    if (!isEmpty(list.find(q => q.isOpen))) {
+        const output = [];
+
+        const newList = list.map((q) => {
+            if (!q.answers.includes(input)) {
+                return q;
+            }
+
+            output.push({ channelName: broadcastChannelName, message: `<@${id}> winner and got ${q.prize}!!111` });
+
+            return {
+                ...q,
+                isOpen: false,
+                winnerId: id,
+            };
+        });
+
+        if (!isEqual(list, newList)) {
+            updateModuleData('quiz', {
+                list: newList,
+            });
+        }
+    }
 
     return response;
 }
