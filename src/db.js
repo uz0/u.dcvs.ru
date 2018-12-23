@@ -20,6 +20,7 @@ db.on('connect', () => {
 
 // Basic operations
 async function update(collection, selector, query) {
+    console.log('update', collection, selector, query)
     return new Promise((resolve, reject) => {
         db[collection].update(selector, query, (err, result) => {
             if (err) {
