@@ -70,7 +70,7 @@ module.exports = async function updateExp(response, context) {
         response.output = output ? `${output}\n${updLvlMsg}` : updLvlMsg;
     }
 
-    await updateModuleData('exp', { $set: query }, { user });
+    await updateModuleData('exp', query, { user });
 
     return response;
 };

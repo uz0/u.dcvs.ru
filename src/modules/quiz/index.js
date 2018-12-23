@@ -13,9 +13,7 @@ async function addQuiz(response, { updateModuleData, id }) {
     };
 
     updateModuleData('quiz', {
-        $push: {
-            list: newQuiz,
-        },
+        list: [newQuiz],
     });
 
     response.output = ['new quiz created', { channelName: broadcastChannelName, message: 'hello' }];

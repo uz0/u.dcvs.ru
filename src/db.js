@@ -1,5 +1,5 @@
 const lodashGet = require('lodash/get');
-const extend = require('lodash/extend');
+const merge = require('lodash/merge');
 const isEmpty = require('lodash/isEmpty');
 const mongo = require('mongojs');
 
@@ -20,7 +20,6 @@ db.on('connect', () => {
 
 // Basic operations
 async function update(collection, selector, query) {
-    console.log('update', collection, selector, query)
     return new Promise((resolve, reject) => {
         db[collection].update(selector, query, (err, result) => {
             if (err) {
@@ -44,11 +43,11 @@ async function get(collection, selector) {
     });
 }
 
-// async function set(collection, selector, query) {
-//     return update(collection, selector, {
-//         $set: query,
-//     });
-// }
+async function set(collection, selector, query) {
+    return update(collection, selector, {
+        $set: query,
+    });
+}
 
 // async function inc(collection, selector, query) {
 //     return update(collection, selector, {
@@ -84,13 +83,8 @@ async function getModuleData(moduleName, { user } = {}) {
 
 async function updateModuleData(moduleName, query, { user } = {}) {
     // TODO PLEASE STOP PLEASE REWORK IT PLEASE!
-    const queryForm = Object.keys(query)[0];
-    let actualQuery = query[queryForm];
     const currentData = await getModuleData(moduleName, { user });
-
-    if (queryForm === '$set') {
-        actualQuery = extend(currentData, actualQuery);
-    }
+    const actualQuery = merge(currentData, query);
 
     if (!user) {
         if (isEmpty(currentData)) { // $setOrInsert???
@@ -100,15 +94,13 @@ async function updateModuleData(moduleName, query, { user } = {}) {
             });
         }
 
-        return update('global', { moduleName }, { [queryForm]: actualQuery });
+        return set('global', { moduleName }, actualQuery);
     }
 
-    return update('users', {
+    return set('users', {
         discordId: user.discordId,
     }, {
-        [queryForm]: {
-            [`data.${moduleName}`]: actualQuery,
-        },
+        [`data.${moduleName}`]: actualQuery,
     });
 }
 
@@ -119,6 +111,7 @@ module.exports = {
 
     // Unsafe be carefuly!
     get,
+    set,
     update,
     insert,
 };

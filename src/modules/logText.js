@@ -39,7 +39,7 @@ module.exports = async function logText(response, context) {
         });
     }
 
-    await updateModuleData('log', { $set: query }, { user });
+    await updateModuleData('log', query, { user });
 
     return response;
 };
