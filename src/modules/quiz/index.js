@@ -3,7 +3,12 @@ const isEqual = require('lodash/isEqual');
 const command = require('../command');
 const { discord: { broadcastChannelName } } = require('../../config');
 
-async function addQuiz(response, { getModuleData, updateModuleData, id }) {
+async function addQuiz(response, {
+    getModuleData,
+    updateModuleData,
+    id,
+    i18n,
+}) {
     const { args: { description, prize, answers } } = response;
     const { list = [] } = await getModuleData('quiz');
 
@@ -20,7 +25,7 @@ async function addQuiz(response, { getModuleData, updateModuleData, id }) {
         list: [...list, newQuiz],
     });
 
-    response.output = ['new quiz created', { channelName: broadcastChannelName, message: 'hello' }];
+    response.output = [i18n('quiz.created'), { channelName: broadcastChannelName, message: i18n('quiz.info', newQuiz) }];
 
     return response;
 }
@@ -30,12 +35,11 @@ async function checkQuiz(response, {
     updateModuleData,
     input,
     id,
+    i18n,
 }) {
     const { list = [] } = await getModuleData('quiz');
-    console.log('check', list)
 
     if (list.find(q => q.isOpen)) {
-        console.log('check2');
         const output = [];
 
         const newList = list.map((q) => {
@@ -43,7 +47,11 @@ async function checkQuiz(response, {
                 return q;
             }
 
-            output.push({ channelName: broadcastChannelName, message: `<@${id}> winner and got ${q.prize}!!111` });
+            if (!q.isOpen) {
+                return q;
+            }
+
+            output.push({ channelName: broadcastChannelName, message: i18n('quiz.winner') });
 
             return {
                 ...q,
@@ -64,11 +72,11 @@ async function checkQuiz(response, {
     return response;
 }
 
-async function quizList(response, { getModuleData }) {
+async function quizList(response, { getModuleData, i18n }) {
     const { list = [] } = await getModuleData('quiz');
-    console.log('list', list);
 
-    response.output = JSON.stringify(list);
+    response.output = i18n('quiz.list');
+    response.output += list.map(q => i18n('quiz.listLine', q)).join('\n');
 
     return response;
 }
