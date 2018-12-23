@@ -75,7 +75,6 @@ async function getUser(userId) {
 async function getModuleData(moduleName, { user } = {}) {
     if (!user) {
         const res = await get('global', { moduleName });
-        console.log('res', res);
         return res || {};
     }
 
@@ -83,25 +82,30 @@ async function getModuleData(moduleName, { user } = {}) {
 }
 
 async function updateModuleData(moduleName, query, { user } = {}) {
-    // todo remove get
+    // TODO PLEASE STOP PLEASE REWORK IT PLEASE!
+    const queryForm = Object.keys(query)[0];
+    let actualQuery = query[queryForm];
     const currentData = await getModuleData(moduleName, { user });
-    const actualQuery = extend(currentData, query);
+
+    if (queryForm === '$set') {
+        actualQuery = extend(currentData, actualQuery);
+    }
 
     if (!user) {
-        if (isEmpty(currentData)) {
+        if (isEmpty(currentData)) { // $setOrInsert???
             return insert('global', {
                 moduleName,
                 ...actualQuery,
             });
         }
 
-        return update('global', { moduleName }, actualQuery);
+        return update('global', { moduleName }, { [queryForm]: actualQuery });
     }
 
     return update('users', {
         discordId: user.discordId,
     }, {
-        [`data.${moduleName}`]: actualQuery,
+        [`data.${moduleName}`]: { [queryForm]: actualQuery },
     });
 }
 
