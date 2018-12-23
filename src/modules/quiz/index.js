@@ -1,8 +1,9 @@
 const command = require('../command');
 const { discord: { broadcastChannelName } } = require('../../config');
 
-async function addQuiz(response, { updateModuleData, id }) {
+async function addQuiz(response, { getModuleData, updateModuleData, id }) {
     const { args: { description, prize, answers } } = response;
+    const { list = [] } = await getModuleData('quiz');
 
     const newQuiz = {
         authorId: id,
@@ -13,7 +14,7 @@ async function addQuiz(response, { updateModuleData, id }) {
     };
 
     updateModuleData('quiz', {
-        list: [newQuiz],
+        list: [...list, newQuiz],
     });
 
     response.output = ['new quiz created', { channelName: broadcastChannelName, message: 'hello' }];

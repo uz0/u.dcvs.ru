@@ -1,7 +1,6 @@
 const lodashGet = require('lodash/get');
-const merge = require('lodash/merge');
+const extend = require('lodash/extend');
 const isEmpty = require('lodash/isEmpty');
-const cloneDeep = require('lodash/cloneDeep');
 const mongo = require('mongojs');
 
 const { mongoURI } = require('./config');
@@ -85,12 +84,11 @@ async function getModuleData(moduleName, { user } = {}) {
 async function updateModuleData(moduleName, query, { user } = {}) {
     // TODO PLEASE STOP PLEASE REWORK IT PLEASE!
     const currentData = await getModuleData(moduleName, { user });
-    const isCurrentDataEmpty = isEmpty(currentData);
-    const actualQuery = merge(currentData, query);
-    console.log('updateModuleData', moduleName, currentData, query, actualQuery)
+    const actualQuery = extend(currentData, query);
+    console.log('updateModuleData', moduleName, currentData, query, actualQuery);
 
     if (!user) {
-        if (isCurrentDataEmpty) { // $setOrInsert???
+        if (isEmpty(currentData)) { // $setOrInsert???
             return insert('global', {
                 moduleName,
                 ...actualQuery,
