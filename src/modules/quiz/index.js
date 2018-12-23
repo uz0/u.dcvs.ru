@@ -56,6 +56,8 @@ async function checkQuiz(response, {
             updateModuleData('quiz', {
                 list: newList,
             });
+
+            response.output = output;
         }
     }
 
