@@ -4,7 +4,7 @@ const quiz = require('../quiz');
 describe('quiz', () => {
     const mockDb = {
         getModuleData() {},
-        setModuleData() {},
+        updateModuleData() {},
     };
 
     const instance = new App({ db: mockDb });

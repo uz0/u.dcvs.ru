@@ -1,7 +1,24 @@
 const command = require('../command');
+const { broadcastChannelName } = require('../../config');
 
-function addQuiz(response) {
-    console.log('hello i am empty module');
+async function addQuiz(response, { updateModuleData }) {
+    const { args: { description, prize, answers }, id } = response;
+
+    const newQuiz = {
+        authorId: id,
+        isOpen: true,
+        description,
+        prize,
+        answers,
+    };
+
+    updateModuleData('exp', {
+        $push: {
+            list: newQuiz,
+        },
+    });
+
+    response.output = ['new quiz created', { channelName: broadcastChannelName, message: 'hello' }];
 
     return response;
 }
@@ -10,7 +27,12 @@ function checkQuiz(response) {
     return response;
 }
 
-function quizList(response) {
+async function quizList(response, { getModuleData }) {
+    const { list = [] } = await getModuleData('quiz');
+    console.log('list', list);
+
+    response.output = JSON.stringify(list);
+
     return response;
 }
 

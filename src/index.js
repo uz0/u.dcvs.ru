@@ -1,5 +1,9 @@
 
 const express = require('express');
+const isString = require('lodash/isString');
+const isObject = require('lodash/isObject');
+const isArray = require('lodash/isArray');
+const isEmpty = require('lodash/isEmpty');
 
 const expressApp = express();
 
@@ -71,30 +75,60 @@ if (discordCfg.authToken) {
             return;
         }
 
+        const handle = (context) => {
+            const { output, reactions } = context;
+
+            if (isEmpty(output)) {
+                return;
+            }
+
+            // TODO rework!
+            if (!isEmpty(reactions)) {
+                reactions.forEach((reaction) => {
+                    msg
+                        .react(reaction)
+                        .catch((e) => {
+                            console.error(e);
+                        });
+                });
+            }
+
+            // TODO: need check permissions!
+            // simple case, output as answer
+            if (isString(output)) {
+                msg.channel
+                    .send(output)
+                    .catch((e) => {
+                        console.error(e);
+                    });
+            }
+
+            // send several messages
+            if (isArray(output)) {
+                output.forEach(_output => handle({
+                    ...context,
+                    output: _output,
+                }));
+            }
+
+            // send to another destination or with params
+            if (isObject(output)) {
+                const { channelName, message } = output;
+                const channel = discordBot.channels.find(ch => ch.name === channelName);
+                channel
+                    .send(message)
+                    .catch((e) => {
+                        console.error(e);
+                    });
+            }
+        };
+
         instance.process({
             id: msg.author.id,
             input: msg.content || '',
             from: 'discord',
             event: 'message',
-            handle({ output, reactions }) {
-                if (reactions.length) {
-                    // TODO: need check permissions!
-                    reactions.forEach((reaction) => {
-                        msg
-                            .react(reaction)
-                            .catch(() => {});
-                    });
-                }
-
-                if (!msg.channel || !output) {
-                    return;
-                }
-
-                // TODO: need check permissions!
-                msg.channel
-                    .send(output)
-                    .catch(() => {});
-            },
+            handle,
         });
     });
 

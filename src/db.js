@@ -19,7 +19,7 @@ db.on('connect', () => {
 });
 
 // Basic operations
-async function _update(collection, selector, query) {
+async function update(collection, selector, query) {
     return new Promise((resolve, reject) => {
         db[collection].update(selector, query, (err, result) => {
             if (err) {
@@ -43,14 +43,14 @@ async function get(collection, selector) {
     });
 }
 
-async function set(collection, selector, query) {
-    return _update(collection, selector, {
-        $set: query,
-    });
-}
+// async function set(collection, selector, query) {
+//     return update(collection, selector, {
+//         $set: query,
+//     });
+// }
 
 // async function inc(collection, selector, query) {
-//     return _update(collection, selector, {
+//     return update(collection, selector, {
 //         $inc: query,
 //     });
 // }
@@ -75,13 +75,14 @@ async function getUser(userId) {
 async function getModuleData(moduleName, { user } = {}) {
     if (!user) {
         const res = await get('global', { moduleName });
+        console.log('res', res);
         return res || {};
     }
 
     return lodashGet(user, `data.${moduleName}`, {});
 }
 
-async function setModuleData(moduleName, query, { user } = {}) {
+async function updateModuleData(moduleName, query, { user } = {}) {
     // todo remove get
     const currentData = await getModuleData(moduleName, { user });
     const actualQuery = extend(currentData, query);
@@ -94,10 +95,10 @@ async function setModuleData(moduleName, query, { user } = {}) {
             });
         }
 
-        return set('global', { moduleName }, actualQuery);
+        return update('global', { moduleName }, actualQuery);
     }
 
-    return set('users', {
+    return update('users', {
         discordId: user.discordId,
     }, {
         [`data.${moduleName}`]: actualQuery,
@@ -107,10 +108,10 @@ async function setModuleData(moduleName, query, { user } = {}) {
 module.exports = {
     getUser,
     getModuleData,
-    setModuleData,
+    updateModuleData,
 
     // Unsafe be carefuly!
     get,
-    set,
+    update,
     insert,
 };

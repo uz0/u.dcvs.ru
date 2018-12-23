@@ -13,6 +13,15 @@ module.exports = pattern => function command(response, { input }) {
         return null;
     }
 
+
+    if (!pattern.includes('...') && rawArgs.length !== definedArgs.length) {
+        return null;
+    }
+
+    if (pattern.includes('...') && rawArgs.length < definedArgs.length) {
+        return null;
+    }
+
     const parsedArgs = definedArgs.reduce((result, item, index) => {
         const _result = {
             ...result,
@@ -28,7 +37,6 @@ module.exports = pattern => function command(response, { input }) {
 
         return _result;
     }, {});
-
 
     response.rawArgs = rawArgs || [];
     response.cmd = definedCommand;
