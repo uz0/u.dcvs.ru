@@ -88,7 +88,7 @@ if (discordCfg.authToken) {
                     msg
                         .react(reaction)
                         .catch((e) => {
-                            console.error(e);
+                            console.error(e.message);
                         });
                 });
             }
@@ -99,7 +99,7 @@ if (discordCfg.authToken) {
                 msg.channel
                     .send(output)
                     .catch((e) => {
-                        console.error(e);
+                        console.error(e.message);
                     });
             }
 
@@ -121,7 +121,7 @@ if (discordCfg.authToken) {
                 channel
                     .send(message)
                     .catch((e) => {
-                        console.error(e);
+                        console.error(e.message);
                     });
             }
         };

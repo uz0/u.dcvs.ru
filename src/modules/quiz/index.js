@@ -1,5 +1,5 @@
 const command = require('../command');
-const { broadcastChannelName } = require('../../config');
+const { discord: { broadcastChannelName } } = require('../../config');
 
 async function addQuiz(response, { updateModuleData, id }) {
     const { args: { description, prize, answers } } = response;

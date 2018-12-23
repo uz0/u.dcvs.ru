@@ -75,6 +75,7 @@ async function getUser(userId) {
 async function getModuleData(moduleName, { user } = {}) {
     if (!user) {
         const res = await get('global', { moduleName });
+        console.log('getModuleData', moduleName, res || {})
         return res || {};
     }
 
@@ -85,6 +86,7 @@ async function updateModuleData(moduleName, query, { user } = {}) {
     // TODO PLEASE STOP PLEASE REWORK IT PLEASE!
     const currentData = await getModuleData(moduleName, { user });
     const actualQuery = merge(currentData, query);
+    console.log('updateModuleData', moduleName, currentData, actualQuery)
 
     if (!user) {
         if (isEmpty(currentData)) { // $setOrInsert???
