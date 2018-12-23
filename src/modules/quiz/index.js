@@ -78,8 +78,14 @@ async function checkQuiz(response, {
 async function quizList(response, { getModuleData, i18n }) {
     const { list = [] } = await getModuleData('quiz');
 
+    if (!list.find(q => q.isOpen)) {
+        response.output = i18n('quiz.nope');
+
+        return response;
+    }
+
     response.output = i18n('quiz.list');
-    response.output += list.map(q => i18n('quiz.listLine', q)).join('\n');
+    response.output += list.filter(q => q.isOpen).map(q => i18n('quiz.listLine', q)).join('\n');
 
     return response;
 }
