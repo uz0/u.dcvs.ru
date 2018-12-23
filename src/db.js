@@ -105,7 +105,9 @@ async function updateModuleData(moduleName, query, { user } = {}) {
     return update('users', {
         discordId: user.discordId,
     }, {
-        [`data.${moduleName}`]: { [queryForm]: actualQuery },
+        [queryForm]: {
+            [`data.${moduleName}`]: actualQuery,
+        },
     });
 }
 

@@ -12,7 +12,7 @@ async function addQuiz(response, { updateModuleData }) {
         answers,
     };
 
-    updateModuleData('exp', {
+    updateModuleData('quiz', {
         $push: {
             list: newQuiz,
         },
