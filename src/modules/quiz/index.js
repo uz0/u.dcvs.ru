@@ -54,6 +54,7 @@ async function checkQuiz(response, {
                 return q;
             }
 
+            output.push(i18n('quiz.winner', { id, ...q }));
             output.push({ channelName: broadcastChannelName, message: i18n('quiz.winner', { id, ...q }) });
 
             return {
