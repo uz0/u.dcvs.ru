@@ -25,7 +25,7 @@ Atomic element, we use it to build all bot functionality. It simple function wha
 `context` immutable structure what contain basic functions provided by modules when app start `__INIT__` or per each request by adapters (then `process` calling) see [Adapters](#adapters), [DB](#db) and [Modules](#modules) for detail information
 
 Basic example (signature):
-```
+```js
 async (response, context) => {
     //... CHECKERS (to prevent unexpected mutation)
     if (response.something) {
@@ -63,7 +63,7 @@ If executor `throw('error')` app also skip rest executors in array and add to `e
 
 #### examples:
 
-```
+```js
 instance.use([someFilter, errorer, mutate]);
 
 // where
@@ -90,7 +90,7 @@ function mutate(response) {
 ```
 
 Also we can create advanced cases with different filters/filter factories and subchains
-```
+```js
 instance.use([
     [someFilter, filter2, mutate1, mutate2],
     [filter, filterFactory('someType'), mutate],
@@ -106,8 +106,7 @@ Adapter is a executor with `__INIT__` that must call `context.process` its start
 Client also must provide callback function, that will be called after all modules will be executed!
 
 In general cases we provide `input` and `handle` and basic adapter ready to serve! :)
-```
-
+```js
 client.onEvent(data => {
     instance.process({
         input: data.msg,
@@ -125,7 +124,7 @@ It can be usefull for: setup/init something before app start get requests, provi
 
 Basic usecase:
 
-```
+```js
 const executor = () {
     console.log('i called every time, then someone call process')
 };
@@ -138,7 +137,7 @@ executor.__INIT__ = (context) {
 ```
 
 Advanced:
-```
+```js
 const twitterExample = (response, context) {
     if (context.event !== 'tweet') {
         return;
