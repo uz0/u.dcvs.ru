@@ -21,6 +21,7 @@ const log = require('./modules/log');
 
 const pong = require('./modules/commands/pong');
 const status = require('./modules/commands/status');
+const moderatorAdd = require('./modules/commands/moderatorAdd');
 
 const instance = new App();
 
@@ -41,6 +42,7 @@ instance.use([
         logText,
     ],
 
+    moderatorAdd,
     pong,
     status,
     quiz,

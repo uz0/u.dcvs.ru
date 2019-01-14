@@ -1,0 +1,2 @@
+moderatorAdd.alreadyExist, "<@{{id}}> уже вовсю модерирует, инфа 146%!"
+moderatorAdd.success, "С подключеньецем, <@{{id}}>!"
