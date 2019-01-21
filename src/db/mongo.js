@@ -48,6 +48,12 @@ dbMongo.__INIT__ = function (context) {
         });
     }
 
+    async function push(collection, selector, query) {
+        return update(collection, selector, {
+            $push: query,
+        });
+    }
+
     async function set(collection, selector, query) {
         return update(collection, selector, {
             $set: query,
@@ -121,6 +127,7 @@ dbMongo.__INIT__ = function (context) {
         insertLog,
         // Unsafe be carefuly!
         get,
+        push,
         set,
         update,
         insert,
