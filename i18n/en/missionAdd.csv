@@ -1,0 +1,6 @@
+missionAdd.noUser, "You hadn't choose assignee for your mission"
+missionAdd.noChecker, "You hadn't choose checker for your mission"
+missionAdd.noDescription, "You have no description for your mission"
+missionAdd.noReward, "You have no reward for your mission"
+,
+missionAdd.success, "{{id}}\nTask: {{description}}\nReward: {{reward}}\nAssignee: {{assignee}}\n\n"

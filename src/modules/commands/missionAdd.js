@@ -78,6 +78,8 @@ const missionAdd = async function (response, ctx) {
 
     response.output = i18n('missionAdd.success', {
         id: missionId,
+        description,
+        reward,
         assignee: assignee === 'all' ? 'everyone' : assignee,
     });
 
