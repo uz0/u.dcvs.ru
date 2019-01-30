@@ -8,6 +8,7 @@ const dbNedb = require('./db/nedb');
 const discordAdapter = require('./adapters/discord');
 const httpAdapter = require('./adapters/http');
 
+const bets = require('./modules/bets');
 const quiz = require('./modules/quiz');
 const poll = require('./modules/poll');
 
@@ -52,6 +53,8 @@ instance.use([
     pong,
     quiz,
     status,
+    poll,
+    bets,
 
     missionChecker,
     updateExp,
