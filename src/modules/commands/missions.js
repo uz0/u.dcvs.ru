@@ -37,11 +37,4 @@ const missions = async function (response, ctx) {
     return response;
 };
 
-missions.__INIT__ = function (context) {
-    return {
-        ...context,
-        missions: true,
-    };
-};
-
 module.exports = [command('missions'), missions];

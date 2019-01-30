@@ -1,6 +1,6 @@
-missionAdd.noUser, "Исполнитель не указан =\"
-missionAdd.noChecker, "Чекер не указан =\"
-missionAdd.noDescription, "Расскажи, что делать-то =\"
-missionAdd.noReward, "А награды? =\"
+missionAdd.noUser, "Исполнитель не указан =\\"
+missionAdd.noChecker, "Чекер не указан =\\"
+missionAdd.noDescription, "Расскажи, что делать-то =\\"
+missionAdd.noReward, "А награды? =\\"
 ,
 missionAdd.success, "{{id}}\nМиссия: {{description}}\nНаграда: {{reward}}\nИсполнитель: {{assignee}}\n\n"

@@ -5,6 +5,14 @@ const isEmpty = require('lodash/isEmpty');
 const isModerator = require('../isModerator');
 const command = require('../command.filter');
 
+// todo: move it somewhere
+function getDiscordIdFromMention(mention) {
+    // cutting off discord's <@id_here>
+    const match = mention.match(/<@(.*)>/);
+
+    return match && match[1];
+}
+
 const missionAdd = async function (response, ctx) {
     const {
         i18n,
@@ -13,16 +21,10 @@ const missionAdd = async function (response, ctx) {
         push,
     } = ctx;
     const {
-        args: {
-            assignee,
-            checker,
-            description,
-            reward,
-            iteration,
-            requirements,
-            checkerSettings,
-        },
+        args: { options },
     } = response;
+    const [assignee, checker, description, reward, checkerSettings, requirements, iteration] = options;
+    const assigneeId = getDiscordIdFromMention(assignee);
 
     if (isEmpty(assignee)) {
         throw i18n('missionAdd.noUser');
@@ -44,7 +46,7 @@ const missionAdd = async function (response, ctx) {
 
     const query = {
         id: missionId,
-        assignee,
+        assignee: assigneeId || assignee,
         checker,
         description,
         reward,
@@ -86,17 +88,7 @@ const missionAdd = async function (response, ctx) {
     return response;
 };
 
-missionAdd.__INIT__ = function (context) {
-    return {
-        ...context,
-        moderatorAdd: true,
-    };
-};
-
 module.exports = [
     isModerator,
-    [command('missionAdd assignee checker description reward'), missionAdd],
-    [command('missionAdd assignee checker description reward checkerSettings'), missionAdd],
-    [command('missionAdd assignee checker description reward checkerSettings requirements'), missionAdd],
-    [command('missionAdd assignee checker description reward checkerSettings requirements iteration'), missionAdd],
+    [command('missionAdd ...options'), missionAdd],
 ];

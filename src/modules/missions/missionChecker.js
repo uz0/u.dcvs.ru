@@ -28,7 +28,14 @@ module.exports = async function missionChecker(response, ctx) {
                 { moduleName: 'missions', 'list.id': mission.id },
                 { 'list.$.closed': true },
             );
-            response.output += i18n('missionChecker.success', { reward: mission.reward });
+
+            response.output += i18n('missionChecker.success', {
+                user: `<@${id}>`,
+                missionId: mission.id,
+                reward: mission.reward,
+            });
+
+            response.exp += parseInt(mission.reward, 10);
         }
     }
 

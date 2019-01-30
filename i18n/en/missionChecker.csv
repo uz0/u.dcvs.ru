@@ -1,0 +1,2 @@
+missionChecker.badChecker, "Something's wrong with your checker"
+missionChecker.success, "Congratulations! {{user}} just completed {{missionId}} mission and get {{reward}} exp!"

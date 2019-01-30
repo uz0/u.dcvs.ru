@@ -29,13 +29,4 @@ const moderatorAdd = async function (response, ctx) {
     return response;
 };
 
-moderatorAdd.__INIT__ = function (context) {
-    // here we can init some methods here
-
-    return {
-        ...context,
-        moderatorAdd: true,
-    };
-};
-
 module.exports = [isModerator, command('moderatorAdd moderatorId'), moderatorAdd];
