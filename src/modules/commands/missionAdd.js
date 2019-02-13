@@ -59,7 +59,7 @@ const missionAdd = async function (response, ctx) {
     }
 
     if (requirements) {
-        extend(query, { requirements });
+        extend(query, { requirements: JSON.parse(requirements.replace(/'/g, '"')) });
     }
 
     const missionsData = await getModuleData('missions');
