@@ -1,9 +1,24 @@
-const isEmpty = require('lodash/isEmpty');
+const clone = require('lodash/clone');
+const defaults = require('lodash/defaults');
 const filter = require('lodash/filter');
+const isEmpty = require('lodash/isEmpty');
 
 const checkers = require('./checkers');
 
-// todo: as separate module?
+// const DAY = 1000 * 60 * 60 * 24;
+
+function checkOnCooldown(missionUserData) {
+    const curDate = new Date();
+    const { onCooldown, cooldownOff } = missionUserData;
+
+    return onCooldown && (curDate < cooldownOff);
+
+    // if (!actualCooldown) {
+    //
+    // }
+}
+
+// todo: refactor this sh*t?
 async function checkAndUpdateRequirements(ctx, mission) {
     if (isEmpty(mission.requirements)) {
         return true;
@@ -12,40 +27,50 @@ async function checkAndUpdateRequirements(ctx, mission) {
     const {
         getModuleData,
         updateModuleData,
-        id,
-        i18n,
-        set,
         user,
     } = ctx;
-    const { list: userMissions } = await getModuleData('missions', { user });
-    const missionUserData = userMissions[mission.id];
-    const { count, cooldown } = mission.requirements;
-    const query = { id: mission.id };
-
+    const userMissions = await getModuleData('missions', { user });
+    const missionUserData = userMissions && userMissions[mission.id];
+    const defaultValues = {
+        count: 0,
+        onCooldown: false,
+    };
+    let query = {
+        id: mission.id,
+        onCooldown: false,
+    };
     let requirementsMet = true;
-    let baseValues;
+    let baseValues = defaults({}, defaultValues);
 
     if (!isEmpty(missionUserData)) {
-        baseValues = {
-            count: 0,
-        };
-    } else {
         baseValues = missionUserData;
+    }
+
+    if (!checkOnCooldown(baseValues)) {
+        baseValues.onCooldown = false;
     }
 
     if (baseValues.onCooldown) {
         return false;
     }
 
-    if (!isEmpty(count)) {
+    if (!isEmpty(mission.requirements.count)) {
         query.count = baseValues.count + 1;
-        if (query.count !== mission.requirements.count) {
+        if (query.count !== parseInt(mission.requirements.count, 10)) {
             requirementsMet = false;
         }
     }
 
     if (requirementsMet && mission.requirements.cooldown) {
-        query.onCooldown = true;
+        const curDate = new Date();
+        query = defaults(
+            {},
+            {
+                onCooldown: true,
+                cooldownOff: new Date(curDate.getTime() + parseInt(mission.requirements.cooldown, 10)),
+            },
+            defaultValues,
+        );
     }
 
     await updateModuleData(`missions.${mission.id}`, query, { user });
@@ -56,11 +81,9 @@ async function checkAndUpdateRequirements(ctx, mission) {
 module.exports = async function missionChecker(response, ctx) {
     const {
         getModuleData,
-        updateModuleData,
         id,
         i18n,
         set,
-        user,
     } = ctx;
 
     let { list: missions } = await getModuleData('missions');
@@ -77,11 +100,13 @@ module.exports = async function missionChecker(response, ctx) {
         }
 
         if (actualChecker(ctx, mission.checkerSettings) && await checkAndUpdateRequirements(ctx, mission)) {
-            await set(
-                'global',
-                { moduleName: 'missions', 'list.id': mission.id },
-                { 'list.$.closed': true },
-            );
+            if (!mission.requirements.cooldown) {
+                await set(
+                    'global',
+                    { moduleName: 'missions', 'list.id': mission.id },
+                    { 'list.$.closed': true },
+                );
+            }
 
             response.output += i18n('missionChecker.success', {
                 user: `<@${id}>`,
