@@ -363,19 +363,32 @@ const checkVote = async function (response, {
         return response;
     }
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const openedPoll of openedPolls) {
-        let findOption = false;
+    pollsList.filter(poll => poll.isOpen).forEach((poll) => {
+        if (votesList.find(vote => (vote.pollId === poll.pollId && vote.voterId === id))) {
+            return;
+        }
+        const inputLower = input.toLowerCase();
 
-        // eslint-disable-next-line no-restricted-syntax
-        for (const option of openedPoll.options) {
-            if (votesList.find(vote => (vote.pollId === openedPoll.pollId && vote.voterId === id))) {
-                break;
-            }
+        if (poll.options.includes(inputLower)) {
+            const newVote = {
+                voterId: id,
+                pollId: poll.pollId,
+                option: poll.options.indexOf(inputLower),
+                dateVoted: new Date(),
+            };
 
-            if (inputLowerArray.includes(option.toLowerCase())) {
-                findOption = option;
-            }
+            updateModuleData('poll', {
+                votesList: [...votesList, newVote],
+            });
+
+            const optionText = inputLower;
+            const requestedPollId = poll.pollId;
+            response.output = i18n('vote.cast', {
+                id,
+                requestedPollId,
+                optionText,
+            });
+            return;
         }
 
         if (findOption) {

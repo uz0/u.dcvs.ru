@@ -6,6 +6,7 @@ const isObject = require('lodash/isObject');
 const isArray = require('lodash/isArray');
 const isEmpty = require('lodash/isEmpty');
 
+// const { PREFIX } = require('./../config');
 const { discord: discordCfg } = require('../config');
 
 const discordAdapter = () => {};
@@ -25,8 +26,13 @@ discordAdapter.__INIT__ = function ({ process }) {
 
         const handle = (context) => {
             const { output, reactions, outputRich } = context;
-            // TODO rework!
 
+            // TODO rework!
+            // TODO rework!
+            // TODO rework!
+            // TODO rework!
+            // TODO rework!
+            // JUST DO IT!
             if (outputRich) {
                 if (!isEmpty(reactions)) {
                     reactions.reduce(
@@ -36,6 +42,7 @@ discordAdapter.__INIT__ = function ({ process }) {
                         Promise.resolve(),
                     );
                 }
+
                 if (isArray(outputRich)) {
                     // eslint-disable-next-line no-restricted-syntax
                     for (const richMessage of outputRich) {
@@ -62,6 +69,7 @@ discordAdapter.__INIT__ = function ({ process }) {
                 for (const fieldsLength of outputRich.fields) {
                     embed.addField(fieldsLength.fieldTitle, fieldsLength.fieldText);
                 }
+              
                 msg.channel
                     .send(embed)
                     .catch((e) => {
