@@ -24,52 +24,96 @@ discordAdapter.__INIT__ = function ({ process }) {
         }
 
         const handle = (context) => {
-            const { output, reactions } = context;
-
+            const { output, reactions, outputRich } = context;
             // TODO rework!
-            if (!isEmpty(reactions)) {
-                reactions.reduce(
-                    (prev, reaction) => prev.then(() => msg.react(reaction).catch((e) => { console.error(e.message); })),
-                    Promise.resolve(),
-                );
-            }
 
-            if (isEmpty(output)) {
-                return;
-            }
-
-            // TODO: need check permissions!
-            // simple case, output as answer
-            if (isString(output)) {
+            if (outputRich) {
+                if (!isEmpty(reactions)) {
+                    reactions.reduce(
+                        (prev, reaction) => prev.then(() => msg.react(reaction).catch((e) => {
+                            console.error(e.message);
+                        })),
+                        Promise.resolve(),
+                    );
+                }
+                if (isArray(outputRich)) {
+                    // eslint-disable-next-line no-restricted-syntax
+                    for (const richMessage of outputRich) {
+                        const { title } = richMessage;
+                        const embed = new Discord.RichEmbed()
+                            .setTitle(title)
+                            .setColor(0x0000FF);
+                        // eslint-disable-next-line no-restricted-syntax
+                        for (const fieldsLength of richMessage.fields) {
+                            embed.addField(fieldsLength.fieldTitle, fieldsLength.fieldText);
+                        }
+                        msg.channel
+                            .send(embed)
+                            .catch((e) => {
+                                console.error(e.embed);
+                            });
+                    }
+                }
+                const { title } = outputRich;
+                const embed = new Discord.RichEmbed()
+                    .setTitle(title)
+                    .setColor(0x0000FF);
+                // eslint-disable-next-line no-restricted-syntax
+                for (const fieldsLength of outputRich.fields) {
+                    embed.addField(fieldsLength.fieldTitle, fieldsLength.fieldText);
+                }
                 msg.channel
-                    .send(output)
+                    .send(embed)
                     .catch((e) => {
-                        console.error(e.message);
+                        console.error(e.embed);
                     });
-            }
+            } else {
+                if (!isEmpty(reactions)) {
+                    reactions.reduce(
+                        (prev, reaction) => prev.then(() => msg.react(reaction).catch((e) => {
+                            console.error(e.message);
+                        })),
+                        Promise.resolve(),
+                    );
+                }
 
-            // send several messages
-            if (isArray(output)) {
-                output.forEach(_output => handle({
-                    ...context,
-                    output: _output,
-                }));
-            }
-
-            // send to another destination or with params
-            if (isObject(output)) {
-                const { channelName, message } = output;
-                const channel = discordBot.channels.find(ch => ch.name === channelName);
-
-                if (!channel) {
+                if (isEmpty(output)) {
                     return;
                 }
 
-                channel
-                    .send(message)
-                    .catch((e) => {
-                        console.error(e.message);
-                    });
+                // TODO: need check permissions!
+                // simple case, output as answer
+                if (isString(output)) {
+                    msg.channel
+                        .send(output)
+                        .catch((e) => {
+                            console.error(e.message);
+                        });
+                }
+
+                // send several messages
+                if (isArray(output)) {
+                    output.forEach(_output => handle({
+                        ...context,
+                        output: _output,
+                    }));
+                }
+
+                // send to another destination or with params
+                if (isObject(output)) {
+                    const { channelName, message } = output;
+                    const channel = discordBot.channels.find(ch => ch.name === channelName);
+
+                    if (!channel) {
+                        return;
+                    }
+
+                    channel
+                        .send(message)
+                        .catch((e) => {
+                            console.error(e.message);
+                        });
+                }
             }
         };
 
