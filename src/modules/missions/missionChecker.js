@@ -1,21 +1,14 @@
-const clone = require('lodash/clone');
 const defaults = require('lodash/defaults');
 const filter = require('lodash/filter');
 const isEmpty = require('lodash/isEmpty');
 
 const checkers = require('./checkers');
 
-// const DAY = 1000 * 60 * 60 * 24;
-
 function checkOnCooldown(missionUserData) {
     const curDate = new Date();
     const { onCooldown, cooldownOff } = missionUserData;
 
     return onCooldown && (curDate < cooldownOff);
-
-    // if (!actualCooldown) {
-    //
-    // }
 }
 
 // todo: refactor this sh*t?
