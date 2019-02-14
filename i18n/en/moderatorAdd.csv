@@ -1,0 +1,2 @@
+moderatorAdd.alreadyExist, "Hey, moderator <@{{id}}> is already in our team!"
+moderatorAdd.success, "Welcome to moderation team, <@{{id}}>!"

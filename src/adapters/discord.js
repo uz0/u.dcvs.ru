@@ -127,6 +127,7 @@ discordAdapter.__INIT__ = function ({ process }) {
 
         process({
             id: msg.author.id,
+            username: msg.author.username,
             input: msg.content || '',
             attachments: msg.attachments,
             from: 'discord',

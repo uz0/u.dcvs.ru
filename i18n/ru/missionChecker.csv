@@ -1,0 +1,2 @@
+missionChecker.badChecker, "Что-то пошло не так =\\"
+missionChecker.success, "Поздравляшки! {{user}} завершил свою священную миссию ({{missionId}}) и получил экспы с барского плеча {{reward}}!"

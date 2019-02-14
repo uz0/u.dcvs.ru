@@ -6,7 +6,7 @@ module.exports = pattern => function command(response, { input }) {
     const [rawCommand, ...rawArgs] = input
         .trim()
         .replace(/\s+(?=([^"]*"[^"]*")*[^"]*$)/g, '|')
-        .replace(/['"]/g, '')
+        .replace(/["]/g, '')
         .split('|');
 
     if (!rawCommand.startsWith(`${PREFIX}`)) {
