@@ -357,7 +357,6 @@ const checkVote = async function (response, {
     const { pollsList = [], votesList = [] } = await getModuleData('poll');
     const openedPolls = pollsList.filter(poll => poll.isOpen);
     const inputLower = input.toLowerCase();
-    const inputLowerArray = inputLower.split(' ');
 
     if (!openedPolls.length) {
         return response;
@@ -367,7 +366,6 @@ const checkVote = async function (response, {
         if (votesList.find(vote => (vote.pollId === poll.pollId && vote.voterId === id))) {
             return;
         }
-        const inputLower = input.toLowerCase();
 
         if (poll.options.includes(inputLower)) {
             const newVote = {
@@ -383,42 +381,15 @@ const checkVote = async function (response, {
 
             const optionText = inputLower;
             const requestedPollId = poll.pollId;
-            response.output = i18n('vote.cast', {
-                id,
-                requestedPollId,
-                optionText,
-            });
-            return;
-        }
 
-        if (findOption) {
-            const newVote = {
-                voterId: id,
-                pollId: openedPoll.pollId,
-                option: openedPoll.options.indexOf(findOption),
-                dateVoted: new Date(),
-            };
-
-            updateModuleData('poll', {
-                votesList: [...votesList, newVote],
-            });
-
-            const optionText = findOption;
-            const requestedPollId = openedPoll.pollId;
-            response.outputRich = {
-                title: i18n('vote.castTitle'),
-                fields: [{
-                    fieldTitle: i18n('vote.castFieldTitle'),
-                    fieldText: i18n('vote.castFieldText', { id, requestedPollId, optionText }),
-                }],
-            };
             response.output = i18n('vote.cast', {
                 id,
                 requestedPollId,
                 optionText,
             });
         }
-    }
+    });
+
     return response;
 };
 
