@@ -12,6 +12,7 @@ const httpAdapter = require('./adapters/http');
 // const quiz = require('./modules/quiz');
 // const poll = require('./modules/poll');
 
+const selfReact = require('./modules/selfReact');
 const addExp = require('./modules/addExp');
 const error = require('./modules/error');
 const event = require('./modules/event');
@@ -51,6 +52,8 @@ instance.use([
     ping,
     echo,
     status,
+
+    selfReact,
 
     // quiz,
     // poll,

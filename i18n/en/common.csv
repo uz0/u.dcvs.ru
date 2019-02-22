@@ -12,3 +12,5 @@ status, "Ayo!\nLevel: {{lvl}}\nExp: {{value}}"
 statusError, "Something's wrong with your status, mate =\\"
 lvl, "Level system"
 lvlUp, "Hey, congratulations, <@{{id}}>! Level up! Your new level is {{lvl}}, keep it up!"
+,
+selfReact, "Can i help you?"
