@@ -5,7 +5,9 @@ module.exports = {
     mongoURI: process.env.MONGODB_URI,
     admin: process.env.ADMINISTRATOR_NICKNAME || 'dcversus',
     discord: {
+        color: '0xf9690e',
         authToken: process.env.DISCORD_AUTH_TOKEN,
         broadcastChannelName: process.env.BROADCAST_CHANNEL_NAME,
+        userFields: ['username', 'id', 'discriminator', 'bot', 'avatar'],
     },
 };
