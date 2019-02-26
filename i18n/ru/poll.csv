@@ -1,5 +1,6 @@
 poll.created, "Опрос успешно создан, ID чтобы отслеживать результаты и делать всякое: {{pollId}}"
 poll.alert, "Привет все @here, новый опрос подъехал! Чтобы голосовать пишите /vote твой_ответ"
+poll.info, "{{description}} {{results}}"
 
 poll.notFound, "По моим данным опроса с таким ID нет ({{requestedPollId}}), сорян("
 
