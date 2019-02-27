@@ -29,7 +29,7 @@ const command = require('./command.filter');
 // привязать вариант ответа, к голосованию
 // создать и вернуть ид голосования в чат при создании.
 // голосование по ид
-//  -проверить есть ли голосование с таким id
+//  -добавить поле с ид
 //  -проголосовать
 // ...
 // ...
@@ -71,58 +71,10 @@ const votePoll = async function (request, {
     updateModuleData,
     getModuleData,
 }) {
-    const { args: { option }, userId } = request;
-
-    const { voteList = [], pollList = [] } = await getModuleData('poll');
-
-    const poll = pollList.reverse().find(pollOption => pollOption.options.includes(option));
-
-    if (!poll) {
-        send(i18n('vote.errorNotPoll'));
-
-        return request;
-    }
-
-    const newVote = { option, userId, pollId: poll.pollId };
-
-    const prevVoted = voteList.find(
-        vote => vote.option === option && vote.userId === userId && vote.pollId === poll.pollId,
-    );
-
-    if (prevVoted) {
-        send(i18n('vote.errorPrevVoted'));
-
-        return request;
-    }
-
-    updateModuleData('poll', {
-        voteList: [
-            ...voteList,
-            newVote,
-        ],
-    });
-
-    send(i18n('vote.cast'));
-
-    return request;
-};
-
-const votePollId = async function (request, {
-    i18n,
-    send,
-    updateModuleData,
-    getModuleData,
-}) {
     const { args: { requestedPollId, requestedOption }, userId } = request;
 
     const { voteList = [], pollList = [] } = await getModuleData('poll');
 
-    const requestedPoll = pollList.find(poll => poll.pollId === requestedPollId);
-
-    if (!requestedPoll) {
-        send(i18n('poll.notFound', { requestedPollId }));
-        return request;
-    }
     const poll = pollList.reverse().find(pollOption => pollOption.options.includes(requestedOption));
 
     if (!poll) {
@@ -176,7 +128,7 @@ const polls = async function (request, { i18n, send, getModuleData }) {
 
 module.exports = [
     [command('addPoll description ...options'), addPoll],
-    [command('votePoll option'), votePoll],
-    [command('votePollId requestedPollId requestedOption'), votePollId],
+    [command('votePoll requestedOption'), votePoll],
+    [command('votePoll requestedPollId requestedOption'), votePoll],
     [command('polls'), polls],
 ];
