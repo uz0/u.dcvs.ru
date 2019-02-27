@@ -36,7 +36,7 @@ const command = require('./command.filter');
 // -добавить чекер на открытие
 // -закрыть голосование
 // -вывести сообщение
-// ...
+// предотвращение каких либо голосов в закрытом голосовании
 
 // ШАГ N описать что хотелка делает (с шага 2 по шаг 4)
 
@@ -79,7 +79,10 @@ const votePoll = async function (request, {
 
     const { voteList = [], pollList = [] } = await getModuleData('poll');
 
-    const poll = pollList.reverse().find(pollOption => pollOption.options.includes(requestedOption));
+    const openPollList = pollList.filter(poll => poll.isOpen === true);
+    console.log(openPollList);
+
+    const poll = openPollList.reverse().find(pollOption => pollOption.options.includes(requestedOption));
 
     if (!poll) {
         send(i18n('vote.errorNotPoll'));
