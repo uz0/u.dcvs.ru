@@ -31,8 +31,11 @@ const command = require('./command.filter');
 // голосование по ид
 //  -добавить поле с ид
 //  -проголосовать
-// ...
-// ...
+// баг с дублированием запроса.(выводит все по 2 раза c http запрос)
+// сделать закрытие
+// -добавить чекер на открытие
+// -закрыть голосование
+// -вывести сообщение
 // ...
 
 // ШАГ N описать что хотелка делает (с шага 2 по шаг 4)
@@ -49,6 +52,7 @@ const addPoll = async function (request, {
         description,
         options,
         pollId,
+        isOpen: true,
     };
 
     const { pollList = [] } = await getModuleData('poll');
@@ -83,10 +87,8 @@ const votePoll = async function (request, {
         return request;
     }
 
-    const newVote = { requestedOption, userId, requestedPollId };
-
     const prevVoted = voteList.find(
-        vote => vote.requestedOption === requestedOption && vote.userId === userId && vote.requestedPollId === requestedPollId,
+        vote => vote.requestedOption === requestedOption && vote.userId === userId && vote.pollId === requestedPollId,
     );
 
     if (prevVoted) {
@@ -94,6 +96,7 @@ const votePoll = async function (request, {
 
         return request;
     }
+    const newVote = { requestedOption, userId, requestedPollId };
 
     updateModuleData('poll', {
         voteList: [
@@ -102,7 +105,7 @@ const votePoll = async function (request, {
         ],
     });
 
-    send(i18n('vote.cast'));
+    send(i18n('vote.cast', { userId, requestedOption, requestedPollId }));
 
     return request;
 };
@@ -111,10 +114,10 @@ const polls = async function (request, { i18n, send, getModuleData }) {
     const { pollList = [], voteList = [] } = await getModuleData('poll');
 
     pollList.forEach((poll) => {
-        const optionResults = poll.options.map((option) => {
-            const results = voteList.filter(vote => vote.option === option);
+        const optionResults = poll.options.map((requestedOption) => {
+            const results = voteList.filter(vote => vote.requestedOption === requestedOption);
 
-            return `${option}:${results.length}`;
+            return `${requestedOption}:${results.length}`;
         });
 
         send(i18n('poll.info', {
@@ -126,9 +129,38 @@ const polls = async function (request, { i18n, send, getModuleData }) {
     return request;
 };
 
+const closePoll = async function (request, {
+    i18n,
+    send,
+    getModuleData,
+    updateModuleData,
+}) {
+    const { pollList = [] } = await getModuleData('poll');
+    const { args: { requestedPollId } } = request;
+
+    const requestedPoll = pollList.find(poll => poll.pollId === requestedPollId);
+
+    if (!requestedPoll) {
+        send(i18n('poll.notFound', { requestedPollId }));
+        return request;
+    }
+
+    const newList = pollList.filter(poll => poll.pollId !== requestedPollId);
+    requestedPoll.isOpen = false;
+    newList.push(requestedPoll);
+    updateModuleData('poll', {
+        pollList: newList,
+    });
+
+    send(i18n('poll.close', { requestedPollId }));
+
+    return request;
+};
+
 module.exports = [
     [command('addPoll description ...options'), addPoll],
     [command('votePoll requestedOption'), votePoll],
     [command('votePoll requestedPollId requestedOption'), votePoll],
     [command('polls'), polls],
+    [command('closePoll requestedPollId'), closePoll],
 ];
