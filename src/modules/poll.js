@@ -28,7 +28,9 @@ const command = require('./command.filter');
 // один юзер не может голосовать дважды!
 // привязать вариант ответа, к голосованию
 // создать и вернуть ид голосования в чат при создании.
-// ...
+// голосование по ид
+//  -проверить есть ли голосование с таким id
+//  -проголосовать
 // ...
 // ...
 // ...
@@ -86,7 +88,54 @@ const votePoll = async function (request, {
     const prevVoted = voteList.find(
         vote => vote.option === option && vote.userId === userId && vote.pollId === poll.pollId,
     );
-    console.log(prevVoted);
+
+    if (prevVoted) {
+        send(i18n('vote.errorPrevVoted'));
+
+        return request;
+    }
+
+    updateModuleData('poll', {
+        voteList: [
+            ...voteList,
+            newVote,
+        ],
+    });
+
+    send(i18n('vote.cast'));
+
+    return request;
+};
+
+const votePollId = async function (request, {
+    i18n,
+    send,
+    updateModuleData,
+    getModuleData,
+}) {
+    const { args: { requestedPollId, requestedOption }, userId } = request;
+
+    const { voteList = [], pollList = [] } = await getModuleData('poll');
+
+    const requestedPoll = pollList.find(poll => poll.pollId === requestedPollId);
+
+    if (!requestedPoll) {
+        send(i18n('poll.notFound', { requestedPollId }));
+        return request;
+    }
+    const poll = pollList.reverse().find(pollOption => pollOption.options.includes(requestedOption));
+
+    if (!poll) {
+        send(i18n('vote.errorNotPoll'));
+
+        return request;
+    }
+
+    const newVote = { requestedOption, userId, requestedPollId };
+
+    const prevVoted = voteList.find(
+        vote => vote.requestedOption === requestedOption && vote.userId === userId && vote.requestedPollId === requestedPollId,
+    );
 
     if (prevVoted) {
         send(i18n('vote.errorPrevVoted'));
@@ -128,5 +177,6 @@ const polls = async function (request, { i18n, send, getModuleData }) {
 module.exports = [
     [command('addPoll description ...options'), addPoll],
     [command('votePoll option'), votePoll],
+    [command('votePollId requestedPollId requestedOption'), votePollId],
     [command('polls'), polls],
 ];
