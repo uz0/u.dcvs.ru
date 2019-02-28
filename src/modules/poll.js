@@ -37,6 +37,8 @@ const command = require('./command.filter');
 // -закрыть голосование
 // -вывести сообщение
 // предотвращение каких либо голосов в закрытом голосовании
+// возможность голосования без /команды
+// проверка на повторное голосование
 
 // ШАГ N описать что хотелка делает (с шага 2 по шаг 4)
 
@@ -76,12 +78,8 @@ const votePoll = async function (request, {
     getModuleData,
 }) {
     const { args: { requestedPollId, requestedOption }, userId } = request;
-
     const { voteList = [], pollList = [] } = await getModuleData('poll');
-
     const openPollList = pollList.filter(poll => poll.isOpen === true);
-    console.log(openPollList);
-
     const poll = openPollList.reverse().find(pollOption => pollOption.options.includes(requestedOption));
 
     if (!poll) {
@@ -113,10 +111,46 @@ const votePoll = async function (request, {
     return request;
 };
 
+const checkVotePoll = async function (request, {
+    i18n,
+    send,
+    getModuleData,
+    updateModuleData,
+}) {
+    const { input, userId } = request;
+    const { pollList = [], voteList = [] } = await getModuleData('poll');
+    const openPollList = pollList.filter(poll => poll.isOpen === true);
+
+    openPollList.forEach((poll) => {
+        const prevVoted = voteList.find(
+            vote => vote.requestedOption === input && vote.userId === userId && vote.requestedPollId === poll.pollId,
+        );
+        if (prevVoted) {
+            return request;
+        }
+
+        if (poll.options.includes(input)) {
+            const requestedPollId = poll.pollId;
+            const requestedOption = input;
+            const newVote = { requestedOption: input, userId, requestedPollId };
+
+            updateModuleData('poll', {
+                voteList: [
+                    ...voteList,
+                    newVote,
+                ],
+            });
+            send(i18n('vote.cast', { userId, requestedOption, requestedPollId }));
+        }
+        return request;
+    });
+};
+
 const polls = async function (request, { i18n, send, getModuleData }) {
     const { pollList = [], voteList = [] } = await getModuleData('poll');
 
-    pollList.forEach((poll) => {
+    const openPollList = pollList.filter(poll => poll.isOpen === true);
+    openPollList.forEach((poll) => {
         const optionResults = poll.options.map((requestedOption) => {
             const results = voteList.filter(vote => vote.requestedOption === requestedOption);
 
@@ -124,6 +158,7 @@ const polls = async function (request, { i18n, send, getModuleData }) {
         });
 
         send(i18n('poll.info', {
+            pollId: poll.pollId,
             description: poll.description,
             results: optionResults.join(', '),
         }));
@@ -166,4 +201,5 @@ module.exports = [
     [command('votePoll requestedPollId requestedOption'), votePoll],
     [command('polls'), polls],
     [command('closePoll requestedPollId'), closePoll],
+    checkVotePoll,
 ];

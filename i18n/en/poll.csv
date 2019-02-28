@@ -1,6 +1,6 @@
 poll.created, "Poll created successfully, here's the ID for results tracking and other stuff: {{pollId}}"
 poll.alert, "Hey everyone @here, a new poll just popped up! vote by typing /vote your_answer"
-poll.info, "{{description}} {{results}}"
+poll.info, "{{pollId}} | {{description}} | {{results}}"
 
 poll.notFound, "I couldn't find a poll with this ID ({{requestedPollId}}), sorry, man("
 
