@@ -1,5 +1,6 @@
 const { hri } = require('human-readable-ids');
 const command = require('./command.filter');
+const moment = require('moment');
 // ШАГ 1 КАРКАС
 // ШАГ 2 описание структуры \ требования
 // 1 создать голосование
@@ -55,6 +56,7 @@ const addPoll = async function (request, {
         options,
         pollId,
         isOpen: true,
+        dateCreated: new Date(),
     };
 
     const { pollList = [] } = await getModuleData('poll');
@@ -150,17 +152,27 @@ const polls = async function (request, { i18n, send, getModuleData }) {
     const { pollList = [], voteList = [] } = await getModuleData('poll');
 
     const openPollList = pollList.filter(poll => poll.isOpen === true);
+    if (openPollList === []) {
+        send(i18n('poll.none'));
+        return request;
+    }
+
     openPollList.forEach((poll) => {
+        const votesCount = voteList.filter(vote => poll.pollId === vote.requestedPollId).length;
         const optionResults = poll.options.map((requestedOption) => {
             const results = voteList.filter(vote => vote.requestedOption === requestedOption);
-
-            return `${requestedOption}:${results.length}`;
+            const percentage = (results.length / votesCount * 100 || 0).toFixed(2);
+            return `${requestedOption} (${percentage})`;
         });
 
-        send(i18n('poll.info', {
-            pollId: poll.pollId,
+        send(i18n('poll.header', {
+            date: moment(poll.dateCreated).format('DD/MM'),
             description: poll.description,
-            results: optionResults.join(', '),
+            votesCount,
+            pollId: poll.pollId,
+        }));
+        send(i18n('poll.info', {
+            results: optionResults.join(' | '),
         }));
     });
 

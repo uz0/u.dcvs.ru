@@ -1,11 +1,11 @@
 poll.created, "Poll created successfully, here's the ID for results tracking and other stuff: {{pollId}}"
 poll.alert, "Hey everyone @here, a new poll just popped up! vote by typing /vote your_answer"
-poll.info, "{{pollId}} | {{description}} | {{results}}"
+poll.info, "{{results}} "
 
 poll.notFound, "I couldn't find a poll with this ID ({{requestedPollId}}), sorry, man("
 
 poll.list, "Here are all the polls that are open at the moment:\n"
-poll.header, "{{date}} {{question}} | {{votesCount}} total votes | ID: {{pollId}}\n"
+poll.header, "{{date}} {{description}} | {{votesCount}} total votes | ID: {{pollId}}\n"
 poll.line, "{{option}} | {{optionVotes}} votes | ({{percentage}}%) |\n"
 poll.none, "No polls are open at the moment, come on open new one!"
 poll.closed, "(closed) "
