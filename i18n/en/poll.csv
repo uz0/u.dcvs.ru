@@ -14,7 +14,7 @@ poll.close, "Poll {{requestedPollId}} was closed, the results are still availabl
 poll.alreadyClosed, "This poll is already closed! Are you messing with me?"
 poll.alreadyVoted, "You've already voted in this poll, you're either cheating or very forgetfull"
 
-vote.cast, "<@{{userId}}> voted for {{requestedOption}} in poll {{requestedPollId}}, hmmm which option's gonna win this this thing?"
+vote.cast, "<@{{userId}}> voted for {{requestedOption}} in poll {{requestedPollId}}, hmmm which option's gonna win this thing?"
 vote.noSuchOption, "The option you're trying to vote for doesn't seem to exist"
 
 poll.noneTitle, "No Poll"

@@ -82,7 +82,9 @@ const votePoll = async function (request, {
     const { args: { requestedPollId, requestedOption }, userId } = request;
     const { voteList = [], pollList = [] } = await getModuleData('poll');
     const openPollList = pollList.filter(poll => poll.isOpen === true);
-    const poll = openPollList.reverse().find(pollOption => pollOption.options.includes(requestedOption));
+    const poll = openPollList
+        .reverse()
+        .find(pollOption => pollOption.options.includes(requestedOption));
 
     if (!poll) {
         send(i18n('vote.errorNotPoll'));
@@ -123,7 +125,6 @@ const checkVotePoll = async function (request, {
     const { pollList = [], voteList = [] } = await getModuleData('poll');
     const openPollList = pollList.filter(poll => poll.isOpen === true);
     const inputLower = input.toLowerCase().split(' ');
-    console.log(inputLower);
 
     openPollList.forEach((poll) => {
         const prevVoted = voteList.find(
@@ -132,11 +133,8 @@ const checkVotePoll = async function (request, {
         if (prevVoted) {
             return request;
         }
-        console.log(poll);
         // eslint-disable-next-line no-restricted-syntax
         for (const argInput of inputLower) {
-            console.log(poll.options.includes(argInput));
-
             if (poll.options.includes(argInput)) {
                 const requestedPollId = poll.pollId;
                 const requestedOption = argInput;
