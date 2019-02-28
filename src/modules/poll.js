@@ -150,6 +150,31 @@ const checkVotePoll = async function (request, {
 
 const polls = async function (request, { i18n, send, getModuleData }) {
     const { pollList = [], voteList = [] } = await getModuleData('poll');
+    const { args: { requestedPollId } } = request;
+    const filteredPolls = requestedPollId ? pollList.filter(poll => poll.pollId === requestedPollId) : pollList;
+    console.log(filteredPolls);
+
+    if (filteredPolls !== []) {
+        filteredPolls.forEach((poll) => {
+            const votesCount = voteList.filter(vote => poll.pollId === vote.requestedPollId).length;
+            const optionResults = poll.options.map((requestedOption) => {
+                const results = voteList.filter(vote => vote.requestedOption === requestedOption);
+                const percentage = (results.length / votesCount * 100 || 0).toFixed(2);
+                return `${requestedOption} (${percentage})`;
+            });
+
+            send(i18n('poll.header', {
+                date: moment(poll.dateCreated).format('DD/MM'),
+                description: poll.description,
+                votesCount,
+                pollId: poll.pollId,
+            }));
+            send(i18n('poll.info', {
+                results: optionResults.join(' | '),
+            }));
+        });
+        return request;
+    }
 
     const openPollList = pollList.filter(poll => poll.isOpen === true);
     if (openPollList === []) {
@@ -175,7 +200,6 @@ const polls = async function (request, { i18n, send, getModuleData }) {
             results: optionResults.join(' | '),
         }));
     });
-
     return request;
 };
 
@@ -212,6 +236,7 @@ module.exports = [
     [command('votePoll requestedOption'), votePoll],
     [command('votePoll requestedPollId requestedOption'), votePoll],
     [command('polls'), polls],
+    [command('polls requestedPollId'), polls],
     [command('closePoll requestedPollId'), closePoll],
     checkVotePoll,
 ];
