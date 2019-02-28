@@ -1,6 +1,6 @@
 const { hri } = require('human-readable-ids');
-const command = require('./command.filter');
 const moment = require('moment');
+const command = require('./command.filter');
 // ШАГ 1 КАРКАС
 // ШАГ 2 описание структуры \ требования
 // 1 создать голосование
@@ -122,27 +122,34 @@ const checkVotePoll = async function (request, {
     const { input, userId } = request;
     const { pollList = [], voteList = [] } = await getModuleData('poll');
     const openPollList = pollList.filter(poll => poll.isOpen === true);
+    const inputLower = input.toLowerCase().split(' ');
+    console.log(inputLower);
 
     openPollList.forEach((poll) => {
         const prevVoted = voteList.find(
-            vote => vote.requestedOption === input && vote.userId === userId && vote.requestedPollId === poll.pollId,
+            vote => vote.userId === userId && vote.requestedPollId === poll.pollId,
         );
         if (prevVoted) {
             return request;
         }
+        console.log(poll);
+        // eslint-disable-next-line no-restricted-syntax
+        for (const argInput of inputLower) {
+            console.log(poll.options.includes(argInput));
 
-        if (poll.options.includes(input)) {
-            const requestedPollId = poll.pollId;
-            const requestedOption = input;
-            const newVote = { requestedOption: input, userId, requestedPollId };
+            if (poll.options.includes(argInput)) {
+                const requestedPollId = poll.pollId;
+                const requestedOption = argInput;
+                const newVote = { requestedOption: argInput, userId, requestedPollId };
 
-            updateModuleData('poll', {
-                voteList: [
-                    ...voteList,
-                    newVote,
-                ],
-            });
-            send(i18n('vote.cast', { userId, requestedOption, requestedPollId }));
+                updateModuleData('poll', {
+                    voteList: [
+                        ...voteList,
+                        newVote,
+                    ],
+                });
+                send(i18n('vote.cast', { userId, requestedOption, requestedPollId }));
+            }
         }
         return request;
     });
@@ -151,32 +158,15 @@ const checkVotePoll = async function (request, {
 const polls = async function (request, { i18n, send, getModuleData }) {
     const { pollList = [], voteList = [] } = await getModuleData('poll');
     const { args: { requestedPollId } } = request;
-    const filteredPolls = requestedPollId ? pollList.filter(poll => poll.pollId === requestedPollId) : pollList;
-    console.log(filteredPolls);
+    let openPollList = [];
 
-    if (filteredPolls !== []) {
-        filteredPolls.forEach((poll) => {
-            const votesCount = voteList.filter(vote => poll.pollId === vote.requestedPollId).length;
-            const optionResults = poll.options.map((requestedOption) => {
-                const results = voteList.filter(vote => vote.requestedOption === requestedOption);
-                const percentage = (results.length / votesCount * 100 || 0).toFixed(2);
-                return `${requestedOption} (${percentage})`;
-            });
-
-            send(i18n('poll.header', {
-                date: moment(poll.dateCreated).format('DD/MM'),
-                description: poll.description,
-                votesCount,
-                pollId: poll.pollId,
-            }));
-            send(i18n('poll.info', {
-                results: optionResults.join(' | '),
-            }));
-        });
-        return request;
+    if (requestedPollId) {
+        openPollList = pollList.filter(poll => poll.pollId === requestedPollId);
     }
 
-    const openPollList = pollList.filter(poll => poll.isOpen === true);
+    if (!requestedPollId) {
+        openPollList = pollList.filter(poll => poll.isOpen);
+    }
     if (openPollList === []) {
         send(i18n('poll.none'));
         return request;
@@ -189,6 +179,9 @@ const polls = async function (request, { i18n, send, getModuleData }) {
             const percentage = (results.length / votesCount * 100 || 0).toFixed(2);
             return `${requestedOption} (${percentage})`;
         });
+        if (poll.isOpen === false) {
+            send(i18n('closed'));
+        }
 
         send(i18n('poll.header', {
             date: moment(poll.dateCreated).format('DD/MM'),
