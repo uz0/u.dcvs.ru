@@ -95,23 +95,25 @@ const checkVotePoll = async function (request, {
     openPollList.forEach((poll) => {
         const prevVoted = voteList.filter(vote => vote.userId === userId && vote.pollId === poll.pollId);
         if (!isEmpty(prevVoted)) {
-            return request;
+            return;
         }
-        if (poll.options.includes(inputLower)) {
-            const requestPollId = poll.pollId;
-            const requestedOption = inputLower;
-            const newVote = { option: requestedOption, userId, pollId: requestPollId };
+        poll.options.forEach((option) => {
+            if (inputLower.includes(option.toLowerCase())) {
+                const requestPollId = poll.pollId;
+                const requestedOption = option;
+                const newVote = { option, userId, pollId: requestPollId };
 
-            updateModuleData('poll', {
-                voteList: [
-                    ...voteList,
-                    newVote,
-                ],
-            });
-            send(i18n('vote.cast', { userId, requestedOption, requestPollId }));
-        }
-        return request;
+                updateModuleData('poll', {
+                    voteList: [
+                        ...voteList,
+                        newVote,
+                    ],
+                });
+                send(i18n('vote.cast', { userId, requestedOption, requestPollId }));
+            }
+        });
     });
+    return request;
 };
 
 const polls = async function (request, { i18n, send, getModuleData }) {
