@@ -1,5 +1,6 @@
 const { hri } = require('human-readable-ids');
 const moment = require('moment');
+const isEmpty = require('lodash/isEmpty');
 const command = require('./command.filter');
 
 const addPoll = async function (request, {
@@ -40,27 +41,33 @@ const votePoll = async function (request, {
 }) {
     const { args: { requestedPollId, requestedOption }, userId } = request;
     const { voteList = [], pollList = [] } = await getModuleData('poll');
-    const openPollList = pollList.filter(poll => poll.isOpen === true);
+    let openPollList = [];
+
+    if (requestedPollId) {
+        openPollList = pollList.filter(poll => poll.pollId === requestedPollId && poll.isOpen === true);
+    }
+    if (!requestedPollId) {
+        openPollList = pollList.filter(poll => poll.isOpen === true);
+    }
     const poll = openPollList
         .reverse()
         .find(pollOption => pollOption.options.includes(requestedOption));
-
     if (!poll) {
-        send(i18n('vote.errorNotPoll'));
-
+        send(i18n('vote.noSuchOption'));
         return request;
     }
 
-    const prevVoted = voteList.find(
-        vote => vote.requestedOption === requestedOption && vote.userId === userId && vote.pollId === requestedPollId,
-    );
-
-    if (prevVoted) {
-        send(i18n('vote.errorPrevVoted'));
-
+    const prevVoted = voteList.filter(vote => vote.userId === userId && vote.pollId === poll.pollId);
+    if (!isEmpty(prevVoted)) {
+        send(i18n('poll.alreadyVoted'));
         return request;
     }
-    const newVote = { requestedOption, userId, requestedPollId };
+    const newVote = {
+        option: requestedOption,
+        userId,
+        pollId: poll.pollId,
+    };
+    const requestPollId = newVote.pollId;
 
     updateModuleData('poll', {
         voteList: [
@@ -69,7 +76,7 @@ const votePoll = async function (request, {
         ],
     });
 
-    send(i18n('vote.cast', { userId, requestedOption, requestedPollId }));
+    send(i18n('vote.cast', { userId, requestedOption, requestPollId }));
 
     return request;
 };
@@ -83,30 +90,25 @@ const checkVotePoll = async function (request, {
     const { input, userId } = request;
     const { pollList = [], voteList = [] } = await getModuleData('poll');
     const openPollList = pollList.filter(poll => poll.isOpen === true);
-    const inputLower = input.toLowerCase().split(' ');
+    const inputLower = input.toLowerCase();
 
     openPollList.forEach((poll) => {
-        const prevVoted = voteList.find(
-            vote => vote.userId === userId && vote.requestedPollId === poll.pollId,
-        );
-        if (prevVoted) {
+        const prevVoted = voteList.filter(vote => vote.userId === userId && vote.pollId === poll.pollId);
+        if (!isEmpty(prevVoted)) {
             return request;
         }
-        // eslint-disable-next-line no-restricted-syntax
-        for (const argInput of inputLower) {
-            if (poll.options.includes(argInput)) {
-                const requestedPollId = poll.pollId;
-                const requestedOption = argInput;
-                const newVote = { requestedOption: argInput, userId, requestedPollId };
+        if (poll.options.includes(inputLower)) {
+            const requestPollId = poll.pollId;
+            const requestedOption = inputLower;
+            const newVote = { option: requestedOption, userId, pollId: requestPollId };
 
-                updateModuleData('poll', {
-                    voteList: [
-                        ...voteList,
-                        newVote,
-                    ],
-                });
-                send(i18n('vote.cast', { userId, requestedOption, requestedPollId }));
-            }
+            updateModuleData('poll', {
+                voteList: [
+                    ...voteList,
+                    newVote,
+                ],
+            });
+            send(i18n('vote.cast', { userId, requestedOption, requestPollId }));
         }
         return request;
     });
@@ -119,20 +121,19 @@ const polls = async function (request, { i18n, send, getModuleData }) {
 
     if (requestedPollId) {
         openPollList = pollList.filter(poll => poll.pollId === requestedPollId);
-    }
-
-    if (!requestedPollId) {
+    } else {
         openPollList = pollList.filter(poll => poll.isOpen);
     }
-    if (openPollList === []) {
+
+    if (isEmpty(openPollList)) {
         send(i18n('poll.none'));
         return request;
     }
 
     openPollList.forEach((poll) => {
-        const votesCount = voteList.filter(vote => poll.pollId === vote.requestedPollId).length;
+        const votesCount = voteList.filter(vote => poll.pollId === vote.pollId).length;
         const optionResults = poll.options.map((requestedOption) => {
-            const results = voteList.filter(vote => vote.requestedOption === requestedOption);
+            const results = voteList.filter(vote => vote.option === requestedOption && poll.pollId === vote.pollId);
             const percentage = (results.length / votesCount * 100 || 0).toFixed(2);
             return `${requestedOption} (${percentage})`;
         });
@@ -140,13 +141,11 @@ const polls = async function (request, { i18n, send, getModuleData }) {
             send(i18n('closed'));
         }
 
-        send(i18n('poll.header', {
+        send(i18n('poll.info', {
             date: moment(poll.dateCreated).format('DD/MM'),
             description: poll.description,
             votesCount,
             pollId: poll.pollId,
-        }));
-        send(i18n('poll.info', {
             results: optionResults.join(' | '),
         }));
     });
@@ -168,12 +167,16 @@ const closePoll = async function (request, {
         send(i18n('poll.notFound', { requestedPollId }));
         return request;
     }
-
-    const newList = pollList.filter(poll => poll.pollId !== requestedPollId);
-    requestedPoll.isOpen = false;
-    newList.push(requestedPoll);
+    const filteredList = pollList.filter(poll => poll.pollId !== requestedPollId);
+    const closedPoll = {
+        ...requestedPoll,
+        isOpen: false,
+    };
     updateModuleData('poll', {
-        pollList: newList,
+        pollList: [
+            ...filteredList,
+            closedPoll,
+        ],
     });
 
     send(i18n('poll.close', { requestedPollId }));
