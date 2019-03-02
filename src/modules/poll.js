@@ -111,15 +111,30 @@ const votePoll = async function (request, {
     const poll = filteredPollList.find(pollOption => pollOption.options.includes(option));
 
     if (!poll) {
-        send(i18n('vote.noSuchOption'));
+        send({
+            embed: {
+                title: i18n('poll'),
+                description: i18n('vote.noSuchOption'),
+            },
+        });
 
         return request;
     }
 
     const prevVoted = voteList.find(vote => vote.userId === userId && vote.pollId === poll.id);
-    if (prevVoted) {
-        send(i18n('poll.alreadyVoted'));
+    if (prevVoted && requestedOption) {
+        send({
+            embed: {
+                title: i18n('poll'),
+                description: i18n('vote.alreadyVoted'),
+            },
+        });
 
+        return request;
+    }
+
+    // we voted, BUT not request direct command!
+    if (prevVoted && !requestedOption) {
         return request;
     }
 
@@ -136,11 +151,16 @@ const votePoll = async function (request, {
         ],
     });
 
-    send(i18n('vote.cast', {
-        userId,
-        requestedOption,
-        requestPollId: newVote.pollId,
-    }));
+    send({
+        embed: {
+            title: i18n('poll'),
+            description: i18n('vote.cast', {
+                userId,
+                option,
+                requestPollId: newVote.pollId,
+            }),
+        },
+    });
 
     return request;
 };
@@ -169,16 +189,23 @@ const polls = async function (request, { i18n, send, getModuleData }) {
             const results = votes.filter(vote => vote.option === option);
             const percentage = (results.length / votesCount * 100 || 0).toFixed(2);
 
-            return `${option} (${percentage}%)`;
+            return {
+                name: option,
+                value: percentage,
+            };
         });
 
-        send(i18n('poll.info', {
-            date: moment(poll.dateCreated).format('DD/MM'),
-            description: poll.description,
-            votesCount,
-            pollId: poll.id,
-            results: optionResults.join(' | '),
-        }));
+        send({
+            embed: {
+                title: i18n('poll.info', {
+                    date: moment(poll.dateCreated).format('DD/MM'),
+                    description: poll.description,
+                    votesCount,
+                    pollId: poll.id,
+                }),
+                fields: optionResults
+            }
+        });
     });
 
     return request;
