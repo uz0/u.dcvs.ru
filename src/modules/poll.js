@@ -189,10 +189,10 @@ const polls = async function (request, { i18n, send, getModuleData }) {
             const results = votes.filter(vote => vote.option === option);
             const percentage = (results.length / votesCount * 100 || 0).toFixed(2);
 
-            return {
-                name: option,
-                value: percentage,
-            };
+            return [
+                option,
+                percentage,
+            ];
         });
 
         send({
