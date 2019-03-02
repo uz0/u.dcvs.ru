@@ -1,9 +1,12 @@
 const { hri } = require('human-readable-ids');
 const moment = require('moment');
 const isEmpty = require('lodash/isEmpty');
+const get = require('lodash/get');
 
 const command = require('./command.filter');
 const isModerator = require('./isModerator');
+
+const { PREFIX } = require('../config');
 
 const addPoll = async function (request, {
     i18n,
@@ -13,15 +16,29 @@ const addPoll = async function (request, {
 }) {
     const { args: { description, options } } = request;
     const pollId = hri.random();
+    let broadcastMsg = null;
+
+    const { pollList = [] } = await getModuleData('poll');
+
+    const message = await send(i18n('poll.created', { pollId }));
+    const systemChannelID = get(message, 'channel.guild.systemChannelID');
+
+    if (systemChannelID) {
+        const {
+            id,
+        } = await send(i18n('poll.created', { pollId }));
+
+        broadcastMsg = ['discord', systemChannelID, id];
+    }
+
     const newPoll = {
         description,
         options,
         id: pollId,
         isOpen: true,
+        broadcastMsg,
         dateCreated: new Date(),
     };
-
-    const { pollList = [] } = await getModuleData('poll');
 
     updateModuleData('poll', {
         pollList: [
@@ -30,7 +47,6 @@ const addPoll = async function (request, {
         ],
     });
 
-    send(i18n('poll.created', { pollId }));
 
     return request;
 };
@@ -49,6 +65,12 @@ const votePoll = async function (request, {
         userId,
         input,
     } = request;
+
+    // inline vote check case, ignore if it not parsed case of command call
+    if (input.startsWith(PREFIX) && !requestedOption) {
+
+        return request;
+    }
 
     const inputLower = input.toLowerCase();
     const { voteList = [], pollList = [] } = await getModuleData('poll');
@@ -83,7 +105,7 @@ const votePoll = async function (request, {
     // not direct vote and doesnt find any match in user input - silent skip
     if (!requestedOption && isEmpty(filteredPollList)) {
 
-        return request;
+        return;
     }
 
     const poll = filteredPollList.find(pollOption => pollOption.options.includes(option));
@@ -197,11 +219,12 @@ const closePoll = async function (request, {
 };
 
 module.exports = [
+    votePoll,
+
     [isModerator, command('addPoll description ...options'), addPoll],
     [isModerator, command('closePoll requestedPollId'), closePoll],
     [command('polls'), polls],
     [command('polls requestedPollId'), polls],
     [command('votePoll requestedOption'), votePoll],
     [command('votePoll requestedPollId requestedOption'), votePoll],
-    votePoll,
 ];
