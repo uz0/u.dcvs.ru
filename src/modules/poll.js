@@ -191,7 +191,7 @@ const polls = async function (request, { i18n, send, getModuleData }) {
 
             return [
                 option,
-                percentage,
+                `${percentage}%`,
             ];
         });
 
@@ -202,6 +202,7 @@ const polls = async function (request, { i18n, send, getModuleData }) {
                     description: poll.description,
                     votesCount,
                     pollId: poll.id,
+                    results: '',
                 }),
                 fields: optionResults
             }
