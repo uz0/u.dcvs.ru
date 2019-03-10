@@ -29,6 +29,8 @@ discordAdapter.__INIT__ = function (ctx) {
                 // temp solution!
                 const user = channel.guild.members.find(usr => usr.username === username);
 
+                console.log('debug', channel, channel.guild, channel.guild.members)
+
                 if (removeRole) {
                     user.removeRole(removeRole);
                 }
