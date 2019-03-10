@@ -87,7 +87,7 @@ module.exports = class App {
             // dirty hack! if user upd his data but our storage dont know it...
             user = {
                 ...user,
-                userData,
+                ...userData,
             }
         }
 

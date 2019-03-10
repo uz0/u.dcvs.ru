@@ -32,10 +32,10 @@ const joinWar = async function (request, { i18n, send, getModuleData, updateModu
 
     send(`${username} was joined to war!`);
     send({ userActions: [{
-        userName: username,
+        username,
         addRole: warsRoleId
     }, {
-        userName: username,
+        username,
         addRole: warsBaseRoleId
     }]});
 };
@@ -68,7 +68,7 @@ const kill = async function (request, { i18n, send, getModuleData, updateModuleD
         });
 
         send({ userActions: [{
-            userName: username,
+            username,
             removeRole: warsRoleId
         }]});
 
@@ -83,7 +83,7 @@ const kill = async function (request, { i18n, send, getModuleData, updateModuleD
         });
 
         send({ userActions: [{
-            userName: winnerName,
+            username: winnerName,
             removeRole: warsRoleId
         }]});
 
