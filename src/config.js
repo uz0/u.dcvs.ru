@@ -8,6 +8,9 @@ module.exports = {
     discord: {
         color: '0xf9690e',
         authToken: process.env.DISCORD_AUTH_TOKEN,
+        warsBaseRoleId: process.env.WARS_BASE_ROLE_ID,
+        warsRoleId: process.env.WARS_ROLE_ID,
+        warsChannelId: process.env.WARS_CHANNEL_ID,
         broadcastChannelName: process.env.BROADCAST_CHANNEL_NAME,
         userFields: ['username', 'id', 'discriminator', 'bot', 'avatar'],
     },

@@ -11,6 +11,7 @@ const httpAdapter = require('./adapters/http');
 // const bets = require('./modules/bets');
 // const quiz = require('./modules/quiz');
 const poll = require('./modules/poll');
+const wars = require('./modules/wars');
 
 const selfReact = require('./modules/selfReact');
 const addExp = require('./modules/addExp');
@@ -57,6 +58,7 @@ instance.use([
 
     // quiz,
     poll,
+    wars,
     // bets,
 
     missionChecker,
