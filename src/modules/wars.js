@@ -63,8 +63,15 @@ const startWar = async function (request, { i18n, send, getModuleData, updateMod
 };
 
 const kill = async function (request, { i18n, send, getModuleData, updateModuleData }) {
-    const { args: { username } } = request;
+    const { args: { username }, from } = request;
+    const [, channelId] = from;
     const { list = [], status } = await getModuleData('wars');
+
+    if (warsChannelId !== channelId) {
+        send('cant use here!');
+
+        return;
+    }
 
     if (status !== 'started') {
         send('war is not started!');
