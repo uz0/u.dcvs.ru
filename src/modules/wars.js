@@ -41,7 +41,19 @@ const joinWar = async function (request, { i18n, send, getModuleData, updateModu
 };
 
 const startWar = async function (request, { i18n, send, getModuleData, updateModuleData }) {
-    // const { list = [], status } = await getModuleData('wars');
+    const { list = [], status } = await getModuleData('wars');
+
+    if (status !== 'preparing') {
+        send('war is not preparing!');
+
+        return;
+    }
+
+    if (list.length < 2) {
+        send('minimum two players needed!');
+
+        return;
+    }
 
     updateModuleData('wars', { 
         status: 'started',
