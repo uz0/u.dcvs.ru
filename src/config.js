@@ -11,7 +11,7 @@ module.exports = {
         warsBaseRoleId: process.env.WARS_BASE_ROLE_ID,
         warsRoleId: process.env.WARS_ROLE_ID,
         warsChannelId: process.env.WARS_CHANNEL_ID,
-        broadcastChannelName: process.env.BROADCAST_CHANNEL_NAME,
+        broadcastChannelId: process.env.BROADCAST_CHANNEL_ID,
         userFields: ['username', 'id', 'discriminator', 'bot', 'avatar'],
     },
 };
