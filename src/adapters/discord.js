@@ -28,6 +28,9 @@ discordAdapter.__INIT__ = function (ctx) {
             userActions.forEach(({ username, addRole, removeRole }) => {
                 const user = discordBot.users.find(usr => usr.username === username);
 
+                console.log('users', discordBot.users.length, discordBot.users)
+                console.log('user', user.id, user.username)
+
                 if (removeRole) {
                     user.removeRole(removeRole);
                 }
