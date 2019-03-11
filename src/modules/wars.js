@@ -27,7 +27,7 @@ const joinWar = async function (request, { i18n, send, getModuleData, updateModu
     const newList = list.filter(usrn => usrn !== username);
 
     updateModuleData('wars', {
-        list: [...newList, username.toLowerCase()],
+        list: [...newList, username],
      });
 
     send(`${username} was joined to war!`);
@@ -105,19 +105,20 @@ const kill = async function (request, { i18n, send, getModuleData, updateModuleD
         return;
     }
 
-    const newList = list.filter(username => username !== inputLower);
+    const username = list.find(usrn => usrn.toLowerCase() === inputLower);
+    const newList = list.filter(usrn => usrn.toLowerCase() !== inputLower);
 
-    if (list.length !== newList.length) {
+    if (username) {
         updateModuleData('wars', {
             list: newList,
         });
 
         send({ userActions: [{
-            username: inputLower,
+            username,
             removeRole: warsRoleId
         }]});
 
-        send(`killed ${inputLower}`);
+        send(`killed ${username}`);
     } else {
         send('dont find user, lets try more!!! FASTER!!!');
     }
