@@ -27,16 +27,30 @@ const joinWar = async function (request, { i18n, send, getModuleData, updateModu
     const newList = list.filter(usrn => usrn !== username);
 
     updateModuleData('wars', {
-        list: [...newList, username],
+        list: [...newList, username.toLowerCase()],
      });
 
     send(`${username} was joined to war!`);
     send({ userActions: [{
         username,
-        addRole: warsRoleId
-    }, {
-        username,
         addRole: warsBaseRoleId
+    }]});
+};
+
+const leftWar = async function (request, { i18n, send, getModuleData, updateModuleData }) {
+    const { user: { username } } = request;
+    const { list = [] } = await getModuleData('wars');
+
+    const newList = list.filter(usrn => usrn !== username);
+
+    updateModuleData('wars', {
+        list: newList,
+     });
+
+    send(`${username} was left from war!`);
+    send({ userActions: [{
+        username,
+        removeRole: warsBaseRoleId
     }]});
 };
 
@@ -55,23 +69,35 @@ const startWar = async function (request, { i18n, send, getModuleData, updateMod
         return;
     }
 
+    list.forEach(username => {
+        send({ userActions: [{
+            username,
+            addRole: warsRoleId
+        }]});
+    })
+
     updateModuleData('wars', { 
         status: 'started',
      });
 
     send('war started!');
+    send({
+        to: ['discord', warsChannelId],
+        message: 'war started!',
+    });
 };
 
 const kill = async function (request, { i18n, send, getModuleData, updateModuleData }) {
-    const { args: { username }, from } = request;
+    const { input, from } = request;
     const [, channelId] = from;
-    const { list = [], status } = await getModuleData('wars');
 
     if (warsChannelId !== channelId) {
-        send('cant use here!');
-
         return;
     }
+
+    const { list = [], status } = await getModuleData('wars');
+    const inputLower = input.toLowerCase();
+
 
     if (status !== 'started') {
         send('war is not started!');
@@ -79,7 +105,7 @@ const kill = async function (request, { i18n, send, getModuleData, updateModuleD
         return;
     }
 
-    const newList = list.filter(usrn => usrn !== username);
+    const newList = list.filter(username => username !== inputLower);
 
     if (list.length !== newList.length) {
         updateModuleData('wars', {
@@ -87,11 +113,13 @@ const kill = async function (request, { i18n, send, getModuleData, updateModuleD
         });
 
         send({ userActions: [{
-            username,
+            username: inputLower,
             removeRole: warsRoleId
         }]});
 
-        send(`killed ${username}`);
+        send(`killed ${inputLower}`);
+    } else {
+        send('dont find user, lets try more!!! FASTER!!!');
     }
 
     if (newList.length === 1) {
@@ -115,5 +143,6 @@ module.exports = [
     [command('prepareWar'), prepareWar],
     [command('startWar'), startWar],
     [command('joinWar'), joinWar],
-    [command('kill username'), kill],
+    [command('leftWar'), leftWar],
+    kill,
 ];
