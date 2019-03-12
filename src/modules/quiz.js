@@ -24,7 +24,7 @@ const addQuiz = async function (request, {
     });
 
     if (broadcastChannelId) {
-        const message = send({
+        const message = await send({
             to: ['discord', broadcastChannelId],
             embed: {
                 title: i18n('quiz'),

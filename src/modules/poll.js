@@ -7,6 +7,9 @@ const isModerator = require('./isModerator');
 
 const { PREFIX, discord: { broadcastChannelId } } = require('../config');
 
+const emptyIcon = '▒';
+const fullIcon = '█';
+
 const addPoll = async function (request, {
     i18n,
     send,
@@ -27,13 +30,15 @@ const addPoll = async function (request, {
     });
 
     if (broadcastChannelId) {
-        const message = send({
+        const message = await send({
             to: ['discord', broadcastChannelId],
             embed: {
                 title: i18n('poll'),
-            description: i18n('poll.created', { pollId }),
+                description: i18n('poll.created', { pollId }),
             },
         });
+
+        console.log('message', message)
 
         if (message) {
             broadcastMsg = ['discord', broadcastChannelId, message.id];
@@ -96,7 +101,7 @@ const votePoll = async function (request, {
     // user input contains something in opened polls
     if (!requestedOption) {
         filteredPollList = filteredPollList.filter(poll => poll.options.find((pollOption) => {
-            const finded = inputLower.includes(pollOption.toLowerCase());
+            const finded = inputLower === pollOption.toLowerCase();
 
             if (finded) {
                 option = pollOption;
@@ -192,27 +197,35 @@ const showPolls = async function (request, { i18n, send, getModuleData }) {
 
     filteredPollList.forEach((poll) => {
         const votes = voteList.filter(vote => poll.id === vote.pollId);
-        const votesCount = votes.length;
+        const allVotesCount = votes.length;
 
         const optionResults = poll.options.map((option) => {
-            const results = votes.filter(vote => vote.option === option);
-            const percentage = (results.length / votesCount * 100 || 0).toFixed(2);
+            const votesCount = votes.filter(vote => vote.option === option).length;
+            const percentage = (votesCount / allVotesCount * 100 || 0).toFixed(2);
+            const fillCount = (percentage / 10).toFixed(0);
+            const emptyCount = 10 - fillCount;
+            let loadbar = '';
+            loadbar += fullIcon.repeat(fillCount);
+            loadbar += emptyIcon.repeat(emptyCount);
 
             return [
-                option,
-                `${percentage}%`,
+                i18n('poll.option', {
+                    option,
+                    percentage,
+                    votesCount
+                }),
+                loadbar,
             ];
         });
 
         send({
             embed: {
-                title: i18n('poll.info', {
+                title: i18n('poll.title', {
                     date: moment(poll.dateCreated).format('DD/MM'),
-                    description: poll.description,
-                    votesCount,
+                    allVotesCount,
                     pollId: poll.id,
-                    results: '',
                 }),
+                description: poll.description,
                 fields: optionResults,
             },
         });
