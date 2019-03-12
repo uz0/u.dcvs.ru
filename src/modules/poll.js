@@ -204,9 +204,10 @@ const showPolls = async function (request, { i18n, send, getModuleData }) {
             const percentage = (votesCount / allVotesCount * 100 || 0).toFixed(2);
             const fillCount = (percentage / 10).toFixed(0);
             const emptyCount = 10 - fillCount;
-            let loadbar = '';
+            let loadbar = '```';
             loadbar += fullIcon.repeat(fillCount);
             loadbar += emptyIcon.repeat(emptyCount);
+            loadbar += '```';
 
             return [
                 i18n('poll.option', {
