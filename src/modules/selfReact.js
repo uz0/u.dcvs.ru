@@ -7,7 +7,12 @@ const selfReact = async function (request, { i18n, send }) {
         send(i18n('selfReact', { input, id }));
     }
 
+    if (request.input.includes('?') && request.input.includes(selfName)) {
+        send(i18n('selfAnswer', { input, id }));
+    }
+
     return request;
 };
+
 
 module.exports = [selfReact];
