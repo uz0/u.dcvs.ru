@@ -1,6 +1,7 @@
 const { hri } = require('human-readable-ids');
 const moment = require('moment');
 const isEmpty = require('lodash/isEmpty');
+const maxBy = require('lodash/maxBy');
 
 const command = require('./command.filter');
 const isModerator = require('./isModerator');
@@ -198,10 +199,19 @@ const showPolls = async function (request, { i18n, send, getModuleData }) {
     filteredPollList.forEach((poll) => {
         const votes = voteList.filter(vote => poll.id === vote.pollId);
         const allVotesCount = votes.length;
+        let topVotedCount = 0;
+
+        poll.options.forEach((option) => {
+            const votesCount = votes.filter(vote => vote.option === option).length;
+
+            if (votesCount > topVotedCount) {
+                topVotedCount = votesCount;
+            }
+        });
 
         const optionResults = poll.options.map((option) => {
             const votesCount = votes.filter(vote => vote.option === option).length;
-            const percentage = (votesCount / allVotesCount * 100 || 0).toFixed(2);
+            const percentage = (votesCount / topVotedCount * 100 || 0).toFixed(2);
             const fillCount = (percentage / 10).toFixed(0);
             const emptyCount = 10 - fillCount;
             let loadbar = '```';
@@ -213,7 +223,7 @@ const showPolls = async function (request, { i18n, send, getModuleData }) {
                 i18n('poll.option', {
                     option,
                     percentage,
-                    votesCount
+                    votesCount,
                 }),
                 loadbar,
             ];
