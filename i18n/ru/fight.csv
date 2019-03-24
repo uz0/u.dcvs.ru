@@ -1,0 +1,8 @@
+fight.wins, "Иииииииии <@{{winner}}> победил!"
+fight.wins, "Что такое? Неужели <@{{winner}}> победил в битве?"
+fight.wins, "Какая досада... <@{{winner}}> победил..."
+fight.wins, "<@{{winner}}> выиграл."
+fight.wins, "Фигасе <@{{winner}}>, ты победил в битве!"
+fight.wins, "Это была охренительная битва и <@{{winner}}> победил."
+fight.wins, "<@{{winner}} быстро среагировал и убил <@{{loser}}>"
+fight.wins, "<@{{winner}}> подавил <@{{loser}}>!"
