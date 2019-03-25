@@ -39,6 +39,7 @@ instance
 
 instance.use([
     log,
+    updateExp,
 
     [
         event('message'),
@@ -62,7 +63,6 @@ instance.use([
     // bets,
 
     // missionChecker,
-    updateExp,
 
     error,
 ]);
