@@ -13,7 +13,6 @@ const poll = require('./modules/poll');
 const wars = require('./modules/wars');
 
 const selfReact = require('./modules/selfReact');
-const addExp = require('./modules/addExp');
 const error = require('./modules/error');
 const event = require('./modules/event');
 const autoReaction = require('./modules/autoReaction');
@@ -23,6 +22,7 @@ const missionChecker = require('./modules/missions/missionChecker');
 const ping = require('./modules/commands/ping');
 const echo = require('./modules/commands/echo');
 const expAdd = require('./modules/commands/expAdd');
+const setupChannelExp = require('./modules/commands/setupChannelExp');
 const status = require('./modules/commands/status');
 const moderatorAdd = require('./modules/commands/moderatorAdd');
 const missionAdd = require('./modules/commands/missionAdd');
@@ -42,7 +42,6 @@ instance.use([
 
     [
         event('message'),
-        addExp(1),
         autoReaction,
     ],
 
@@ -53,6 +52,7 @@ instance.use([
     echo,
     status,
     expAdd,
+    setupChannelExp,
 
     selfReact,
 
