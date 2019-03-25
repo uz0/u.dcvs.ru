@@ -17,7 +17,7 @@ const error = require('./modules/error');
 const event = require('./modules/event');
 const autoReaction = require('./modules/autoReaction');
 const log = require('./modules/log');
-const missionChecker = require('./modules/missions/missionChecker');
+const updateExp = require('./modules/updateExp');
 
 const ping = require('./modules/commands/ping');
 const echo = require('./modules/commands/echo');
@@ -61,7 +61,8 @@ instance.use([
     wars,
     // bets,
 
-    missionChecker,
+    // missionChecker,
+    updateExp,
 
     error,
 ]);
