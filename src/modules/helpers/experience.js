@@ -1,4 +1,3 @@
-// const isEmpty = require('lodash/isEmpty');
 const defaults = require('lodash/defaults');
 
 async function addUserExp(ctx, userId, amount, reason) {
@@ -9,14 +8,6 @@ async function addUserExp(ctx, userId, amount, reason) {
     } = ctx;
     const user = await getUser(userId);
     const data = await getModuleData('exp', { user });
-
-    // if (isEmpty(data.log)) {
-    //     await updateModuleData(
-    //         'exp',
-    //         { log: [] },
-    //         { user },
-    //     );
-    // }
 
     const newData = defaults(data, { amount: 0, log: [] });
     newData.amount += parseInt(amount, 10);
