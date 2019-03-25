@@ -4,9 +4,9 @@ const command = require('../command.filter');
 
 const fights = async function (request, context) {
     const { i18n, send } = context;
-    const { user, args: { opponentId } } = request;
+    const { user, args: { opponent } } = request;
 
-    const fighters = [user.id, opponentId];
+    const fighters = [`<@${user.id}>`, opponent];
     const [winner, loser] = shuffle(fighters);
 
     send(i18n('fight.wins', { winner, loser }));
@@ -14,4 +14,4 @@ const fights = async function (request, context) {
     return request;
 };
 
-module.exports = [command('fight opponentId'), fights];
+module.exports = [command('fight opponent'), fights];
