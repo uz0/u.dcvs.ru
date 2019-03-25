@@ -16,13 +16,13 @@ const selfReact = require('./modules/selfReact');
 const addExp = require('./modules/addExp');
 const error = require('./modules/error');
 const event = require('./modules/event');
-const updateExp = require('./modules/updateExp');
 const autoReaction = require('./modules/autoReaction');
 const log = require('./modules/log');
 const missionChecker = require('./modules/missions/missionChecker');
 
 const ping = require('./modules/commands/ping');
 const echo = require('./modules/commands/echo');
+const expAdd = require('./modules/commands/expAdd');
 const status = require('./modules/commands/status');
 const moderatorAdd = require('./modules/commands/moderatorAdd');
 const missionAdd = require('./modules/commands/missionAdd');
@@ -52,6 +52,7 @@ instance.use([
     ping,
     echo,
     status,
+    expAdd,
 
     selfReact,
 
@@ -61,7 +62,6 @@ instance.use([
     // bets,
 
     missionChecker,
-    updateExp,
 
     error,
 ]);

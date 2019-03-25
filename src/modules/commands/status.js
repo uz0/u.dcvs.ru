@@ -1,23 +1,56 @@
 const isInteger = require('lodash/isInteger');
+const isEmpty = require('lodash/isEmpty');
 const command = require('../command.filter');
+const isModerator = require('../isModerator');
+const { getDiscordIdFromMention } = require('../helpers/discord');
 
-const status = async function (request, context) {
-    const { i18n, getModuleData, send } = context;
-    const { lvl, value } = await getModuleData('exp', { user: request.user });
-    console.log('lvl, value', lvl, value);
+const LOG_COUNT = 5;
 
-    if (!isInteger(lvl) || !value) {
-        throw (i18n('statusError'));
+const status = async function (req, ctx) {
+    const {
+        i18n,
+        getModuleData,
+        getUser,
+        send,
+    } = ctx;
+    const { args: { other } } = req;
+
+    let actualUser;
+    if (other) {
+        const otherId = getDiscordIdFromMention(other);
+        actualUser = await getUser(otherId);
     } else {
-        send({
-            embed: {
-                title: i18n('lvl'),
-                description: i18n('status', { lvl, value }),
-            },
-        });
+        actualUser = req.user;
     }
 
-    return request;
+    const { amount, log } = await getModuleData('exp', { user: actualUser });
+
+    if (!isInteger(amount)) {
+        throw (i18n('exp.noExp'));
+    }
+    if (isEmpty(log)) {
+        throw (i18n('exp.noLog'));
+    }
+
+    const outLog = log
+        .slice(0, LOG_COUNT)
+        .map(entry => `${entry.amount}\t${entry.reason}`)
+        .join('\n');
+
+    send({
+        embed: {
+            title: i18n('exp.title'),
+            description: i18n('exp.status', { exp: amount, log: outLog }),
+            fields: [
+                [i18n('exp.logTitle'), outLog],
+            ],
+        },
+    });
+
+    return req;
 };
 
-module.exports = [command('status'), status];
+module.exports = [
+    [command('status'), status],
+    [isModerator, command('status other'), status],
+];

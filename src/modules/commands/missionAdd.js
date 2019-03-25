@@ -4,14 +4,7 @@ const isEmpty = require('lodash/isEmpty');
 
 const isModerator = require('../isModerator');
 const command = require('../command.filter');
-
-// todo: move it somewhere
-function getDiscordIdFromMention(mention) {
-    // cutting off discord's <@id_here>
-    const match = mention.match(/<@(.*)>/);
-
-    return match && match[1];
-}
+const { getDiscordIdFromMention } = require('../helpers/discord');
 
 const missionAdd = async function (req, ctx) {
     const {
