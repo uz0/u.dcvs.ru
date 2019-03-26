@@ -1,4 +1,3 @@
-const isEmpty = require('lodash/isEmpty');
 const shuffle = require('lodash/shuffle');
 const command = require('../command.filter');
 
@@ -13,14 +12,14 @@ const setupDuel = async function (request, context) {
     const [, opponentId] = opponent.match(/<@(.*)>/);
 
     if (!opponentId) {
-
+        send(i18n('duel.noUser'));
     }
 
     updateModuleData('duels', {
         [opponentId]: user.id,
-    })
+    });
 
-    send('<@${opponent}>, ты вызван на бой! Теперь напиши да, чтобы принять свою смерть...');
+    send(`<@${opponent}>, ты вызван на бой! Теперь напиши да, чтобы принять свою смерть...`);
 
     return request;
 };
@@ -32,20 +31,23 @@ const checkDuel = async function (request, context) {
     const duels = getModuleData('duels');
 
     if (duels[user.id] && input === 'да') {
+        send(`бой начался! <@${duels[user.id]}> и <@${user.id}> ДА НАЧНЕТСЯ БОЙ!`);
 
-        send('бой начался! <@${duels[user.id]}> и <@{user.id}> ДА НАЧНЕТСЯ БОЙ!');
+        await timeout(1000);
+        send(3);
+        await timeout(1000);
+        send(2);
+        await timeout(1000);
+        send(1);
+        await timeout(1000);
+        const duelers = [user, `<@${duels[user.id]}>`];
 
-        await timeout(1000);
-        send(3)
-        await timeout(1000);
-        send(2)
-        await timeout(1000);
-        send(1)
-        await timeout(1000);
-
-        send('победил!! ??');
+        const [winner, loser] = shuffle(duelers);
+        send(i18n('duel.wins', { winner, loser }));
     }
-}
+    
+    return request;
+};
 
 module.exports = [
     [command('duel opponent'), setupDuel],
