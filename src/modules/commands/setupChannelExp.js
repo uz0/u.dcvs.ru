@@ -65,6 +65,6 @@ const setupChannelExp = async function (req, ctx) {
 };
 
 module.exports = [
-    isModerator,
+    isModerator, command('setupChannelExp amount'), setupChannelExp
     [command('setupChannelExp amount'), setupChannelExp],
 ];
