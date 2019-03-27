@@ -13,11 +13,5 @@ module.exports = {
         warsChannelId: process.env.WARS_CHANNEL_ID,
         broadcastChannelId: process.env.BROADCAST_CHANNEL_ID,
         userFields: ['username', 'id', 'discriminator', 'bot', 'avatar'],
-        channels: {
-            mainChannel: {
-                id: process.env.MAIN_CHANNEL_ID,
-                expAmount: 111,
-            },
-        },
     },
 };

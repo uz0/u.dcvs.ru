@@ -3,9 +3,9 @@ const isEmpty = require('lodash/isEmpty');
 const isModerator = require('../isModerator');
 const command = require('../command.filter');
 const { getDiscordIdFromMention } = require('../helpers/discord');
-const { addUserExp } = require('../helpers/experience');
+const addUserExp = require('../addUserExp');
 
-const expAdd = async function (req, ctx) {
+const expAddCmd = async function (req, ctx) {
     const {
         i18n,
         send,
@@ -27,20 +27,21 @@ const expAdd = async function (req, ctx) {
         throw i18n('expAdd.noReason');
     }
 
-    const targetId = getDiscordIdFromMention(target);
-    await addUserExp(ctx, targetId, amount, reason);
+    const targetUserId = getDiscordIdFromMention(target);
+    req.exp = {
+        targetUserId,
+        amount,
+        reason,
+    };
 
     send({
         embed: {
             title: i18n('expAdd.title'),
-            description: i18n('expAdd.description', { targetId, amount, reason }),
+            description: i18n('expAdd.description', { targetUserId, amount, reason }),
         },
     });
 
     return req;
 };
 
-module.exports = [
-    isModerator,
-    [command('expAdd target amount reason'), expAdd],
-];
+module.exports = [isModerator, command('expAdd target amount reason'), expAddCmd, addUserExp];

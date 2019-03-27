@@ -17,7 +17,7 @@ const error = require('./modules/error');
 const event = require('./modules/event');
 const autoReaction = require('./modules/autoReaction');
 const log = require('./modules/log');
-const updateExp = require('./modules/updateExp');
+const addExpForChannelMessage = require('./modules/addExpForChannelMessage');
 
 const ping = require('./modules/commands/ping');
 const echo = require('./modules/commands/echo');
@@ -39,7 +39,7 @@ instance
 
 instance.use([
     log,
-    updateExp,
+    addExpForChannelMessage,
 
     [
         event('message'),

@@ -1,6 +1,6 @@
-const { addUserExp } = require('./helpers/experience');
+const addUserExp = require('./addUserExp');
 
-module.exports = async function updateExp(req, ctx) {
+async function addExpForChannelMessage(req, ctx) {
     const {
         from,
         userId,
@@ -10,6 +10,7 @@ module.exports = async function updateExp(req, ctx) {
         getModuleData,
     } = ctx;
     const { channels } = await getModuleData('exp');
+    // TODO: unify from
     const currentChannel = from[1];
     const channelData = channels && channels[currentChannel];
 
@@ -17,7 +18,13 @@ module.exports = async function updateExp(req, ctx) {
         return req;
     }
 
-    await addUserExp(ctx, userId, channelData.amount, i18n('exp.fromChannel'));
+    req.exp = {
+        targetUserId: userId,
+        amount: channelData.amount,
+        reason: i18n('exp.fromChannel'),
+    };
 
     return req;
-};
+}
+
+module.exports = [addExpForChannelMessage, addUserExp];

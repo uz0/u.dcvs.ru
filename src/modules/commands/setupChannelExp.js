@@ -2,19 +2,6 @@ const isEmpty = require('lodash/isEmpty');
 
 const isModerator = require('../isModerator');
 const command = require('../command.filter');
-const { discord: { channels } } = require('../../config');
-
-async function setDefaultsChannelExp({ updateModuleData }) {
-    const channelsData = {};
-
-    Object.keys(channels).forEach((channel) => {
-        channelsData[channels[channel].id] = { amount: channels[channel].expAmount };
-    });
-
-    await updateModuleData('exp', { channels: channelsData });
-
-    return channelsData;
-}
 
 const setupChannelExp = async function (req, ctx) {
     const {
@@ -39,11 +26,7 @@ const setupChannelExp = async function (req, ctx) {
         throw i18n('setupChannelExp.badChannel');
     }
 
-    let { channels: currentChannels } = await getModuleData('exp');
-
-    if (isEmpty(currentChannels)) {
-        currentChannels = await setDefaultsChannelExp(ctx);
-    }
+    const { channels: currentChannels } = await getModuleData('exp');
 
     await updateModuleData('exp', {
         channels: {
@@ -64,7 +47,4 @@ const setupChannelExp = async function (req, ctx) {
     return req;
 };
 
-module.exports = [
-    isModerator, command('setupChannelExp amount'), setupChannelExp
-    [command('setupChannelExp amount'), setupChannelExp],
-];
+module.exports = [isModerator, command('setupChannelExp amount'), setupChannelExp];
