@@ -23,7 +23,7 @@ const missionChecker = require('./modules/missions/missionChecker');
 
 const ping = require('./modules/commands/ping');
 const fight = require('./modules/commands/fight');
-const duels = require('./modules/commands/duel');
+const duels = require('./modules/commands/duels');
 const echo = require('./modules/commands/echo');
 const status = require('./modules/commands/status');
 const moderatorAdd = require('./modules/commands/moderatorAdd');
