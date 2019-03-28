@@ -7,6 +7,8 @@ const { lang } = require('./config');
 
 const reader = new CsvReader();
 
+const rawData = {};
+
 reader.on('row', ([key, value]) => {
     if (rawData[key]) {
         rawData[key].push(value);
