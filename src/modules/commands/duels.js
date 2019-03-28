@@ -19,7 +19,7 @@ const setupDuel = async function (request, context) {
         [opponentId]: user.id,
     });
 
-    send(`${opponent}, ты вызван на бой! Теперь напиши да, чтобы принять свою смерть...`);
+    send(`${opponent}, ты вызван на дуэль! Теперь напиши да, чтобы принять свою смерть...`);
 
     return request;
 };
@@ -29,12 +29,16 @@ const checkDuel = async function (request, context) {
     const { user, input } = request;
 
     const duels = await getModuleData('duels');
+    const reply = input.toLowerCase();
 
-    if (duels[user.id] && input === 'да') {
+    if (duels[user.id] && reply === 'да') {
         const dueler1 = `<@${user.id}>`;
         const dueler2 = `<@${duels[user.id]}>`;
 
         send(i18n('duel.hasBegun', { dueler1, dueler2 }));
+
+        const duelers = [`<@${user.id}>`, `<@${duels[user.id]}>`];
+        const [winner, loser] = shuffle(duelers);
 
         await timeout(1000);
         send('3');
@@ -43,9 +47,6 @@ const checkDuel = async function (request, context) {
         await timeout(1000);
         send('1');
         await timeout(1000);
-        const duelers = [`<@${user.id}>`, `<@${duels[user.id]}>`];
-
-        const [winner, loser] = shuffle(duelers);
 
         send(i18n('duel.wins', { winner, loser }));
     }

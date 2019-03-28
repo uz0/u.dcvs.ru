@@ -7,8 +7,5 @@ duel.wins, "It was an amazing duel and {{winner}} won."
 duel.wins, "{{winner}} defeated {{loser}}"
 duel.wins, "{{winner}} has reacted quickly and killed {{loser}}"
 duel.noUser, "Can't get that user."
-<<<<<<< HEAD
 duel.noDuel, "It seems you haven't challenged someone for a duel."
 duel.hasBegun, "Duel between {{dueler1}} and {{dueler2}} has begun..."
-=======
->>>>>>> 3c74fdc7a0980116ea1992f8a28f758c4dc31dcc
