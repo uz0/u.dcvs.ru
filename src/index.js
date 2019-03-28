@@ -13,6 +13,7 @@ const poll = require('./modules/poll');
 const wars = require('./modules/wars');
 
 const selfReact = require('./modules/selfReact');
+const funnyBan = require('./modules/funnyBan');
 const addExp = require('./modules/addExp');
 const error = require('./modules/error');
 const event = require('./modules/event');
@@ -58,10 +59,11 @@ instance.use([
     status,
 
     selfReact,
+    funnyBan,
 
     quiz,
     poll,
-    wars,
+    // wars,
     // bets,
 
     missionChecker,
