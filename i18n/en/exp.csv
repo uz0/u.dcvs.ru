@@ -1,0 +1,17 @@
+exp.title, "EXP"
+exp.status, "You have {{amount}} exp!"
+exp.logTitle, "Exp log below!"
+exp.noExp, "You don't have any exp yet"
+exp.noLog, "Your log is empty somehow"
+exp.fromChannel, "Exp for messaging in {{from}}"
+,
+expAdd.title, "EXP GRANTED"
+expAdd.description, "<@{{targetUserId}}> just earned {{amount}} exp for \"{{reason}}\""
+expAdd.noTarget, "Target user for exp add is not specified"
+expAdd.noAmount, "Exp amount for exp add is not specified"
+expAdd.noReason, "Reason for exp add is not specified"
+,
+setupChannelExp.title, "EXP FOR CHANNEL"
+setupChannelExp.description, "{{amount}} exp will be granted for messages in {{from}}"
+setupChannelExp.badAmount, "Exp amount for exp add is not specified"
+setupChannelExp.badChannel, "Something is wrong with your channel"

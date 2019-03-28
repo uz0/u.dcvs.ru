@@ -10,7 +10,6 @@ ping, "понг я пишу код в час ночи"
 ping, "System.out.println(system.errors.VitalyasheException);"
 ping, "понг продаю гараж"
 ,
-status, "Уровень: {{lvl}}\nОпыт: {{value}}"
 statusError, "Ошибка в моем днк =/"
 ,
 selfReact, "Чего нужно?"

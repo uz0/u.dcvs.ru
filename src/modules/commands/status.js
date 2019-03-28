@@ -40,7 +40,7 @@ const status = async function (req, ctx) {
     send({
         embed: {
             title: i18n('exp.title'),
-            description: i18n('exp.status', { exp: amount, log: outLog }),
+            description: i18n('exp.status', { amount }),
             fields: [
                 [i18n('exp.logTitle'), outLog],
             ],

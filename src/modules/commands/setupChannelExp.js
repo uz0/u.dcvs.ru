@@ -39,7 +39,7 @@ const setupChannelExp = async function (req, ctx) {
 
     send({
         embed: {
-            title: i18n('exp.title'),
+            title: i18n('setupChannelExp.title'),
             description: i18n('setupChannelExp.description', { from, amount }),
         },
     });

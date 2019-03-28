@@ -1,0 +1,17 @@
+exp.title, "ОПЫТ"
+exp.status, "У тебя {{amount}} опыта!"
+exp.logTitle, "Лог внизу!"
+exp.noExp, "У тебя еще нет опыта"
+exp.noLog, "Лог где-то продолбался"
+exp.fromChannel, "Опыт за общение в {{from}}"
+,
+expAdd.title, "ОПЫТ ПОЛУЧЕН"
+expAdd.description, "<@{{targetUserId}}> получил {{amount}} за \"{{reason}}\""
+expAdd.noTarget, "Не указан пользователь"
+expAdd.noAmount, "Не указано количество опыта"
+expAdd.noReason, "Не указана причина"
+,
+setupChannelExp.title, "ОПЫТ ДЛЯ КАНАЛА"
+setupChannelExp.description, "{{amount}} опыта получено за общение в {{from}}"
+setupChannelExp.badAmount, "Не указано количество опыта"
+setupChannelExp.badChannel, "Что-то пошло не так с каналом"

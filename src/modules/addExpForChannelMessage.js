@@ -21,7 +21,7 @@ async function addExpForChannelMessage(req, ctx) {
     req.exp = {
         targetUserId: userId,
         amount: channelData.amount,
-        reason: i18n('exp.fromChannel'),
+        reason: i18n('exp.fromChannel', { from }),
     };
 
     return req;

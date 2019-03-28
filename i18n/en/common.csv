@@ -8,7 +8,6 @@ ping, "pong2"
 ping, "pong3"
 ping, "pong4"
 ,
-status, "Ayo!\nLevel: {{lvl}}\nExp: {{value}}"
 statusError, "Something's wrong with your status, mate =\\"
 ,
 selfReact, "Can i help you?"
