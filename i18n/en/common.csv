@@ -8,6 +8,8 @@ ping, "pong2"
 ping, "pong3"
 ping, "pong4"
 ,
+ban, "banned"
+,
 status, "Ayo!\nLevel: {{lvl}}\nExp: {{value}}"
 statusError, "Something's wrong with your status, mate =\\"
 lvl, "Level system"
