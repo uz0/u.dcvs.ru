@@ -17,7 +17,7 @@ reader.on('row', ([key, value]) => {
     }
 });
 
-const newlines = str => str.replace(/\\n/g, '\n');
+const newlines = str => str;
 
 function i18nFactory() {
     fs.readdirSync(`./i18n/${lang}/`).forEach((file) => {
@@ -29,22 +29,25 @@ function i18nFactory() {
     });
 
     return (key, props = {}) => {
-        const parsed = rawData[key] || [''];
-        let string = sample(parsed);
-
-        if (!string && !props.strict) {
-            string = key;
-        }
-
-        Object
-            .entries(props)
-            .forEach(([k, v]) => {
-                string = string.replace(`{{${k}}}`, v);
-            });
-
-        string = newlines(string);
-
-        return string;
+        // strict must throw error!
+        const emptyString = props._strict ? '' : key;
+        const allKeys = rawData[key] || [emptyString];
+        
+        const parsedKeys = allKeys.map(key => {
+            let string = key;
+            
+            Object
+                .entries(props)
+                .forEach(([k, v]) => {
+                    string = string
+                        .replace(`{{${k}}}`, v)
+                        .replace(/\\n/g, '\n');
+                });
+            
+            return string;
+        });
+ 
+        return props._allKeys ? parsedKeys : sample(parsedKeys);
     };
 }
 

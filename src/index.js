@@ -10,9 +10,9 @@ const httpAdapter = require('./adapters/http');
 
 const quiz = require('./modules/quiz');
 const poll = require('./modules/poll');
-const wars = require('./modules/wars');
 
 const selfReact = require('./modules/selfReact');
+const funnyBan = require('./modules/funnyBan');
 const error = require('./modules/error');
 const event = require('./modules/event');
 const autoReaction = require('./modules/autoReaction');
@@ -20,6 +20,7 @@ const log = require('./modules/log');
 const addExpForChannelMessage = require('./modules/addExpForChannelMessage');
 
 const ping = require('./modules/commands/ping');
+const fight = require('./modules/commands/fight');
 const echo = require('./modules/commands/echo');
 const expAdd = require('./modules/commands/expAdd');
 const setupChannelExp = require('./modules/commands/setupChannelExp');
@@ -49,6 +50,7 @@ instance.use([
     moderatorAdd,
     missionAdd,
     missions,
+    fight,
     ping,
     echo,
     status,
@@ -56,10 +58,11 @@ instance.use([
     setupChannelExp,
 
     selfReact,
+    funnyBan,
 
     quiz,
     poll,
-    wars,
+    // wars,
     // bets,
 
     // missionChecker,

@@ -8,7 +8,7 @@ ping, "pong2"
 ping, "pong3"
 ping, "pong4"
 ,
-statusError, "Something's wrong with your status, mate =\\"
+ban, "banned"
 ,
 selfReact, "Can i help you?"
 ,

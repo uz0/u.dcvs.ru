@@ -10,7 +10,11 @@ ping, "понг я пишу код в час ночи"
 ping, "System.out.println(system.errors.VitalyasheException);"
 ping, "понг продаю гараж"
 ,
-statusError, "Ошибка в моем днк =/"
+ban, "Вы забанены"
+ban, "Выдан БАН"
+ban, "БАН"
+ban, "Кто-то получил БАН"
+ban, "БАААААН"
 ,
 selfReact, "Чего нужно?"
 selfReact, "Отстань!"

@@ -1,0 +1,8 @@
+fight.wins, "Aaaaaaaand {{winner}} wins!"
+fight.wins, "What's this? Isn't {{winner}} won the fight?"
+fight.wins, "What a pity...{{winner}} won the fight..."
+fight.wins, "{{winner}} won the fight."
+fight.wins, "Ayy {{winner}}, you won the fight!"
+fight.wins, "It was an amazing fight and {{winner}} won."
+fight.wins, "{{winner}} defeated {{loser}}"
+fight.wins, "{{winner}} has reacted quickly and killed {{loser}}"
