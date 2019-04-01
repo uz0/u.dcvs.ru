@@ -2,10 +2,10 @@ const { hri } = require('human-readable-ids');
 const moment = require('moment');
 const isEmpty = require('lodash/isEmpty');
 
-const command = require('./command.filter');
-const isModerator = require('./isModerator');
+const command = require('./filters/command');
+const isModerator = require('./filters/isModerator');
 
-const { PREFIX, discord: { broadcastChannelId } } = require('../config');
+const { PREFIX, discord: { broadcastChannelId } } = require('./config');
 
 const emptyIcon = '▒';
 const fullIcon = '█';

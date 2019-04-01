@@ -1,5 +1,5 @@
 const isEmpty = require('lodash/isEmpty');
-const command = require('../command.filter');
+const command = require('../filters/command');
 
 const echo = async function (request, { i18n, send, getModuleData }) {
     const { setup } = await getModuleData('echo');

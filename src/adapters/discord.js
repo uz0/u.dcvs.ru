@@ -84,9 +84,9 @@ discordAdapter.__INIT__ = function (ctx) {
             });
         }
 
-        // if (!message) {
-        //     return Promise.reject();
-        // }
+        if (!message) {
+            return Promise.resolve();
+        }
 
         return channel.send(message).catch((e) => {
             console.error(e.message);
@@ -94,6 +94,10 @@ discordAdapter.__INIT__ = function (ctx) {
     };
 
     discordBot.on('message', (message) => {
+        const mentions = message.mentions.members.map(member => member.id);
+        const selfId = discordBot.user.id;
+        const hasSelfMention = !isEmpty(mentions.find(mention => mention === selfId));
+
         const {
             content = '',
             author,
@@ -111,6 +115,9 @@ discordAdapter.__INIT__ = function (ctx) {
             userId: author.id,
             input: content,
             from: ['discord', channel.id, id],
+            mentions,
+            hasSelfMention,
+            fromHuman: `discord/${channel.name}`,
             event: 'message',
 
             _handleDirect: handler,

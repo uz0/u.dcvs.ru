@@ -97,6 +97,7 @@ module.exports = class App {
             userId,
             input,
             from, // [adapter, ...],
+            fromKey: from.slice(0, -1).join('/'),
 
             ...data, // Dirty need some standard structure !!!
             user,

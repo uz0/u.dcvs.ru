@@ -1,7 +1,7 @@
 const isEmpty = require('lodash/isEmpty');
 
-const isModerator = require('../isModerator');
-const command = require('../command.filter');
+const isModerator = require('../filters/isModerator');
+const command = require('../filters/command');
 
 const setupChannelExp = async function (req, ctx) {
     const {
@@ -10,28 +10,24 @@ const setupChannelExp = async function (req, ctx) {
         getModuleData,
         updateModuleData,
     } = ctx;
+
     const {
-        from,
+        fromKey,
         args: { amount },
     } = req;
+
     const actualAmount = parseInt(amount, 10);
 
     if (!actualAmount) {
-        throw i18n('setupChannelExp.badAmount');
+        throw i18n('experience.badAmount');
     }
 
-    const fromChannel = from[1];
+    const { channels } = await getModuleData('experience');
 
-    if (!fromChannel) {
-        throw i18n('setupChannelExp.badChannel');
-    }
-
-    const { channels: currentChannels } = await getModuleData('exp');
-
-    await updateModuleData('exp', {
+    await updateModuleData('experience', {
         channels: {
-            ...currentChannels,
-            [fromChannel]: {
+            ...channels,
+            [fromKey]: {
                 amount: actualAmount,
             },
         },
@@ -39,8 +35,8 @@ const setupChannelExp = async function (req, ctx) {
 
     send({
         embed: {
-            title: i18n('setupChannelExp.title'),
-            description: i18n('setupChannelExp.description', { from, amount }),
+            title: i18n('experience.title'),
+            description: i18n('experience.setup', { fromKey, amount }),
         },
     });
 

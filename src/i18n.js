@@ -17,8 +17,6 @@ reader.on('row', ([key, value]) => {
     }
 });
 
-const newlines = str => str;
-
 function i18nFactory() {
     fs.readdirSync(`./i18n/${lang}/`).forEach((file) => {
         if (file.split('.')[1] === 'csv') {

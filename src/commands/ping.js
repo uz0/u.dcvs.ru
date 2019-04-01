@@ -1,4 +1,5 @@
-const command = require('../command.filter');
+
+const command = require('../filters/command');
 
 const ping = async function (request, { i18n, pong, send }) {
     // we init pong in __INIT__
