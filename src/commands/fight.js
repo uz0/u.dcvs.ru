@@ -1,4 +1,3 @@
-const isEmpty = require('lodash/isEmpty');
 const shuffle = require('lodash/shuffle');
 
 const command = require('../filters/command');

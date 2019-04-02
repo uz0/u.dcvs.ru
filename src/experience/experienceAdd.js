@@ -16,6 +16,7 @@ module.exports = async function experienceAdd(req, ctx) {
         targetUserId,
         amount: rawAmount,
         reason,
+        reasonId,
     } = experience;
     const amount = parseInt(rawAmount, 10);
 
@@ -29,30 +30,12 @@ module.exports = async function experienceAdd(req, ctx) {
 
     newData.amount += amount;
 
-    let hasPrevRecord = false;
-
-    newData.log = newData.log
-        .filter(entry => entry)
-        .map(entry => {
-
-        if (entry && entry.reason === reason) {
-            hasPrevRecord = true;
-
-            return {
-                ...entry,
-                amount: entry.amount + amount,
-            }
-        }
-
-        return entry;
+    newData.log.unshift({
+        amount,
+        reason,
+        reasonId,
     });
 
-    if (!hasPrevRecord) {
-        newData.log.unshift({
-            amount,
-            reason,
-        });
-    }
 
     updateModuleData('experience', newData, { user });
 
@@ -60,4 +43,4 @@ module.exports = async function experienceAdd(req, ctx) {
     req.experience = undefined;
 
     return req;
-}
+};

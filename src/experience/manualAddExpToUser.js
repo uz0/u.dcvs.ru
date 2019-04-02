@@ -1,4 +1,3 @@
-const isEmpty = require('lodash/isEmpty');
 const { hri } = require('human-readable-ids');
 
 const isModerator = require('../filters/isModerator');
@@ -13,7 +12,7 @@ async function manualAddExpToUser(req, ctx) {
     } = ctx;
 
     const {
-        args: { target, amount, reason },
+        args: { amount, reason },
         mentions,
     } = req;
 
@@ -22,6 +21,7 @@ async function manualAddExpToUser(req, ctx) {
         targetUserId,
         amount,
         reason,
+        reasonId: hri.random(),
     };
 
     send({
@@ -32,6 +32,6 @@ async function manualAddExpToUser(req, ctx) {
     });
 
     return req;
-};
+}
 
 module.exports = [isModerator, command('expAdd target amount reason'), manualAddExpToUser, experienceAdd];

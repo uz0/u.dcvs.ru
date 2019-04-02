@@ -30,10 +30,10 @@ function i18nFactory() {
         // strict must throw error!
         const emptyString = props._strict ? '' : key;
         const allKeys = rawData[key] || [emptyString];
-        
-        const parsedKeys = allKeys.map(key => {
-            let string = key;
-            
+
+        const parsedKeys = allKeys.map((value) => {
+            let string = value;
+
             Object
                 .entries(props)
                 .forEach(([k, v]) => {
@@ -41,10 +41,10 @@ function i18nFactory() {
                         .replace(`{{${k}}}`, v)
                         .replace(/\\n/g, '\n');
                 });
-            
+
             return string;
         });
- 
+
         return props._allKeys ? parsedKeys : sample(parsedKeys);
     };
 }

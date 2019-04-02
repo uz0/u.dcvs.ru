@@ -1,4 +1,4 @@
-const App = require('../../app');
+const App = require('../app');
 const echo = require('../commands/echo');
 
 let store = {};
@@ -22,6 +22,7 @@ describe('echo', () => {
     test('return predefined from i18n answer if setup data in /echo', (done) => {
         instance.process({
             input: `/echo ${setup}`,
+            from: { adapter: 'test' },
             _handleDirect(message) {
                 expect(message).toHaveProperty('message', 'test');
                 done();
@@ -32,6 +33,7 @@ describe('echo', () => {
     test('return setup data if direct call /echo', (done) => {
         instance.process({
             input: '/echo',
+            from: { adapter: 'test' },
             _handleDirect(message) {
                 expect(message).toHaveProperty('message', setup);
                 done();

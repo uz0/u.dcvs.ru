@@ -2,8 +2,7 @@ const experienceAdd = require('./experienceAdd');
 
 async function addExpForChannelMessage(req, ctx) {
     const {
-        fromKey,
-        fromHuman,
+        from,
         userId,
     } = req;
 
@@ -13,7 +12,7 @@ async function addExpForChannelMessage(req, ctx) {
     } = ctx;
 
     const { channels } = await getModuleData('experience');
-    const channelData = channels && channels[fromKey];
+    const channelData = channels && channels[String(from)];
 
     if (!channelData) {
         return req;
@@ -22,7 +21,8 @@ async function addExpForChannelMessage(req, ctx) {
     req.experience = {
         targetUserId: userId,
         amount: channelData.amount,
-        reason: i18n('experience.fromChannel', { fromKey: fromHuman }),
+        reason: i18n('experience.fromChannel', { fromKey: from.name }),
+        reasonId: `MESSAGE_${String(from)}`,
     };
 
     return req;

@@ -1,5 +1,3 @@
-const isEmpty = require('lodash/isEmpty');
-
 const isModerator = require('../filters/isModerator');
 const command = require('../filters/command');
 
@@ -12,7 +10,7 @@ const setupChannelExp = async function (req, ctx) {
     } = ctx;
 
     const {
-        fromKey,
+        from,
         args: { amount },
     } = req;
 
@@ -27,7 +25,7 @@ const setupChannelExp = async function (req, ctx) {
     await updateModuleData('experience', {
         channels: {
             ...channels,
-            [fromKey]: {
+            [String(from)]: {
                 amount: actualAmount,
             },
         },
@@ -36,7 +34,7 @@ const setupChannelExp = async function (req, ctx) {
     send({
         embed: {
             title: i18n('experience.title'),
-            description: i18n('experience.setup', { fromKey, amount }),
+            description: i18n('experience.setup', { fromKey: from.name, amount }),
         },
     });
 

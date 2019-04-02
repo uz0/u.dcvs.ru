@@ -15,7 +15,10 @@ httpAdapter.__INIT__ = function (ctx) {
         const id = hri.random();
         ctx.process({
             input: req.query.message,
-            from: ['http', id],
+            from: {
+                adapter: 'http',
+                id,
+            },
 
             _handleDirect(message, request, context) {
                 res.json({ message, request, context });

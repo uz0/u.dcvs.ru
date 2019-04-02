@@ -1,7 +1,12 @@
 
+const addExpForChannelMessage = require('./addExpForChannelMessage');
+const manualAddExpToUser = require('./manualAddExpToUser');
+const setupChannelExp = require('./setupChannelExp');
+const status = require('./status');
+
 module.exports = [
-    require('./addExpForChannelMessage'),
-    require('./manualAddExpToUser'),
-    require('./setupChannelExp'),
-    require('./status'),
-]
+    addExpForChannelMessage,
+    manualAddExpToUser,
+    setupChannelExp,
+    status,
+];

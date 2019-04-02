@@ -18,8 +18,11 @@ discordAdapter.__INIT__ = function (ctx) {
     });
 
     const handler = async (output) => {
-        const { message, to, reactions, userActions = [] } = output;
-        const [, channelId, msgId] = to;
+        const {
+            message, to, reactions, userActions = [],
+        } = output;
+        const { path, id: msgId } = to;
+        const [, channelId] = path;
         let { embed } = output;
 
         const channel = discordBot.channels.find(ch => ch.id === channelId);
@@ -38,7 +41,7 @@ discordAdapter.__INIT__ = function (ctx) {
                 }
             });
 
-            return;
+            return Promise.resolve();
         }
 
         if (msgId && reactions) {
@@ -103,6 +106,7 @@ discordAdapter.__INIT__ = function (ctx) {
             author,
             id,
             channel,
+            guild,
         } = message;
 
         // anti-bot + anti-self-loop
@@ -114,10 +118,14 @@ discordAdapter.__INIT__ = function (ctx) {
             userData: pick(author, discordCfg.userFields),
             userId: author.id,
             input: content,
-            from: ['discord', channel.id, id],
+            from: {
+                adapter: 'discord',
+                path: [guild.id, channel.id],
+                id,
+                name: channel.name,
+            },
             mentions,
             hasSelfMention,
-            fromHuman: `discord/${channel.name}`,
             event: 'message',
 
             _handleDirect: handler,

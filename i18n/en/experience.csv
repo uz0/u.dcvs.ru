@@ -8,3 +8,4 @@ experience.fromChannel, "Exp for messaging in {{fromKey}}"
 ,
 experience.badAmount, "Amount incorrect"
 experience.noExp, "You don't have any exp yet"
+experience.undefined, "undefined"
