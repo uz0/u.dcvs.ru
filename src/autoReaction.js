@@ -7,7 +7,7 @@ async function autoReaction(request, { send, getModuleData }) {
     const { channels } = await getModuleData('reactions');
     const channelData = channels && channels[String(request.from)];
 
-    if (!channelData && isEmpty(channelData.reactions)) {
+    if (!channelData || isEmpty(channelData.reactions)) {
         return request;
     }
 
