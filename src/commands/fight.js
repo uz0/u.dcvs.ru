@@ -1,6 +1,6 @@
-const isEmpty = require('lodash/isEmpty');
 const shuffle = require('lodash/shuffle');
-const command = require('../command.filter');
+
+const command = require('../filters/command');
 
 const fights = async function (request, context) {
     const { i18n, send } = context;

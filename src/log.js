@@ -24,7 +24,7 @@ const keepLog = async function (request, context) {
         date: new Date(),
         event,
         userId,
-        client: from[0],
+        client: from.adapter,
         from,
     };
 
@@ -43,7 +43,7 @@ const keepLog = async function (request, context) {
 const getLog = async function (request, { getAll }) {
     const { query, from } = request;
 
-    if (query === 'getLog' && from[0] === 'http') {
+    if (query === 'getLog' && from.adapter === 'http') {
         const logs = await getAll('logs');
 
         request.data = logs;

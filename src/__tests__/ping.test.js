@@ -1,4 +1,4 @@
-const App = require('../../app');
+const App = require('../app');
 const ping = require('../commands/ping');
 
 describe('ping', () => {
@@ -17,6 +17,7 @@ describe('ping', () => {
     test('return something if call /ping', (done) => {
         instance.process({
             input: '/ping',
+            from: { adapter: 'test' },
             _handleDirect(message) {
                 expect(message).toHaveProperty('message', 'test');
                 done();

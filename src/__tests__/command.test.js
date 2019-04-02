@@ -1,5 +1,5 @@
-const { PREFIX } = require('../../config');
-const cmdModule = require('../command.filter');
+const { PREFIX } = require('../config');
+const cmdModule = require('../filters/command');
 
 describe('on non-command message', () => {
     test('return null', async () => {

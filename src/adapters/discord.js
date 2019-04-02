@@ -18,8 +18,11 @@ discordAdapter.__INIT__ = function (ctx) {
     });
 
     const handler = async (output) => {
-        const { message, to, reactions, userActions = [] } = output;
-        const [, channelId, msgId] = to;
+        const {
+            message, to, reactions, userActions = [],
+        } = output;
+        const { path, id: msgId } = to;
+        const [, channelId] = path;
         let { embed } = output;
 
         const channel = discordBot.channels.find(ch => ch.id === channelId);
@@ -38,7 +41,7 @@ discordAdapter.__INIT__ = function (ctx) {
                 }
             });
 
-            return;
+            return Promise.resolve();
         }
 
         if (msgId && reactions) {
@@ -84,9 +87,9 @@ discordAdapter.__INIT__ = function (ctx) {
             });
         }
 
-        // if (!message) {
-        //     return Promise.reject();
-        // }
+        if (!message) {
+            return Promise.resolve();
+        }
 
         return channel.send(message).catch((e) => {
             console.error(e.message);
@@ -94,11 +97,16 @@ discordAdapter.__INIT__ = function (ctx) {
     };
 
     discordBot.on('message', (message) => {
+        const mentions = message.mentions.members.map(member => member.id);
+        const selfId = discordBot.user.id;
+        const hasSelfMention = !isEmpty(mentions.find(mention => mention === selfId));
+
         const {
             content = '',
             author,
             id,
             channel,
+            guild,
         } = message;
 
         // anti-bot + anti-self-loop
@@ -110,7 +118,14 @@ discordAdapter.__INIT__ = function (ctx) {
             userData: pick(author, discordCfg.userFields),
             userId: author.id,
             input: content,
-            from: ['discord', channel.id, id],
+            from: {
+                adapter: 'discord',
+                path: [guild.id, channel.id],
+                id,
+                name: channel.name,
+            },
+            mentions,
+            hasSelfMention,
             event: 'message',
 
             _handleDirect: handler,
