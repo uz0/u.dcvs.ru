@@ -17,7 +17,8 @@ const moderatorAdd = require('./commands/moderatorAdd');
 
 const quiz = require('./quiz');
 const poll = require('./poll');
-const selfReact = require('./selfReact');
+const selfMention = require('./selfMention');
+const autoReaction = require('./autoReaction');
 
 const experience = require('./experience');
 
@@ -36,7 +37,8 @@ instance.use([
     echo,
     moderatorAdd,
 
-    selfReact,
+    selfMention,
+    autoReaction,
     experience,
     quiz,
     poll,

@@ -3,18 +3,14 @@ otherError, "ОшЫбка в твоем ДНК"
 error, "Зовите прохрамистов!"
 done, "мы чет сделали..."
 ,
+reactions.setuped, "Настройка авто-реакций завершена"
+,
 ping, "понг"
 ping, "понг по русски"
 ping, "понг епта что я делаю"
 ping, "понг я пишу код в час ночи"
 ping, "System.out.println(system.errors.VitalyasheException);"
 ping, "понг продаю гараж"
-,
-ban, "Вы забанены"
-ban, "Выдан БАН"
-ban, "БАН"
-ban, "Кто-то получил БАН"
-ban, "БАААААН"
 ,
 selfReact, "Чего нужно?"
 selfReact, "Отстань!"

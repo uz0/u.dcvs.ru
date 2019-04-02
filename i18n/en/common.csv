@@ -3,12 +3,12 @@ otherError, "Does not sure what error..."
 error, "Error"
 done, "done"
 ,
+reactions.setuped, "Reactions setuped"
+,
 ping, "pong1"
 ping, "pong2"
 ping, "pong3"
 ping, "pong4"
-,
-ban, "banned"
 ,
 selfReact, "Can i help you?"
 ,
