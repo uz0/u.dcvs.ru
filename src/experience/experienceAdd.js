@@ -34,6 +34,7 @@ module.exports = async function experienceAdd(req, ctx) {
         amount,
         reason,
         reasonId,
+        date: new Date(),
     });
 
 
