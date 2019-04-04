@@ -1,5 +1,5 @@
-const isModerator = require('../isModerator');
-const command = require('../command.filter');
+const isModerator = require('../filters/isModerator');
+const command = require('../filters/command');
 
 const moderatorAdd = async function (req, ctx) {
     const {

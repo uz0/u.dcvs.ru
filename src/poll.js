@@ -2,10 +2,10 @@ const { hri } = require('human-readable-ids');
 const moment = require('moment');
 const isEmpty = require('lodash/isEmpty');
 
-const command = require('./command.filter');
-const isModerator = require('./isModerator');
+const command = require('./filters/command');
+const isModerator = require('./filters/isModerator');
 
-const { PREFIX, discord: { broadcastChannelId } } = require('../config');
+const { PREFIX, discord: { broadcastChannelId } } = require('./config');
 
 const emptyIcon = '▒';
 const fullIcon = '█';
@@ -38,7 +38,7 @@ const addPoll = async function (request, {
             },
         });
 
-        console.log('message', message)
+        console.log('message', message);
 
         if (message) {
             broadcastMsg = ['discord', broadcastChannelId, message.id];
@@ -213,7 +213,7 @@ const showPolls = async function (request, { i18n, send, getModuleData }) {
                 i18n('poll.option', {
                     option,
                     percentage,
-                    votesCount
+                    votesCount,
                 }),
                 loadbar,
             ];

@@ -10,7 +10,74 @@ const bind = require('lodash/bind');
 const concat = require('lodash/concat');
 const invariant = require('invariant');
 
-module.exports = class App {
+const ADAPTER_DELIMITER = '//';
+// const ID_DELIMITER = '#';
+
+class Destination {
+    constructor({
+        adapter, // literal, adapter key (unique) for back-call
+        path = [], // full path WHERE happen event
+        id, // per request, like artifact what keep and transfer information about call source
+        name, // human readable
+    }) {
+        invariant(!isEmpty(adapter), 'adapter must be present');
+        invariant(isArray(path), 'path must be array');
+        // must sanitize!
+
+        this._adapter = adapter;
+        this._path = path;
+        this._id = id;
+        this._name = name;
+    }
+
+    get adapter() {
+        return this._adapter;
+    }
+
+    get path() {
+        return this._path;
+    }
+
+    get id() {
+        return this._id;
+    }
+
+    get name() {
+        return this._name;
+    }
+
+    // static fromString(destination) {
+    //     const [adapter, rest] = destination.split(ADAPTER_DELIMITER);
+    //     const [rawPath, id] = rest.split(ID_DELIMITER);
+    //     const path = rawPath.split('/');
+
+    //     return new Destination({
+    //         adapter,
+    //         path,
+    //         id,
+    //     })
+    // }
+
+    static toString({ adapter, path }) {
+        let destination = '';
+        const pathString = path.join('/');
+
+        destination += `${adapter}${ADAPTER_DELIMITER}`;
+        destination += pathString;
+
+        // if (id) {
+        //     destination += `${ID_DELIMITER}${id}`;
+        // }
+
+        return destination;
+    }
+
+    toString() {
+        return Destination.toString(this);
+    }
+}
+
+class App {
     constructor(modules = [], context = {}) {
         this.modules = modules;
 
@@ -55,12 +122,12 @@ module.exports = class App {
             _output = { to: request.from, ..._output };
         }
 
-        if (_output.to === request.from) {
+        if (String(_output.to) === String(request.from)) {
             return context._handleDirect(_output, request, context);
         }
 
         // or HandleTo section
-        const handlerId = _output.to[0];
+        const handlerId = _output.to.adapter;
         const handler = context._handlers[handlerId];
 
         invariant(isFunction(handler), 'handleTo must be a function');
@@ -88,7 +155,7 @@ module.exports = class App {
             user = {
                 ...user,
                 ...userData,
-            }
+            };
         }
 
         // request, per "process" state
@@ -96,7 +163,7 @@ module.exports = class App {
         let request = {
             userId,
             input,
-            from, // [adapter, ...],
+            from: new Destination(from),
 
             ...data, // Dirty need some standard structure !!!
             user,
@@ -208,4 +275,7 @@ module.exports = class App {
 
         return module(request, context);
     }
-};
+}
+
+module.exports = App;
+module.exports.Destination = Destination;

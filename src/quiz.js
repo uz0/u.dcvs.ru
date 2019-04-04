@@ -1,8 +1,9 @@
 const { hri } = require('human-readable-ids');
 const isEmpty = require('lodash/isEmpty');
-const command = require('./command.filter');
 
-const { discord: { broadcastChannelId } } = require('../config');
+const command = require('./filters/command');
+
+const { discord: { broadcastChannelId } } = require('./config');
 
 const addQuiz = async function (request, {
     getModuleData,

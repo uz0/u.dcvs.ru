@@ -1,4 +1,4 @@
-const App = require('../../app');
+const App = require('../app');
 const quiz = require('../quiz');
 
 describe('quiz', () => {
@@ -15,6 +15,7 @@ describe('quiz', () => {
     test('return empty if doesnt call command', (done) => {
         instance.process({
             input: '',
+            from: { adapter: 'test' },
             _handleDirect(message) {
                 expect(message).toHaveProperty('message', '');
                 done();

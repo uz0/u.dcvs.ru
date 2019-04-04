@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const { hri } = require('human-readable-ids');
 const debug = require('debug')('bot:adapter:http');
 
 const { port } = require('../config');
@@ -11,9 +12,13 @@ const httpAdapter = () => {};
 
 httpAdapter.__INIT__ = function (ctx) {
     server.use('/api', (req, res) => {
+        const id = hri.random();
         ctx.process({
             input: req.query.message,
-            from: ['http'],
+            from: {
+                adapter: 'http',
+                id,
+            },
 
             _handleDirect(message, request, context) {
                 res.json({ message, request, context });
@@ -25,6 +30,7 @@ httpAdapter.__INIT__ = function (ctx) {
     });
 
     server.use(cors());
+
     server.use(bodyParser.urlencoded({ extended: false }));
     server.use(bodyParser.json());
 

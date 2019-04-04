@@ -1,12 +1,16 @@
 const shuffle = require('lodash/shuffle');
-const command = require('../command.filter');
+const command = require('../filters/command');
 
 function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 const setupDuel = async function (request, context) {
-    const { i18n, send, updateModuleData } = context;
+    const {
+        i18n,
+        send,
+        updateModuleData,
+    } = context;
     const { user, args: { opponent } } = request;
 
     const [, opponentId] = opponent.match(/<@(.*)>/);
@@ -17,6 +21,7 @@ const setupDuel = async function (request, context) {
 
     updateModuleData('duels', {
         [opponentId]: user.id,
+        duelStartTime: new Date(),
     });
 
     send(`${opponent}, ты вызван на дуэль! Теперь напиши 'да' или 'окей', чтобы принять свою смерть...`);
@@ -31,7 +36,8 @@ const checkDuel = async function (request, context) {
     const duels = await getModuleData('duels');
     const reply = input.toLowerCase();
     const agreeVariants = i18n('agree', { _allKeys: true });
-    if (duels[user.id] && agreeVariants.includes(reply)) {
+
+    if (duels[user.id] && agreeVariants.includes(reply) && duels.duelStartTime > Date.now()) {
         const dueler1 = `<@${user.id}>`;
         const dueler2 = `<@${duels[user.id]}>`;
 
@@ -49,6 +55,13 @@ const checkDuel = async function (request, context) {
         await timeout(1000);
 
         send(i18n('duel.wins', { winner, loser }));
+
+        return request;
+    }
+
+    if (duels[user.id] && duels.duelStartTime === Date.now()) {
+        const userr = `<@${duels[user.id]}>`;
+        send(i18n('duel.cantDuelTwice', { userr }));
     }
 
     return request;
