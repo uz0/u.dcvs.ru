@@ -16,7 +16,6 @@ const setupDuel = async function (request, context) {
         i18n,
         updateModuleData,
         send,
-        getModuleData,
     } = context;
     const { user, args: { opponent } } = request;
 
@@ -32,9 +31,7 @@ const setupDuel = async function (request, context) {
             time: new Date(),
         },
     });
-    const get = await getModuleData('duels');
 
-    console.log(`id is ${get.opponentId}, user id is ${get[opponentId].userId}, duel start ${get[opponentId].time}`);
     send(`${opponent}, ты вызван на дуэль! Теперь напиши 'да' или 'окей', чтобы принять свою смерть...`);
 
     return request;
@@ -53,7 +50,6 @@ const checkDuel = async function (request, context) {
     const opponentt = duels.opponentId;
     const curTime = new Date();
     const diff = getDiffInMins(duels[opponentt].time, curTime);
-    console.log(`diff is ${diff}`);
 
     const reply = input.toLowerCase();
     const agreeVariants = i18n('agree', { _allKeys: true });
