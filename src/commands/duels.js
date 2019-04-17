@@ -12,7 +12,12 @@ function timeout(ms) {
 }
 
 const setupDuel = async function (request, context) {
-    const { i18n, send, updateModuleData } = context;
+    const {
+        i18n,
+        updateModuleData,
+        send,
+        getModuleData,
+    } = context;
     const { user, args: { opponent } } = request;
 
     const [, opponentId] = opponent.match(/<@(.*)>/);
@@ -24,53 +29,70 @@ const setupDuel = async function (request, context) {
     updateModuleData('duels', {
         [opponentId]: {
             userId: user.id,
-            duelStartTime: new Date(),
+            time: new Date(),
         },
     });
+    const get = await getModuleData('duels');
 
+    console.log(`id is ${get.opponentId}, user id is ${get[opponentId].userId}, duel start ${get[opponentId].time}`);
     send(`${opponent}, ты вызван на дуэль! Теперь напиши 'да' или 'окей', чтобы принять свою смерть...`);
 
     return request;
 };
 
 const checkDuel = async function (request, context) {
-    const { i18n, send, getModuleData } = context;
+    const {
+        i18n,
+        getModuleData,
+        send,
+    } = context;
     const { user, input } = request;
 
     const duels = await getModuleData('duels');
 
+    const opponentt = duels.opponentId;
     const curTime = new Date();
-    const duelStart = duels.duelStartTime;
-    const diff = getDiffInMins(duelStart, curTime);
+    const diff = getDiffInMins(duels[opponentt].time, curTime);
+    console.log(`diff is ${diff}`);
 
     const reply = input.toLowerCase();
     const agreeVariants = i18n('agree', { _allKeys: true });
 
-    if (duels.userId && agreeVariants.includes(reply) && duelStart && diff >= 5) {
-        const dueler1 = `<@${user.id}>`;
-        const dueler2 = `<@${duels.userId}>`;
-
-        send(i18n('duel.hasBegun', { dueler1, dueler2 }));
-
-        const duelers = [`<@${user.id}>`, `<@${duels.userId}>`];
-        const [winner, loser] = shuffle(duelers);
-
-        await timeout(1000);
-        send('3');
-        await timeout(1000);
-        send('2');
-        await timeout(1000);
-        send('1');
-        await timeout(1000);
-
-        send(i18n('duel.wins', { winner, loser }));
-
+    if (duels[opponentt].userId && agreeVariants.includes(!reply)) {
         return request;
     }
 
-    if (duels.userId && agreeVariants.includes(reply) && duelStart && diff < 5) {
-        const userr = `<@${duels.userId}>`;
-        send(i18n('duel.cantDuelTwice', { userr }));
+    if (duels[opponentt].userId && agreeVariants.includes(reply) && duels[opponentt].time) {
+        if (diff === 0 || diff === 5) {
+            const dueler1 = `<@${user.id}>`;
+            const dueler2 = `<@${duels[opponentt].userId}>`;
+
+            send(i18n('duel.hasBegun', { dueler1, dueler2 }));
+
+            const duelers = [`<@${user.id}>`, `<@${duels[opponentt].userId}>`];
+            const [winner, loser] = shuffle(duelers);
+
+            await timeout(1000);
+            send('3');
+            await timeout(1000);
+            send('2');
+            await timeout(1000);
+            send('1');
+            await timeout(1000);
+
+            send(i18n('duel.wins', { winner, loser }));
+
+            return request;
+        }
+
+        if (diff < 5 && diff !== 0) {
+            const userr = `<@${duels[opponentt].userId}>`;
+            send(i18n('duel.cantDuelTwice', { userr }));
+
+            return request;
+        }
+
+        return request;
     }
 
     return request;
