@@ -12,6 +12,9 @@ module.exports = {
         warsRoleId: process.env.WARS_ROLE_ID,
         warsChannelId: process.env.WARS_CHANNEL_ID,
         broadcastChannelId: process.env.BROADCAST_CHANNEL_ID,
-        userFields: ['username', 'id', 'discriminator', 'bot', 'avatar'],
+        userFields: ['username', 'id', 'discriminator', 'bot', 'avatar', 'presence'],
+    },
+    riot: {
+        authToken: process.env.RIOT_AUTH_TOKEN,
     },
 };

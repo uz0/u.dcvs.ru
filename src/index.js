@@ -14,6 +14,7 @@ const ping = require('./commands/ping');
 const fight = require('./commands/fight');
 const echo = require('./commands/echo');
 const moderatorAdd = require('./commands/moderatorAdd');
+const lolAdd = require('./commands/lolAdd');
 
 const quiz = require('./quiz');
 const poll = require('./poll');
@@ -36,6 +37,7 @@ instance.use([
     ping,
     echo,
     moderatorAdd,
+    lolAdd,
 
     selfMention,
     autoReaction,
