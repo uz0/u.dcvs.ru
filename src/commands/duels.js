@@ -1,10 +1,10 @@
 const shuffle = require('lodash/shuffle');
 const command = require('../filters/command');
 
-function getDiffInMins(dt2, dt1) {
-    const diff = (dt2.getTime() - dt1.getTime()) / 1000;
-    const diff2 = diff / 60;
-    return Math.abs(Math.round(diff2));
+function getTimeDiff(dt1, dt2) {
+    const secs = (dt2.getTime() - dt1.getTime()) / 1000;
+    const mins = secs / 60;
+    return Math.abs(Math.round(mins));
 }
 
 function timeout(ms) {
@@ -23,6 +23,7 @@ const setupDuel = async function (request, context) {
     if (!opponentId) {
         return request;
     }
+
     const userId = user.id;
     const time = new Date();
 
@@ -47,28 +48,27 @@ const checkDuel = async function (request, context) {
     } = context;
     const { user, input } = request;
 
+    const id = await getModuleData('id');
+    const opponentId = id.duelerid;
     const duels = await getModuleData('duels');
-    const opponentId = await getModuleData('id');
-
-    const opponentt = opponentId.duelerid;
-    const curTime = new Date();
-    const diff = getDiffInMins(duels[opponentt].time, curTime);
-
     const reply = input.toLowerCase();
     const agreeVariants = i18n('agree', { _allKeys: true });
 
-    if (duels[opponentt].userId && agreeVariants.includes(!reply)) {
+    if (!duels[opponentId] || !duels[opponentId].userId) {
         return request;
     }
 
-    if (duels[opponentt].userId && agreeVariants.includes(reply) && duels[opponentt].time) {
-        if (diff === 0|| diff === 5) {
+    if (duels[opponentId].userId && agreeVariants.includes(reply) && duels[opponentId].time) {
+        const curTime = new Date();
+        const diff = getTimeDiff(duels[opponentId].time, curTime);
+        console.log(diff);
+        if (diff === 0 || diff === 5) {
             const dueler1 = `<@${user.id}>`;
-            const dueler2 = `<@${duels[opponentt].userId}>`;
+            const dueler2 = `<@${duels[opponentId].userId}>`;
 
             send(i18n('duel.hasBegun', { dueler1, dueler2 }));
 
-            const duelers = [`<@${user.id}>`, `<@${duels[opponentt].userId}>`];
+            const duelers = [`<@${user.id}>`, `<@${duels[opponentId].userId}>`];
             const [winner, loser] = shuffle(duelers);
 
             await timeout(1000);
@@ -84,9 +84,8 @@ const checkDuel = async function (request, context) {
             return request;
         }
 
-        if (diff < 5 && diff !== 0) {
-            const userr = `<@${duels[opponentt].userId}>`;
-            send(i18n('duel.cantDuelTwice', { userr }));
+        if (diff > 5 || diff !== 0) {
+            return request;
         }
     }
 
